@@ -23,9 +23,6 @@ import {
   Search,
 } from "lucide-react";
 
-const USER_AVATAR =
-  "https://images.unsplash.com/photo-1689600944138-da3b150d9cb8?crop=entropy&cs=tinysrgb&fit=facearea&facepad=2&w=256&h=256&q=80";
-
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
@@ -116,7 +113,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       <div className="pt-6 border-t border-gray-100 dark:border-white/10 mt-6 space-y-5">
         <div className="flex items-center gap-3 px-2">
           <img
-            src={USER_AVATAR}
+            src={user?.image || '/avatar-default.png'}
             alt="User"
             className="w-10 h-10 rounded-full object-cover border-2 border-gray-100 dark:border-white/15 flex-shrink-0"
           />
@@ -130,7 +127,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               )}
             </div>
             <p className="text-[11px] font-medium text-gray-500 truncate">
-              {user?.email || "Premium Member"}
+              {user?.email || user?.phoneNumber || "Member"}
             </p>
           </div>
         </div>
@@ -200,10 +197,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <div className="flex items-center gap-3 pl-2 border-l border-gray-200 dark:border-white/10">
               <div className="text-right hidden sm:block">
                 <p className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">{user?.name}</p>
-                <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-tighter">{user?.email}</p>
+                <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-tighter">{user?.role === 'user' ? 'Member' : 'Admin'}</p>
               </div>
               <img
-                src={USER_AVATAR}
+                src={user?.image || '/avatar-default.png'}
                 alt="User"
                 className="w-10 h-10 rounded-full object-cover border-2 border-blue-500/20 p-0.5"
               />
