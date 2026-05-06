@@ -35,6 +35,7 @@ export const users = pgTable('users', {
     phoneNumber: varchar('phone_number').unique(), // Primary for anti-scam OTP
     password: text('password'), // Hashed
     role: roleEnum('role').default('user').notNull(),
+    image: varchar('image'),
 
     //Track the exact moment their 2-month access expires
     subscriptionEndsAt: timestamp('subscription_ends_at'),
