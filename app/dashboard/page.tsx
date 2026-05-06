@@ -37,14 +37,14 @@ const RECOMMENDED = [
   { id: 4, title: "Nova Co-Working", loc: "Innovation Qtr", price: "৳350/mo", type: "Office", image: OFFICE_IMG },
 ];
 
-export default function UserDashboardPage() {
+export default function UserDashboardPage({ user }: { user: any }) {
   return (
     <div className="space-y-10">
       {/* Welcome Header */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-1">
           <p className="text-[11px] font-bold tracking-[0.15em] text-blue-600 dark:text-blue-400 uppercase">Dashboard Overview</p>
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white tracking-tight">Welcome back, Sarah!</h1>
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white tracking-tight">Welcome back, {user?.name || "User"}!</h1>
           <p className="text-gray-500 dark:text-gray-400 text-base">Here's a summary of your property activity this week.</p>
         </div>
         <div className="flex items-center gap-2 text-xs font-bold text-gray-400 dark:text-gray-500 bg-white dark:bg-slate-800 px-4 py-2 rounded-lg border border-gray-100 dark:border-white/5">

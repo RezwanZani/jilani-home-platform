@@ -1,5 +1,6 @@
 'use client';
 
+import { useUser } from "@/components/providers/UserProvider";
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -30,15 +31,17 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
+  const user = useUser();
+
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admindashboard");
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const userLinks = [
-    { name: "Overview", path: "/userdashboard", icon: Home },
-    { name: "Explore", path: "/userdashboard/explore", icon: Compass },
-    { name: "Your Listings", path: "/userdashboard/saved", icon: Heart },
-    { name: "Settings", path: "/userdashboard/settings", icon: Settings },
+    { name: "Overview", path: "/dashboard", icon: Home },
+    { name: "Explore", path: "/dashboard/explore", icon: Compass },
+    { name: "Your Listings", path: "/dashboard/saved", icon: Heart },
+    { name: "Settings", path: "/dashboard/settings", icon: Settings },
   ];
 
   const adminLinks = [
@@ -51,7 +54,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   ];
 
   const links = isAdmin ? adminLinks : userLinks;
-  
+
   // Site's primary brand color
   const brandBlue = "#3B82F6";
   const brandGradient = "from-[#3B82F6] to-[#60A5FA]";
@@ -83,8 +86,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </p>
         {links.map((link) => {
           const Icon = link.icon;
-          const isActive = pathname === link.path || (link.path !== "/userdashboard" && link.path !== "/admindashboard" && pathname.startsWith(link.path));
-          
+          const isActive = pathname === link.path || (link.path !== "/dashboard" && link.path !== "/admindashboard" && pathname.startsWith(link.path));
           return (
             <Link
               key={link.name}
@@ -98,7 +100,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               )}
             >
               {isActive && (
-                <motion.div 
+                <motion.div
                   layoutId="activeNav"
                   className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-white rounded-full"
                 />
@@ -121,19 +123,19 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="overflow-hidden flex-1 min-w-0">
             <div className="flex items-center gap-1.5">
               <p className="font-bold text-sm text-gray-900 dark:text-white truncate">
-                {isAdmin ? "Administrator" : "Sarah Jenkins"}
+                {user?.name}
               </p>
               {!isAdmin && (
                 <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full flex-shrink-0" />
               )}
             </div>
             <p className="text-[11px] font-medium text-gray-500 truncate">
-              {isAdmin ? "admin@jilanihome.com" : "Premium Member"}
+              {user?.email || "Premium Member"}
             </p>
           </div>
         </div>
         <Link
-          href="/"
+          href="/logout"
           className="flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors text-sm font-bold"
         >
           <LogOut className="w-4.5 h-4.5" />
@@ -145,7 +147,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="h-screen bg-[#F8FAFC] dark:bg-[#0F172A] text-gray-900 dark:text-slate-100 flex font-sans overflow-hidden">
-      
+
       {/* Sidebar Overlay */}
       <AnimatePresence>
         {mobileOpen && (
@@ -182,9 +184,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </button>
             <div className="hidden sm:flex items-center gap-3 px-5 py-2.5 rounded-full bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-500 text-sm w-80 group focus-within:border-blue-500/50 transition-all">
               <Search className="w-4.5 h-4.5 flex-shrink-0 group-focus-within:text-blue-500" />
-              <input 
-                type="text" 
-                placeholder="Search properties, users, etc..." 
+              <input
+                type="text"
+                placeholder="Search properties, users, etc..."
                 className="bg-transparent border-none outline-none w-full placeholder:text-gray-400 font-medium"
               />
             </div>
@@ -197,8 +199,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </button>
             <div className="flex items-center gap-3 pl-2 border-l border-gray-200 dark:border-white/10">
               <div className="text-right hidden sm:block">
-                <p className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">{isAdmin ? "Admin" : "Sarah Jenkins"}</p>
-                <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-tighter">{isAdmin ? "System Superuser" : "Premium Member"}</p>
+                <p className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">{user?.name}</p>
+                <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-tighter">{user?.email}</p>
               </div>
               <img
                 src={USER_AVATAR}

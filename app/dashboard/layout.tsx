@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
+import { UserProvider } from "@/components/providers/UserProvider";
 
 export default async function UserDashboardLayout({
   children,
@@ -32,5 +33,9 @@ export default async function UserDashboardLayout({
     redirect("/onboarding");
   }
 
-  return <DashboardLayout>{children}</DashboardLayout>;
+  return (
+    <UserProvider user={dbUser}>
+      <DashboardLayout>{children}</DashboardLayout>
+    </UserProvider>
+  );
 }

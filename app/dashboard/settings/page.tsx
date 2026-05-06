@@ -1,5 +1,6 @@
 'use client';
 
+import { useUser } from "@/components/providers/UserProvider";
 import React, { useState } from "react";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { motion, AnimatePresence } from "framer-motion";
@@ -46,6 +47,7 @@ const Toggle = ({ defaultChecked = false }: { defaultChecked?: boolean }) => {
 };
 
 export default function UserSettingsPage() {
+  const user = useUser();
   const [active, setActive] = useState<Section>("profile");
   const [saved, setSaved] = useState(false);
 
@@ -104,11 +106,11 @@ export default function UserSettingsPage() {
                       </button>
                     </div>
                     <div className="min-w-0 text-center sm:text-left space-y-1">
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">Sarah Jenkins</h3>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">{user?.name}</h3>
                       <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Profile photo will be visible to hosts.</p>
                       <div className="flex flex-wrap items-center justify-center gap-4 mt-4 sm:justify-start">
-                         <button className="text-xs font-bold text-blue-600 hover:underline uppercase tracking-widest">Upload New</button>
-                         <button className="text-xs font-bold text-red-500 hover:underline uppercase tracking-widest">Remove</button>
+                        <button className="text-xs font-bold text-blue-600 hover:underline uppercase tracking-widest">Upload New</button>
+                        <button className="text-xs font-bold text-red-500 hover:underline uppercase tracking-widest">Remove</button>
                       </div>
                     </div>
                   </div>
@@ -116,18 +118,18 @@ export default function UserSettingsPage() {
                   {/* Form Grid */}
                   <div className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
                     {[
-                      { label: "First Name", value: "Sarah", icon: User },
-                      { label: "Last Name", value: "Jenkins", icon: User },
-                      { label: "Email Address", value: "sarah.j@example.com", icon: Mail },
-                      { label: "Phone Number", value: "+1 (555) 234-5678", icon: Phone },
+                      { label: "First Name", value: user?.name?.split(" ")[0] || "", icon: User },
+                      { label: "Last Name", value: user?.name?.split(" ")[1] || "", icon: User },
+                      { label: "Email Address", value: user?.email || "", icon: Mail },
+                      { label: "Phone Number", value: user?.phoneNumber || "", icon: Phone },
                     ].map((field) => (
                       <div key={field.label} className="min-w-0 space-y-2.5">
                         <label className="block text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest px-1">
                           {field.label}
                         </label>
                         <div className="relative group">
-                           <field.icon className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
-                           <input
+                          <field.icon className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                          <input
                             defaultValue={field.value}
                             className="w-full min-w-0 truncate pl-12 pr-4 py-3.5 rounded-2xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5 text-gray-900 dark:text-white text-sm font-bold outline-none focus:border-blue-500/50 transition-all placeholder:text-gray-400"
                           />
@@ -145,12 +147,12 @@ export default function UserSettingsPage() {
                     />
                   </div>
                 </GlassCard>
-                
+
                 <div className="flex justify-end pt-4">
-                  <button 
-                    onClick={handleSave} 
+                  <button
+                    onClick={handleSave}
                     className={cn(
-                      "flex w-full items-center justify-center gap-3 rounded-2xl px-6 py-4 text-sm font-bold transition-all shadow-2xl active:scale-95 sm:w-auto sm:px-10", 
+                      "flex w-full items-center justify-center gap-3 rounded-2xl px-6 py-4 text-sm font-bold transition-all shadow-2xl active:scale-95 sm:w-auto sm:px-10",
                       saved ? "bg-emerald-500 text-white shadow-emerald-500/20" : "bg-blue-600 text-white shadow-blue-600/25 hover:bg-blue-700"
                     )}
                   >
@@ -164,8 +166,8 @@ export default function UserSettingsPage() {
               <motion.div key="security" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} className="min-w-0 space-y-6">
                 <GlassCard className="min-w-0 p-6 sm:p-8 space-y-8 bg-white dark:bg-slate-800 border-gray-100 dark:border-white/5 shadow-sm">
                   <div className="flex items-center gap-3 mb-4">
-                     <Lock className="w-6 h-6 text-blue-600" />
-                     <h3 className="font-bold text-gray-900 dark:text-white text-xl">Change Password</h3>
+                    <Lock className="w-6 h-6 text-blue-600" />
+                    <h3 className="font-bold text-gray-900 dark:text-white text-xl">Change Password</h3>
                   </div>
                   <div className="space-y-6 max-w-xl">
                     {["Current Password", "New Password", "Confirm New Password"].map((label) => (
@@ -177,20 +179,20 @@ export default function UserSettingsPage() {
                     <button className="px-8 py-4 rounded-2xl bg-blue-600 text-white text-sm font-bold shadow-lg shadow-blue-600/25 hover:bg-blue-700 transition-all active:scale-95">Update Password</button>
                   </div>
                 </GlassCard>
-                
+
                 <GlassCard className="min-w-0 p-6 sm:p-8 bg-white dark:bg-slate-800 border-gray-100 dark:border-white/5 shadow-sm">
-                   <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-                      <div className="flex items-center gap-5">
-                         <div className="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                            <Shield className="w-8 h-8 text-blue-600" />
-                         </div>
-                         <div>
-                            <h4 className="font-bold text-gray-900 dark:text-white text-lg">Two-Factor Authentication</h4>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 font-medium mt-1">Add an extra layer of security to your account.</p>
-                         </div>
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+                    <div className="flex items-center gap-5">
+                      <div className="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                        <Shield className="w-8 h-8 text-blue-600" />
                       </div>
-                      <button className="w-full sm:w-auto px-6 py-3 rounded-xl bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-wider hover:bg-blue-600 hover:text-white transition-all">Enable 2FA</button>
-                   </div>
+                      <div>
+                        <h4 className="font-bold text-gray-900 dark:text-white text-lg">Two-Factor Authentication</h4>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 font-medium mt-1">Add an extra layer of security to your account.</p>
+                      </div>
+                    </div>
+                    <button className="w-full sm:w-auto px-6 py-3 rounded-xl bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-wider hover:bg-blue-600 hover:text-white transition-all">Enable 2FA</button>
+                  </div>
                 </GlassCard>
               </motion.div>
             )}
@@ -198,13 +200,13 @@ export default function UserSettingsPage() {
             {active === "notifications" && (
               <motion.div key="notifications" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}>
                 <GlassCard className="min-w-0 p-0 bg-white dark:bg-slate-800 border-gray-100 dark:border-white/5 shadow-sm overflow-hidden">
-                   <div className="p-8 border-b border-gray-50 dark:border-white/5">
-                      <h3 className="font-bold text-gray-900 dark:text-white text-xl flex items-center gap-3">
-                         <Bell className="w-6 h-6 text-blue-600" />
-                         Email & Push Notifications
-                      </h3>
-                   </div>
-                   <div className="divide-y divide-gray-50 dark:divide-white/5">
+                  <div className="p-8 border-b border-gray-50 dark:border-white/5">
+                    <h3 className="font-bold text-gray-900 dark:text-white text-xl flex items-center gap-3">
+                      <Bell className="w-6 h-6 text-blue-600" />
+                      Email & Push Notifications
+                    </h3>
+                  </div>
+                  <div className="divide-y divide-gray-50 dark:divide-white/5">
                     {[
                       { label: "New Listings", desc: "Alert when properties matching your criteria are listed", defaultChecked: true },
                       { label: "Host Messages", desc: "When a host responds to your inquiry or schedules a viewing", defaultChecked: true },
@@ -234,22 +236,22 @@ export default function UserSettingsPage() {
                     <h3 className="text-4xl font-bold mt-2">Premium Plan</h3>
                     <p className="text-slate-400 mt-4 text-base font-medium max-w-md">Your account is fully verified. You have unlimited access to direct owner contacts, priority support, and verified property insights.</p>
                     <div className="mt-10 flex flex-wrap gap-4">
-                       <button className="px-8 py-4 rounded-2xl bg-white/10 backdrop-blur-md text-white font-bold text-sm border border-white/10 hover:bg-white/20 transition-all">Manage Billing</button>
-                       <button className="px-8 py-4 rounded-2xl bg-white/10 backdrop-blur-md text-white font-bold text-sm border border-white/10 hover:bg-white/20 transition-all">Download Invoices</button>
+                      <button className="px-8 py-4 rounded-2xl bg-white/10 backdrop-blur-md text-white font-bold text-sm border border-white/10 hover:bg-white/20 transition-all">Manage Billing</button>
+                      <button className="px-8 py-4 rounded-2xl bg-white/10 backdrop-blur-md text-white font-bold text-sm border border-white/10 hover:bg-white/20 transition-all">Download Invoices</button>
                     </div>
                   </div>
                 </GlassCard>
 
                 <GlassCard className="min-w-0 p-6 sm:p-8 bg-white dark:bg-slate-800 border-gray-100 dark:border-white/5 shadow-sm">
-                   <h4 className="font-bold text-gray-900 dark:text-white text-lg mb-8 flex items-center gap-3">
-                      <Trash2 className="w-5 h-5 text-red-500" />
-                      Danger Zone
-                   </h4>
-                   <div className="p-6 rounded-2xl bg-red-50 dark:bg-red-500/5 border border-red-100 dark:border-red-500/20">
-                      <p className="text-sm font-bold text-red-900 dark:text-red-300">Delete Account Permanently</p>
-                      <p className="text-xs text-red-700 dark:text-red-400/70 mt-1 font-medium leading-relaxed">Once deleted, all your saved listings, messages, and account history will be removed from our servers. This action is not reversible.</p>
-                      <button className="mt-6 px-6 py-3 rounded-xl bg-red-500 text-white text-[11px] font-bold uppercase tracking-widest shadow-lg shadow-red-500/20 hover:bg-red-600 transition-all active:scale-95">Delete My Account</button>
-                   </div>
+                  <h4 className="font-bold text-gray-900 dark:text-white text-lg mb-8 flex items-center gap-3">
+                    <Trash2 className="w-5 h-5 text-red-500" />
+                    Danger Zone
+                  </h4>
+                  <div className="p-6 rounded-2xl bg-red-50 dark:bg-red-500/5 border border-red-100 dark:border-red-500/20">
+                    <p className="text-sm font-bold text-red-900 dark:text-red-300">Delete Account Permanently</p>
+                    <p className="text-xs text-red-700 dark:text-red-400/70 mt-1 font-medium leading-relaxed">Once deleted, all your saved listings, messages, and account history will be removed from our servers. This action is not reversible.</p>
+                    <button className="mt-6 px-6 py-3 rounded-xl bg-red-500 text-white text-[11px] font-bold uppercase tracking-widest shadow-lg shadow-red-500/20 hover:bg-red-600 transition-all active:scale-95">Delete My Account</button>
+                  </div>
                 </GlassCard>
               </motion.div>
             )}
