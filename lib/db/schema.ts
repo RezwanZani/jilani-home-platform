@@ -108,23 +108,24 @@ export const propertyLocationsPrivate = pgTable('property_locations_private', {
     propertyId: uuid('property_id').references(() => properties.id, { onDelete: 'cascade' }).primaryKey(),
 
     // Specific Identifier (e.g., "House 12", "Flat 4B", "Kazi Villa")
-    houseOrBuilding: varchar('house_or_building'),
-    houseOrBuilding_bn: varchar('house_or_building_bn'),
+    house: varchar('house'),
+    house_bn: varchar('house_bn'),
 
     // Routing (e.g., "Road 5", "Village Rahimpur")
-    roadOrVillage: varchar('road_or_village'),
-    roadOrVillage_bn: varchar('road_or_village_bn'),
+    road: varchar('road'),
+    road_bn: varchar('road_bn'),
 
     // Subdivision (e.g., "Block C", "Sector 10")
-    blockOrSector: varchar('block_or_sector'),
-    blockOrSector_bn: varchar('block_or_sector_bn'),
+    block: varchar('block'),
+    block_bn: varchar('block_bn'),
 
     // Cultural/Visual Identification (e.g., "Beside Boro Masjid")
     landmark: text('landmark'),
     landmark_bn: text('landmark_bn'),
 
     // Optional: Keep a full concatenated string just in case you need it for SMS/Email APIs easily
-    fullExactAddress: text('full_exact_address').notNull(),
+    additionalLine: text('additional_line'),
+    additionalLine_bn: text('additional_line_bn'),
 });
 
 // ==========================================
