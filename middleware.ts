@@ -5,67 +5,54 @@ export default auth((req) => {
     const isLoggedIn = !!req.auth;
     const user = req.auth?.user;
 
-    // Extract both phone number and role from the JWT
     const hasPhoneNumber = !!user?.phoneNumber;
-    const role = user?.role as "admin" | "owner" | "user" | undefined;
+    const role = user?.role; // Should now correctly be "admin" or "user"
 
     const path = req.nextUrl.pathname;
     const isOnboardingPage = path === "/onboarding";
     const isAuthPage = path === "/login" || path === "/signup";
 
-    // Group your protected routes
-    const isDashboardRoute = path.startsWith("/admin") || path.startsWith("/owner") || path.startsWith("/user");
+    // Define the routes you want to lock behind authentication
+    const isProtectedRoute = path.startsWith("/dashboard") || path.startsWith("/admin");
 
-    // 1. Not logged in -> Protect Dashboards & Onboarding, but let them see public pages (like /properties)
+    // 1. Not Logged In -> Keep away from protected areas
     if (!isLoggedIn) {
-        if (isDashboardRoute || isOnboardingPage) {
+        if (isProtectedRoute || isOnboardingPage) {
             return NextResponse.redirect(new URL("/login", req.nextUrl));
         }
-        return NextResponse.next(); // Allow access to public homepage and listings
+        return NextResponse.next();
     }
 
     // --- FROM HERE DOWN, THE USER IS LOGGED IN ---
 
-    // Define their correct default dashboard based on their role
-    const defaultDashboard = role === "admin" ? "/admin"
-        : role === "owner" ? "/owner"
-            : "/user";
+    // Define where they should land after logging in
+    const defaultLandingPage = role === "admin" ? "/admin" : "/dashboard";
 
-    // 2. Keep logged-in users away from Auth Pages
+    // 2. Keep away from Auth pages
     if (isAuthPage) {
-        return NextResponse.redirect(new URL(defaultDashboard, req.nextUrl));
+        return NextResponse.redirect(new URL(defaultLandingPage, req.nextUrl));
     }
 
-    // 3. 🚨 THE ONBOARDING SHIELDS
-    // Shield A: If they DON'T have a phone number, force them to onboarding (keep them out of dashboards)
+    // 3. Onboarding Shields
     if (!hasPhoneNumber && !isOnboardingPage) {
         return NextResponse.redirect(new URL("/onboarding", req.nextUrl));
     }
-    // Shield B: If they DO have a phone number, keep them away from onboarding
     if (hasPhoneNumber && isOnboardingPage) {
-        return NextResponse.redirect(new URL(defaultDashboard, req.nextUrl));
+        return NextResponse.redirect(new URL(defaultLandingPage, req.nextUrl));
     }
 
-    // 4. 🛡️ THE RBAC SHIELDS (Role-Based Access Control)
-    // Protect Admin routes
+    // 4. RBAC Shields (Admins can see everything, Users cannot see Admin)
     if (path.startsWith("/admin") && role !== "admin") {
-        return NextResponse.redirect(new URL(defaultDashboard, req.nextUrl));
+        // Kick normal users out of the admin panel
+        return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
     }
 
-    // Protect Owner routes (Allow admins to see owner routes for support purposes)
-    if (path.startsWith("/owner") && role !== "owner" && role !== "admin") {
-        return NextResponse.redirect(new URL(defaultDashboard, req.nextUrl));
-    }
-
-    // Optional: Keep Admins out of standard user dashboards to avoid confusion
-    if (path.startsWith("/user") && role === "admin") {
-        return NextResponse.redirect(new URL("/admin", req.nextUrl));
-    }
+    // Notice: There is no block stopping Admins from visiting /dashboard here!
+    // If an admin navigates to /dashboard, NextResponse.next() allows it.
 
     return NextResponse.next();
 });
 
 export const config = {
-    // The matcher runs on every route EXCEPT api, static files, and images
     matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

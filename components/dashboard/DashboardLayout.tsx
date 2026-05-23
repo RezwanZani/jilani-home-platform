@@ -31,7 +31,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const user = useUser();
 
   const pathname = usePathname();
-  const isAdmin = pathname.startsWith("/admindashboard");
+  const isAdmin = pathname.startsWith("/admin");
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const userLinks = [
@@ -42,12 +42,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   ];
 
   const adminLinks = [
-    { name: "Dashboard", path: "/admindashboard", icon: LayoutDashboard },
-    { name: "Properties", path: "/admindashboard/properties", icon: Building2 },
-    { name: "Users", path: "/admindashboard/users", icon: Users },
-    { name: "Analytics", path: "/admindashboard/analytics", icon: BarChart3 },
-    { name: "Verification", path: "/admindashboard/verification", icon: CheckCircle },
-    { name: "Settings", path: "/admindashboard/settings", icon: Settings },
+    { name: "Dashboard", path: "/admin", icon: LayoutDashboard },
+    { name: "Properties", path: "/admin/properties", icon: Building2 },
+    { name: "Users", path: "/admin/users", icon: Users },
+    { name: "Analytics", path: "/admin/analytics", icon: BarChart3 },
+    { name: "Verification", path: "/admin/verification", icon: CheckCircle },
+    { name: "Settings", path: "/admin/settings", icon: Settings },
   ];
 
   const links = isAdmin ? adminLinks : userLinks;

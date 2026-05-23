@@ -12,6 +12,7 @@ const LOGIN_IMAGE = "https://images.unsplash.com/photo-1770992161088-7ad66282c9a
 
 export default function Login() {
   const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,10 +23,6 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     setError("");
-
-    const formData = new FormData(e.currentTarget);
-    const identifier = formData.get("identifier") as string;
-    const password = formData.get("password") as string;
 
     // Call Auth.js credentials provider
     const result = await signIn("password-login", {
@@ -91,12 +88,19 @@ export default function Login() {
           </h1>
           <p className="text-[#6B7280] mb-8 text-sm">Sign in to your account to continue</p>
 
+          {error && (
+            <div className="p-3 mb-4 text-red-700 bg-red-100 border border-red-400 rounded">
+              {error}
+            </div>
+          )}
+
           {/* Form */}
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-1.5">
               <label className="text-sm font-medium text-[#9CA3AF]">Email Address</label>
               <input
                 value={identifier}
+                name='identifier'
                 onChange={(e) => setIdentifier(e.target.value)}
                 placeholder="Email or Phone Number"
                 className="w-full bg-[#1A1A1A] border border-white/[0.08] rounded-xl py-3 px-4 text-white placeholder-[#4B5563] text-sm focus:outline-none focus:ring-1 focus:ring-[#3B82F6]/60 focus:border-[#3B82F6]/50 transition-all"
@@ -114,6 +118,9 @@ export default function Login() {
                 <input
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
+                  value={password}
+                  name='password'
+                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full bg-[#1A1A1A] border border-white/[0.08] rounded-xl py-3 px-4 pr-11 text-white placeholder-[#4B5563] text-sm focus:outline-none focus:ring-1 focus:ring-[#3B82F6]/60 focus:border-[#3B82F6]/50 transition-all"
                 />
                 <button

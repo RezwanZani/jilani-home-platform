@@ -177,21 +177,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             // 'account' and 'user' are ONLY present on the very first login request
             if (account && user) {
                 if (account.provider === "google") {
-                    // BUG FIX: Force the token to use the Database UUID, not the Google ID
+                    // Force the token to use the Database UUID, not the Google ID
                     const [dbUser] = await db
                         .select()
                         .from(users)
                         .where(eq(users.email, user.email as string));
 
                     if (dbUser) {
-                        token.id = dbUser.id; // Assign Postgres UUID
+                        token.id = dbUser.id;
                         token.phoneNumber = dbUser.phoneNumber;
-                        token.role = user.role;
+                        // FIX: Use dbUser.role, NOT user.role (Google doesn't provide a role)
+                        token.role = dbUser.role;
                     }
                 } else {
                     // For Credentials provider (Email/Phone + Password)
                     token.id = user.id;
                     token.phoneNumber = user.phoneNumber;
+                    // For credentials, 'user' comes from our authorize() function, so user.role exists
                     token.role = user.role;
                 }
             }
