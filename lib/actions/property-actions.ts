@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { properties, propertyImages, users, ownerContacts } from "@/lib/db/schema";
+import { properties, propertyImages, users, ownerContacts, propertyLocationsPrivate } from "@/lib/db/schema";
 import { eq } from "drizzle-orm"; // 🚨 Make sure to import this!
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
@@ -64,7 +64,22 @@ export async function createProperty(data: any) {
                 coverImage: data.coverImage,
             }).returning({ id: properties.id });
 
-            // C. Insert Gallery Images
+            // ==========================================
+            // C. INSERT PRIVATE ADDRESS (PAYWALL DATA)
+            // ==========================================
+            await tx.insert(propertyLocationsPrivate).values({
+                propertyId: newProp.id, // Links directly to the property we just created
+                house: data.privateAddress.house || null,
+                house_bn: data.privateAddress.house_bn || null,
+                road: data.privateAddress.road || null,
+                road_bn: data.privateAddress.road_bn || null,
+                block: data.privateAddress.block || null,
+                block_bn: data.privateAddress.block_bn || null,
+                landmark: data.privateAddress.landmark || null,
+                landmark_bn: data.privateAddress.landmark_bn || null,
+            });
+
+            // D. Insert Gallery Images
             if (data.galleryUrls && data.galleryUrls.length > 0) {
                 const imageInsertData = data.galleryUrls.map((url: string) => ({
                     propertyId: newProp.id,

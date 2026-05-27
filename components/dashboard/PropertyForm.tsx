@@ -285,6 +285,13 @@ export default function PropertyForm({ isOpen, onClose, onSuccess }: PropertyFor
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false); // To show loading state during submit
 
+  const [privateAddress, setPrivateAddress] = useState({
+    house: "", house_bn: "",
+    road: "", road_bn: "",
+    block: "", block_bn: "",
+    landmark: "", landmark_bn: ""
+  });
+
   const [ownerMode, setOwnerMode] = useState<"existing" | "new">("existing");
   const [newOwner, setNewOwner] = useState({
     name: "",
@@ -465,6 +472,7 @@ export default function PropertyForm({ isOpen, onClose, onSuccess }: PropertyFor
         // Pass the new ownership data so the backend can process it!
         ownerMode: ownerMode,
         newOwner: newOwner,
+        privateAddress: privateAddress,
       };
 
       const dbResult = await createProperty(finalPropertyData);
@@ -816,6 +824,60 @@ export default function PropertyForm({ isOpen, onClose, onSuccess }: PropertyFor
                       >
                         <Plus className="w-4 h-4 text-gray-600 dark:text-gray-300" />
                       </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Exact Location (Private / Paywall Locked) */}
+                <div className="space-y-4 md:col-span-3 p-5 rounded-3xl bg-red-500/5 dark:bg-red-500/10 border border-red-500/10">
+                  <div className="flex items-center gap-2">
+                    <div className="p-1 rounded bg-red-500 text-white">
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                    </div>
+                    <h4 className="text-xs font-bold uppercase text-red-600 dark:text-red-400 tracking-wider">
+                      Exact Address (Hidden behind Paywall)
+                    </h4>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* House / Flat */}
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-bold text-gray-500 uppercase">House/Flat (EN)</Label>
+                      <Input value={privateAddress.house} onChange={(e) => setPrivateAddress(prev => ({ ...prev, house: e.target.value }))} placeholder="e.g. Flat 4B, Kazi Villa" className="h-10 rounded-xl" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-bold text-gray-500 uppercase">House/Flat (BN)</Label>
+                      <Input value={privateAddress.house_bn} onChange={(e) => setPrivateAddress(prev => ({ ...prev, house_bn: e.target.value }))} placeholder="উদা: ফ্ল্যাট ৪বি, কাজী ভিলা" className="h-10 rounded-xl" />
+                    </div>
+
+                    {/* Road */}
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-bold text-gray-500 uppercase">Road (EN)</Label>
+                      <Input value={privateAddress.road} onChange={(e) => setPrivateAddress(prev => ({ ...prev, road: e.target.value }))} placeholder="e.g. Road 5" className="h-10 rounded-xl" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-bold text-gray-500 uppercase">Road (BN)</Label>
+                      <Input value={privateAddress.road_bn} onChange={(e) => setPrivateAddress(prev => ({ ...prev, road_bn: e.target.value }))} placeholder="উদা: রোড ৫" className="h-10 rounded-xl" />
+                    </div>
+
+                    {/* Block / Sector */}
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-bold text-gray-500 uppercase">Block/Sector (EN)</Label>
+                      <Input value={privateAddress.block} onChange={(e) => setPrivateAddress(prev => ({ ...prev, block: e.target.value }))} placeholder="e.g. Block C" className="h-10 rounded-xl" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-bold text-gray-500 uppercase">Block/Sector (BN)</Label>
+                      <Input value={privateAddress.block_bn} onChange={(e) => setPrivateAddress(prev => ({ ...prev, block_bn: e.target.value }))} placeholder="উদা: ব্লক সি" className="h-10 rounded-xl" />
+                    </div>
+
+                    {/* Landmark */}
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-bold text-gray-500 uppercase">Landmark (EN)</Label>
+                      <Input value={privateAddress.landmark} onChange={(e) => setPrivateAddress(prev => ({ ...prev, landmark: e.target.value }))} placeholder="e.g. Beside Boro Masjid" className="h-10 rounded-xl" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-bold text-gray-500 uppercase">Landmark (BN)</Label>
+                      <Input value={privateAddress.landmark_bn} onChange={(e) => setPrivateAddress(prev => ({ ...prev, landmark_bn: e.target.value }))} placeholder="উদা: বড় মসজিদের পাশে" className="h-10 rounded-xl" />
                     </div>
                   </div>
                 </div>
