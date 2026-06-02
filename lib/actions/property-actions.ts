@@ -88,6 +88,8 @@ export async function createProperty(data: any) {
                 block_bn: data.privateAddress.block_bn || null,
                 landmark: data.privateAddress.landmark || null,
                 landmark_bn: data.privateAddress.landmark_bn || null,
+                additionalLine: data.privateAddress.additionalLine || null,
+                additionalLine_bn: data.privateAddress.additionalLine_bn || null,
             });
 
             // D. Insert Gallery Images
@@ -202,6 +204,8 @@ export async function updateProperty(propertyId: string, data: any) {
                     block_bn: data.privateAddress?.block_bn || null,
                     landmark: data.privateAddress?.landmark || null,
                     landmark_bn: data.privateAddress?.landmark_bn || null,
+                    additionalLine: data.privateAddress?.additionalLine || null,
+                    additionalLine_bn: data.privateAddress?.additionalLine_bn || null,
                 }
             });
 
@@ -437,28 +441,58 @@ export async function bulkProcessProperties(rows: any[]) {
             }
 
             // --- 3. INSERT PROPERTY ---
-            if (!row['Title (EN)'] || !row['Type'] || row['Price'] === undefined || row['Price'] === null || row['Rooms'] === undefined || row['Rooms'] === null || row['Rooms'] === "") {
-                throw new Error("Missing required property fields (Title, Type, Price, Rooms).");
+            // Validate ENUMS to prevent database crashes
+            const validTypes = ['house', 'office', 'hall', 'apartment', 'studio', 'penthouse', 'villa', 'commercial'];
+            const pTypeRaw = row['Type'] ? String(row['Type']).toLowerCase() : '';
+            if (!validTypes.includes(pTypeRaw)) {
+                throw new Error(`Invalid Property Type: "${row['Type']}". Must be one of: ${validTypes.join(', ')}`);
             }
 
-            const baseSlug = row['Title (EN)'].toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+            const validPriceTypes = ['hour', 'month', 'day', 'year', 'event', 'one-time'];
+            let pPriceType = row['Price Type'] ? String(row['Price Type']).toLowerCase() : 'month';
+            if (!validPriceTypes.includes(pPriceType)) pPriceType = 'month';
+
+            const baseSlug = String(row['Title (EN)']).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
             const uniqueSlug = `${baseSlug}-${crypto.randomUUID().slice(0, 8)}`;
 
             await db.insert(properties).values({
                 zoneId: finalZoneId,
                 ownerId: finalOwnerId,
                 title: row['Title (EN)'],
-                title_bn: row['Title (BN)'] || null,
+                title_bn: row['Title (BN)'] ? String(row['Title (BN)']) : null,
                 slug: uniqueSlug,
-                description: row['Description (EN)'] || null,
-                description_bn: row['Description (BN)'] || null,
-                type: row['Type'].toLowerCase(), // 'house', 'office', 'hall'
-                price: row['Price'].toString(),
-                priceType: row['Price Type'] ? row['Price Type'].toLowerCase() : 'month',
+                description: row['Description (EN)'] ? String(row['Description (EN)']) : null,
+                description_bn: row['Description (BN)'] ? String(row['Description (BN)']) : null,
+                type: pTypeRaw as any,
+                price: String(row['Price']),
+                priceType: pPriceType as any,
                 sizeSqft: row['Size (Sqft)'] ? Number(row['Size (Sqft)']) : null,
                 roomCount: Number(row['Rooms']),
                 status: 'pending', // Default
             });
+
+            // Retrieve the property we just inserted to get its ID
+            const insertedProp = await db.select({ id: properties.id }).from(properties).where(eq(properties.slug, uniqueSlug)).limit(1);
+            if (insertedProp.length > 0) {
+                // Check if any private address field is provided
+                const hasPrivateAddress = row['House/Flat (EN)'] || row['House/Flat (BN)'] || row['Road (EN)'] || row['Road (BN)'] || row['Block (EN)'] || row['Block (BN)'] || row['Landmark (EN)'] || row['Landmark (BN)'] || row['Additional Line (EN)'] || row['Additional Line (BN)'];
+
+                if (hasPrivateAddress) {
+                    await db.insert(propertyLocationsPrivate).values({
+                        propertyId: insertedProp[0].id,
+                        house: row['House/Flat (EN)'] ? String(row['House/Flat (EN)']) : null,
+                        house_bn: row['House/Flat (BN)'] ? String(row['House/Flat (BN)']) : null,
+                        road: row['Road (EN)'] ? String(row['Road (EN)']) : null,
+                        road_bn: row['Road (BN)'] ? String(row['Road (BN)']) : null,
+                        block: row['Block (EN)'] ? String(row['Block (EN)']) : null,
+                        block_bn: row['Block (BN)'] ? String(row['Block (BN)']) : null,
+                        landmark: row['Landmark (EN)'] ? String(row['Landmark (EN)']) : null,
+                        landmark_bn: row['Landmark (BN)'] ? String(row['Landmark (BN)']) : null,
+                        additionalLine: row['Additional Line (EN)'] ? String(row['Additional Line (EN)']) : null,
+                        additionalLine_bn: row['Additional Line (BN)'] ? String(row['Additional Line (BN)']) : null,
+                    });
+                }
+            }
 
             resultRow.Status = "Succeed";
             resultRow.Remark = "Added successfully";

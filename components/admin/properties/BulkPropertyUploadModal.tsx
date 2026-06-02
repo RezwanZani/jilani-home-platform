@@ -26,7 +26,17 @@ const TEMPLATE_DATA = [{
     "Owner ID": "",
     "Owner Name (EN)": "John Doe",
     "Owner Phone": "01700000000",
-    "Owner WhatsApp": "01700000000"
+    "Owner WhatsApp": "01700000000",
+    "House/Flat (EN)": "House 12",
+    "House/Flat (BN)": "বাড়ি ১২",
+    "Road (EN)": "Road 5",
+    "Road (BN)": "রোড ৫",
+    "Block (EN)": "Block C",
+    "Block (BN)": "ব্লক সি",
+    "Landmark (EN)": "Beside Mosque",
+    "Landmark (BN)": "মসজিদের পাশে",
+    "Additional Line (EN)": "",
+    "Additional Line (BN)": ""
 }];
 
 export default function BulkPropertyUploadModal({ isOpen, onClose, onComplete }: any) {
@@ -86,7 +96,9 @@ export default function BulkPropertyUploadModal({ isOpen, onClose, onComplete }:
         setIsUploading(true);
         setError("");
 
-        const result = await bulkProcessProperties(fullData);
+        // Ensure plain object serialization for Server Action
+        const plainData = JSON.parse(JSON.stringify(fullData));
+        const result = await bulkProcessProperties(plainData);
 
         if (result.success) {
             setResultData(result.processedRows || []);
