@@ -14,11 +14,6 @@ export async function sendPhoneOTP(phoneNumber: string) {
             return { success: false, message: "Please provide a valid 11 digit phone number." };
         }
 
-        const session = await auth();
-        if (!session?.user?.id) {
-            return { success: false, message: "Unauthorized. Please log in first." };
-        }
-
         // 1. Generate a random 6-digit OTP code
         const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
 

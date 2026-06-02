@@ -44,6 +44,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
                 if (!user || !user.password) return null;
 
+                // 🚨 BLOCK DELETED USERS
+                if (user.deletedAt !== null) {
+                    throw new Error("This account has been deactivated or deleted.");
+                }
+
                 // Verify the hashed password
                 const isPasswordValid = await bcrypt.compare(
                     credentials.password as string,
@@ -98,6 +103,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                         .returning();
                 }
 
+                // 🚨 BLOCK DELETED USERS
+                if (user.deletedAt !== null) {
+                    throw new Error("This account has been deactivated or deleted.");
+                }
+
                 return user;
             },
         }),
@@ -145,6 +155,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                         .returning();
                 }
 
+                // 🚨 BLOCK DELETED USERS
+                if (user.deletedAt !== null) {
+                    throw new Error("This account has been deactivated or deleted.");
+                }
+
                 return user;
             },
         }),
@@ -160,7 +175,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                     .from(users)
                     .where(eq(users.email, user.email));
 
-                if (!existingUser) {
+                if (existingUser) {
+                    // 🚨 If the user exists AND has a deletedAt timestamp, block the login
+                    if (existingUser.deletedAt !== null) {
+                        return false; // Returning false immediately redirects them to an "Access Denied" error page
+                    }
+                } else {
                     await db.insert(users).values({
                         id: crypto.randomUUID(), // Creates the Postgres UUID
                         name: user.name || "Google User",
@@ -169,8 +189,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                     });
                 }
             }
+
             return true;
         },
+
 
         // 2. JWT SESSION BUILDER
         async jwt({ token, user, trigger, session, account }) {
