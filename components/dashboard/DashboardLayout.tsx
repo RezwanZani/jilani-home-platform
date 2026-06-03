@@ -23,6 +23,10 @@ import {
   Search,
   MapPinned,
   UserCheck,
+  DollarSign,
+  Ticket,
+  BadgeDollarSign,
+  Coins,
 } from "lucide-react";
 
 interface DashboardLayoutProps {
@@ -49,6 +53,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "Owners", path: "/admin/owners", icon: UserCheck },
     { name: "Zones", path: "/admin/zones", icon: MapPinned },
     { name: "Users", path: "/admin/users", icon: Users },
+    { name: "Packages", path: "/admin/packages", icon: Coins },
+    { name: "Transactions", path: "/admin/transactions", icon: BadgeDollarSign },
+    { name: "Promo Code", path: "/admin/promos", icon: Ticket },
     { name: "Analytics", path: "/admin/analytics", icon: BarChart3 },
     { name: "Verification", path: "/admin/verification", icon: CheckCircle },
     { name: "Settings", path: "/admin/settings", icon: Settings },

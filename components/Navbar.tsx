@@ -6,10 +6,14 @@ import Link from 'next/link';
 import { Menu, X, Sun, Moon } from 'lucide-react';
 import { ImageWithFallback } from '@/components/figma/ImageWithFallback';
 import { useTheme } from '@/providers/ThemeProvider';
+import { useUser } from '@/components/providers/UserProvider';
+import { useSession } from 'next-auth/react';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { theme, toggle } = useTheme();
+
+  const session = useSession();
 
   return (
     <motion.header
@@ -50,13 +54,21 @@ export default function Navbar() {
             >
               {theme === 'dark' ? <Sun className="w-4 h-4 sm:w-5 sm:h-5" /> : <Moon className="w-4 h-4 sm:w-5 sm:h-5" />}
             </button>
-            <Link href="/login" className="hidden md:flex items-center justify-center text-sm font-medium text-white/80 hover:text-white px-5 py-2 rounded-xl hover:bg-white/10 transition-all h-10 keep-white">
-              Login
-            </Link>
-            <Link href="/signup" className="bg-[#3B82F6] hover:bg-[#2563EB] text-white text-xs sm:text-sm font-medium px-3 sm:px-6 py-1.5 sm:py-2 rounded-lg sm:rounded-xl transition-all shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:shadow-[0_0_25px_rgba(59,130,246,0.5)] whitespace-nowrap h-8 sm:h-10 flex items-center justify-center keep-white">
-              Sign Up
-            </Link>
-            <button 
+            {!session?.data?.user && (
+              <>
+                <Link href="/login" className="hidden md:flex items-center justify-center text-sm font-medium text-white/80 hover:text-white px-5 py-2 rounded-xl hover:bg-white/10 transition-all h-10 keep-white">
+                  Login
+                </Link>
+                <Link href="/signup" className="bg-[#3B82F6] hover:bg-[#2563EB] text-white text-xs sm:text-sm font-medium px-3 sm:px-6 py-1.5 sm:py-2 rounded-lg sm:rounded-xl transition-all shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:shadow-[0_0_25px_rgba(59,130,246,0.5)] whitespace-nowrap h-8 sm:h-10 flex items-center justify-center keep-white">
+                  Sign Up
+                </Link>
+              </>
+            )}
+            {session?.data?.user && (
+              <Link href={session.data.user.role === "admin" ? "/admin" : "/dashboard"} className="bg-[#3B82F6] hover:bg-[#2563EB] text-white text-xs sm:text-sm font-medium px-3 sm:px-6 py-1.5 sm:py-2 rounded-lg sm:rounded-xl transition-all shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:shadow-[0_0_25px_rgba(59,130,246,0.5)] whitespace-nowrap h-8 sm:h-10 flex items-center justify-center keep-white">
+                Dashboard
+              </Link>)}
+            <button
               onClick={() => setIsOpen(!isOpen)}
               className="md:hidden flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 text-white/80 hover:text-white hover:bg-white/10 rounded-lg sm:rounded-xl transition-all keep-white"
             >
@@ -78,12 +90,12 @@ export default function Navbar() {
           >
             {/* Glossy Reflection Overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-white/20 dark:from-white/10 to-transparent pointer-events-none" />
-            
+
             <Link href="/listings" onClick={() => setIsOpen(false)} className="relative text-white hover:bg-white/10 px-6 py-4 rounded-2xl transition-all text-lg font-bold keep-white">Browse Spaces</Link>
             <a href="/#how-it-works" onClick={() => setIsOpen(false)} className="relative text-white bg-white/10 px-6 py-4 rounded-2xl transition-all text-lg font-bold keep-white">How It Works</a>
             <Link href="/pricing" onClick={() => setIsOpen(false)} className="relative text-white hover:bg-white/10 px-6 py-4 rounded-2xl transition-all text-lg font-bold keep-white">Pricing</Link>
             <div className="relative h-px w-full bg-white/10 dark:bg-white/5 my-2 mx-2" />
-            <Link href="/login" onClick={() => setIsOpen(false)} className="relative text-left text-white hover:bg-white/10 px-6 py-4 rounded-2xl transition-all text-lg font-bold keep-white">Login</Link>
+            {!session?.data?.user && (<Link href="/login" onClick={() => setIsOpen(false)} className="relative text-left text-white hover:bg-white/10 px-6 py-4 rounded-2xl transition-all text-lg font-bold keep-white">Login</Link>)}
           </motion.div>
         )}
       </AnimatePresence>
