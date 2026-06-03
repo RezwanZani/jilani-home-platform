@@ -11,9 +11,10 @@ import {
     pgEnum,
     unique,
     serial,
-    primaryKey
+    primaryKey,
+    check
 } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 
 // ==========================================
 // 1. ENUMS
@@ -98,6 +99,10 @@ export const properties = pgTable('properties', {
     roomCount: integer('room_count').notNull(),
     amenities: jsonb('amenities'),
     amenities_bn: jsonb('amenities_bn'),
+
+    // Review Data
+    averageRating: decimal('average_rating', { precision: 3, scale: 2 }).default('0.00').notNull(),
+    totalReviews: integer('total_reviews').default(0).notNull(),
 
     status: propertyStatusEnum('status').default('pending').notNull(),
     viewsCount: integer('views_count').default(0).notNull(),
@@ -279,3 +284,26 @@ export const sessions = pgTable("session", {
     userId: uuid("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
     expires: timestamp("expires", { mode: "date" }).notNull(),
 });
+
+//============================================
+//      PROPERTY REVIEW
+//============================================
+export const reviews = pgTable('property_reviews', {
+    id: uuid('id').defaultRandom().primaryKey(),
+    propertyId: uuid('property_id')
+        .references(() => properties.id, { onDelete: 'cascade' }).notNull(),
+    userId: uuid('user_id')
+        .references(() => users.id, { onDelete: 'cascade' }).notNull(),
+
+    rating: integer('rating').notNull(), // Star rating (1 to 5)
+    message: text('message'),            // Optional review text
+
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(),
+}, (table) => ({
+    // 🚨 1. The Magic Constraint: Ensures a user can only review a property ONCE
+    unq: unique().on(table.propertyId, table.userId),
+
+    // 🚨 2. Database-level validation: Ensures rating is strictly 1-5
+    ratingCheck: check('rating_check', sql`${table.rating} >= 1 AND ${table.rating} <= 5`)
+}));
