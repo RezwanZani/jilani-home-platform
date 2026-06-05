@@ -14,6 +14,7 @@ import {
     Refrigerator, Microwave, Tv, Flower
 } from 'lucide-react';
 import { Listing } from '@/types/listings';
+import SaveButton from './SaveButton';
 
 // Fixed keys to be strictly lowercase for robust matching
 const AMENITY_ICONS: Record<string, React.ReactNode> = {
@@ -135,6 +136,12 @@ export default function ListingCard({ listing, view }: { listing: Listing; view:
                             {propStyle.Icon()} {propStyle.text}
                         </span>
                     </div>
+                    <div className="absolute top-3 right-3 z-1000">
+                        <SaveButton
+                            propertyId={listing.id}
+                            initialSavedState={listing.isSaved}
+                            styleType="card" />
+                    </div>
                 </div>
 
                 <div className="flex flex-1 flex-col sm:flex-row sm:items-center gap-4 py-4 px-5">
@@ -206,6 +213,13 @@ export default function ListingCard({ listing, view }: { listing: Listing; view:
                         </span>
                     </div>
                 )}
+
+                <div className="absolute bottom-3 left-3 z-20 flex flex-col items-end gap-2">
+                    <SaveButton
+                        propertyId={listing.id}
+                        initialSavedState={listing.isSaved}
+                        styleType="card" />
+                </div>
                 <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-[#0D0D0D]/80 backdrop-blur-md rounded-lg px-2 py-1">
                     <Star className="w-3 h-3 fill-[#F59E0B] text-[#F59E0B]" />
                     <span className="text-white text-xs font-semibold">{listing.rating}</span>

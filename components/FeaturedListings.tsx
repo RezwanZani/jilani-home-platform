@@ -17,6 +17,7 @@ import {
 
 import Link from 'next/link';
 import { getTopRatedProperties } from '@/lib/actions/property-actions';
+import SaveButton from './listings/SaveButton';
 
 // ─── Amenity icon map ─────────────────────────────────────────────────────────
 const A_ICONS: Record<string, React.ReactNode> = {
@@ -171,6 +172,14 @@ function FeaturedCard({ property, state }: { property: any; state: CardState }) 
           </div>
         )}
 
+        {/* Save Button */}
+        <div className="absolute bottom-3 left-3 z-20 flex flex-col items-end gap-2">
+          <SaveButton
+            propertyId={property.id}
+            initialSavedState={property.isSaved}
+            styleType="card" />
+        </div>
+
         {/* Rating */}
         <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-[#0D0D0D]/80 backdrop-blur-md rounded-lg px-2 py-1">
           <Star className="w-3 h-3 fill-[#F59E0B] text-[#F59E0B]" />
@@ -301,7 +310,6 @@ function DotPager({ total, current, onChange }: { total: number; current: number
 }
 
 // ─── Section ──────────────────────────────────────────────────────────────────
-// REMOVED 'async' keyword here
 export default function FeaturedListings() {
   const [current, setCurrent] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -332,7 +340,8 @@ export default function FeaturedListings() {
     reviewCount: p.property.totalReviews || 0,
     capacity: p.property.roomCount ? p.property.roomCount * 2 : 2,
     amenities: p.property.amenities && p.property.amenities.length > 0 ? p.property.amenities : ['WiFi', 'AC'],
-    tag: p.property.averageRating >= 4.5 ? 'Top Rated' : null
+    tag: p.property.averageRating >= 4.5 ? 'Top Rated' : null,
+    isSaved: !!p.savedId
   }));
 
   const total = properties.length;

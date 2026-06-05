@@ -71,6 +71,7 @@ export default function ListingsPage() {
         title: item.property.title,
         image: item.property.coverImage || 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800',
         type: item.property.type || 'Unknown',
+        isSaved: !!item.savedId,
         area: item.zone?.name || 'Unknown Area',
         city: item.zone?.city || 'Unknown City',
         description: item.property.description || 'No description provided.',

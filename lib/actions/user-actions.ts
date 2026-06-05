@@ -5,7 +5,7 @@ import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import sharp from "sharp";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db/index";
-import { users } from "@/lib/db/schema";
+import { users, savedProperties } from "@/lib/db/schema";
 import { and, asc, desc, eq, ilike, inArray, isNull, or } from "drizzle-orm";
 import * as bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";

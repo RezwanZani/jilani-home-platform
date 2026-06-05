@@ -7,6 +7,7 @@ export type Listing = {
     title: string;
     image: string;
     type: string;
+    isSaved?: boolean;
     area: string;
     city: string;
     description: string;

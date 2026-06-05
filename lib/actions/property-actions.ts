@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { properties, propertyImages, users, ownerContacts, propertyLocationsPrivate, zones } from "@/lib/db/schema";
+import { properties, propertyImages, users, ownerContacts, propertyLocationsPrivate, zones, savedProperties } from "@/lib/db/schema";
 import { eq, desc, asc, or, ilike, inArray, and, isNull, arrayContains, gte, lte, ne, sql } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
@@ -531,6 +531,18 @@ export async function bulkUpdatePropertyStatus(ids: string[], newStatus: 'pendin
 //==========================================
 export async function getTopRatedProperties() {
     try {
+        //Get the user
+        const session = await auth();
+        const userId = session?.user?.id;
+
+        //Safely create the join condition for saved properties
+        const savedJoinCondition = userId
+            ? and(
+                eq(savedProperties.propertyId, properties.id),
+                eq(savedProperties.userId, userId)
+            )
+            : sql`FALSE`;
+
         const data = await db
             // 1. Explicitly select the property data AND the joined zone data
             .select({
@@ -541,11 +553,14 @@ export async function getTopRatedProperties() {
                     city: zones.city,
                     thana: zones.thana,
                     area: zones.area,
-                }
+                },
+                // If savedId is not null, the user has saved this property
+                savedId: savedProperties.id
             })
             .from(properties)
             // 2. Join the zones table where the IDs match
             .leftJoin(zones, eq(properties.zoneId, zones.id))
+            .leftJoin(savedProperties, savedJoinCondition)
             .where(eq(properties.status, 'active'))
             .orderBy(desc(properties.averageRating))
             .limit(10);
@@ -596,6 +611,10 @@ export async function getPaginatedProperties(params: {
     const offset = (page - 1) * limit;
 
     try {
+        // Get current user
+        const session = await auth();
+        const userId = session?.user?.id;
+
         const conditions: any[] = [eq(properties.status, 'active')];
 
         // Search Match
@@ -653,13 +672,24 @@ export async function getPaginatedProperties(params: {
         let orderBy = desc(properties.createdAt);
         if (sortBy === 'Top Rated') orderBy = desc(properties.averageRating);
 
+        // Safely create the join condition for saved properties
+        const savedJoinCondition = userId
+            ? and(
+                eq(savedProperties.propertyId, properties.id),
+                eq(savedProperties.userId, userId)
+            )
+            : sql`FALSE`;
+
         const data = await db
             .select({
                 property: properties,
-                zone: { id: zones.id, name: zones.name, city: zones.city }
+                zone: { id: zones.id, name: zones.name, city: zones.city },
+                // If savedId is not null, the user has saved this property
+                savedId: savedProperties.id
             })
             .from(properties)
             .leftJoin(zones, eq(properties.zoneId, zones.id))
+            .leftJoin(savedProperties, savedJoinCondition) // <-- NEW LEFT JOIN
             .where(and(...conditions))
             .orderBy(orderBy)
             .limit(limit)
