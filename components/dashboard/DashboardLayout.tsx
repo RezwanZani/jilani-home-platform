@@ -26,7 +26,7 @@ import {
   DollarSign,
   Ticket,
   BadgeDollarSign,
-  Coins,
+  Coins, Star
 } from "lucide-react";
 
 interface DashboardLayoutProps {
@@ -50,6 +50,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const adminLinks = [
     { name: "Dashboard", path: "/admin", icon: LayoutDashboard },
     { name: "Properties", path: "/admin/properties", icon: Building2 },
+    { name: "Reviews", path: "/admin/reviews", icon: Star },
     { name: "Owners", path: "/admin/owners", icon: UserCheck },
     { name: "Zones", path: "/admin/zones", icon: MapPinned },
     { name: "Users", path: "/admin/users", icon: Users },
