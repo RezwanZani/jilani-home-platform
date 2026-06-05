@@ -268,6 +268,8 @@ export async function fetchProperties(page: number, limit: number = 10, search =
         if (sortKey === 'title') orderByColumn = properties.title;
         else if (sortKey === 'price') orderByColumn = properties.price;
         else if (sortKey === 'viewsCount') orderByColumn = properties.viewsCount;
+        else if (sortKey === 'rating') orderByColumn = properties.averageRating;
+        else if (sortKey === 'reviews') orderByColumn = properties.totalReviews;
         else orderByColumn = properties.createdAt;
 
         const order: any = sortOrder === "desc" ? desc(orderByColumn) : asc(orderByColumn);
@@ -285,6 +287,8 @@ export async function fetchProperties(page: number, limit: number = 10, search =
                 status: properties.status,
                 coverImage: properties.coverImage,
                 viewsCount: properties.viewsCount, // 🚨 Added Views Count
+                averageRating: properties.averageRating,
+                totalReviews: properties.totalReviews,
                 createdAt: properties.createdAt,
                 ownerId: properties.ownerId, // 🚨 Added to pass into the Edit Form
                 zoneId: properties.zoneId,   // 🚨 Added to pass into the Edit Form

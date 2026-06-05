@@ -4,8 +4,11 @@ import React, { useState, useEffect } from "react";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { motion } from "framer-motion";
 import {
-    Search, MoreVertical, Filter, Loader2, ArrowDownUp, Edit3, Trash2,
-    Home, Upload, MapPin, User, Plus, Eye, ChevronDown, CheckCircle, XCircle, Clock, AlertTriangle
+    Search, MoreVertical, Filter, Loader2,
+    ArrowDownUp, ArrowDownAZ, ArrowUpAZ, ArrowDown01, ArrowUp01,
+    Edit3, Trash2, Home, Upload, MapPin, User, Plus, Eye,
+    ChevronDown, CheckCircle, XCircle, Clock, AlertTriangle,
+    Star
 } from "lucide-react";
 import BulkPropertyUploadModal from "./BulkPropertyUploadModal";
 import AdvancedFilter from "./AdvancedFilter";
@@ -234,14 +237,17 @@ export default function PropertiesClient({ initialData = [], limit = 10, hasMore
                                     <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer" onChange={() => setSelectedIds(selectedIds.length === PropertiesList.length ? [] : PropertiesList.map(p => p.id))} checked={selectedIds.length === PropertiesList.length && PropertiesList.length > 0} />
                                 </th>
                                 <th onClick={() => handleSort("title")} className="px-8 py-5 text-left text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase cursor-pointer">
-                                    Property Details <ArrowDownUp className="w-3 h-3 inline ml-1 opacity-50" />
+                                    Property Details {sortKey !== "title" ? <ArrowDownUp className="w-3 h-3 inline ml-1 opacity-50" /> : sortOrder === "asc" ? <ArrowDownAZ className="w-3 h-3 inline ml-1 opacity-50" /> : <ArrowUpAZ className="w-3 h-3 inline ml-1 opacity-50" />}
                                 </th>
                                 <th className="px-8 py-5 text-left text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Location & Owner</th>
                                 <th onClick={() => handleSort("price")} className="px-8 py-5 text-left text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase cursor-pointer">
-                                    Pricing & Specs <ArrowDownUp className="w-3 h-3 inline ml-1 opacity-50" />
+                                    Pricing & Specs {sortKey !== "price" ? <ArrowDownUp className="w-3 h-3 inline ml-1 opacity-50" /> : sortOrder === "asc" ? <ArrowDownAZ className="w-3 h-3 inline ml-1 opacity-50" /> : <ArrowUpAZ className="w-3 h-3 inline ml-1 opacity-50" />}
+                                </th>
+                                <th onClick={() => handleSort("rating")} className="px-8 py-5 text-left text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase cursor-pointer">
+                                    Rating {sortKey !== "rating" ? <ArrowDownUp className="w-3 h-3 inline ml-1 opacity-50" /> : sortOrder === "asc" ? <ArrowDown01 className="w-3 h-3 inline ml-1 opacity-50" /> : <ArrowUp01 className="w-3 h-3 inline ml-1 opacity-50" />}
                                 </th>
                                 <th onClick={() => handleSort("viewsCount")} className="px-8 py-5 text-left text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase cursor-pointer">
-                                    Views <ArrowDownUp className="w-3 h-3 inline ml-1 opacity-50" />
+                                    Views {sortKey !== "viewsCount" ? <ArrowDownUp className="w-3 h-3 inline ml-1 opacity-50" /> : sortOrder === "asc" ? <ArrowDown01 className="w-3 h-3 inline ml-1 opacity-50" /> : <ArrowUp01 className="w-3 h-3 inline ml-1 opacity-50" />}
                                 </th>
                                 <th className="px-8 py-5 text-left text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Status</th>
                                 <th className="px-8 py-5 text-right text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Actions</th>
@@ -276,6 +282,13 @@ export default function PropertiesClient({ initialData = [], limit = 10, hasMore
                                         <p className="font-bold text-gray-900 dark:text-white">৳{prop.price} <span className="text-xs text-gray-500 font-medium mt-0.5">{prop.priceType === "one-time" ? "(One Time)" : `/ ${prop.priceType}`}</span>
                                         </p>
                                         <p className="text-xs text-gray-500 font-medium mt-0.5">{prop.roomCount} Rooms • {prop.sizeSqft || 0} Sqft</p>
+                                    </td>
+                                    <td className="px-8 py-5">
+                                        <div className="flex items-center gap-1 bg-[#0D0D0D]/80 backdrop-blur-md rounded-lg px-2 py-1">
+                                            <Star className="w-3 h-3 fill-[#F59E0B] text-[#F59E0B]" />
+                                            <span className="text-white text-xs font-semibold">{prop.averageRating || 0}</span>
+                                            <span className="text-gray-400 text-xs">({prop.totalReviews || 0})</span>
+                                        </div>
                                     </td>
                                     <td className="px-8 py-5">
                                         <div className="flex items-center gap-1.5">
