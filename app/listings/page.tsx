@@ -67,6 +67,7 @@ export default function ListingsPage() {
 
       const formatted: Listing[] = data.map((item: any) => ({
         id: item.property.id,
+        slug: item.property.slug,
         title: item.property.title,
         image: item.property.coverImage || 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800',
         type: item.property.type || 'Unknown',

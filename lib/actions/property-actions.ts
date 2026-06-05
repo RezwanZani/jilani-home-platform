@@ -676,7 +676,7 @@ export async function getPaginatedProperties(params: {
 //==========================================
 //      INDIVIDUAL PROPERTY QUERY
 //==========================================
-export async function getPropertyById(id: string) {
+export async function getPropertyBySlug(slug: string) {
     try {
         // 1. Fetch the main property and zone
         const data = await db
@@ -690,7 +690,7 @@ export async function getPropertyById(id: string) {
             })
             .from(properties)
             .leftJoin(zones, eq(properties.zoneId, zones.id))
-            .where(eq(properties.id, id))
+            .where(eq(properties.slug, slug))
             .limit(1);
 
         if (data.length === 0) {
@@ -703,7 +703,7 @@ export async function getPropertyById(id: string) {
         const imagesData = await db
             .select({ url: propertyImages.imageUrl })
             .from(propertyImages)
-            .where(eq(propertyImages.propertyId, id));
+            .where(eq(propertyImages.propertyId, result.property.id));
 
         const imageUrls = imagesData.map(img => img.url);
 

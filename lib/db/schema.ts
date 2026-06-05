@@ -12,7 +12,8 @@ import {
     unique,
     serial,
     primaryKey,
-    check
+    check,
+    index
 } from 'drizzle-orm/pg-core';
 import { relations, sql } from 'drizzle-orm';
 
@@ -110,6 +111,11 @@ export const properties = pgTable('properties', {
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(),
     deletedAt: timestamp('deleted_at'),
+}, (table) => {
+    // THIS IS THE CRITICAL ADDITION
+    return {
+        slugIdx: index('slug_idx').on(table.slug),
+    };
 });
 
 // ==========================================
