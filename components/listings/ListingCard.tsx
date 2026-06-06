@@ -265,7 +265,7 @@ export default function ListingCard({
 
                 <div className="flex items-center gap-1.5 text-sm text-gray-400 mt-1">
                     <HousePlus className="w-3.5 h-3.5 text-gray-600" />
-                    <span>{listing.roomCount || 0} {(listing.roomCount === 1) ? 'Room' : 'Rooms'}</span>
+                    <span>{listing.roomCount || 0} {(listing.roomCount === 1) ? 'Room' : 'Rooms'} {`(${listing.sizeSqft || 0} sqft)`}</span>
                 </div>
 
                 <div className="flex flex-wrap gap-1.5">

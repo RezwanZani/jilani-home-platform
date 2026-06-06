@@ -83,6 +83,7 @@ export default function ListingsClient({ isLoggedIn, userBalance }: ListingsClie
                 description: item.property.description || 'No description provided.',
                 priceType: item.property.priceType || 'one-time',
                 roomCount: item.property.roomCount || 0,
+                sizeSqft: item.property.sizeSqft || 0,
                 rating: Number(item.property.averageRating) || 0,
                 reviews: Number(item.property.totalReviews) || 0,
                 price: `৳ ${item.property.price}`,

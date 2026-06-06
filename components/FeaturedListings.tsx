@@ -217,16 +217,16 @@ function FeaturedCard({ property, state, isLoggedIn, userBalance }: { property: 
 
         <div className="flex items-center gap-1.5 text-sm text-gray-400">
           <HousePlus className="w-3.5 h-3.5 text-gray-600" />
-          <span>{property.roomCount} {property.roomCount === 1 ? "room" : "rooms"}</span>
+          <span>{property.roomCount} {property.roomCount === 1 ? "room" : "rooms"} {`(${property.sizeSqft || 0} sqft)`}</span>
         </div>
 
         <div className="flex flex-wrap gap-1.5">
-          {property.amenities.slice(0, 3).map((amenity: string) => (
+          {property.amenities && property.amenities.length > 0 && property.amenities.slice(0, 3).map((amenity: string) => (
             <span key={amenity} className="flex items-center gap-1 text-xs text-gray-400 bg-white/[0.05] border border-white/[0.07] px-2 py-1 rounded-lg">
               {A_ICONS[amenity.toLowerCase()] ? A_ICONS[amenity.toLowerCase()] : <Check className="w-3.5 h-3.5" />}{amenity}
             </span>
           ))}
-          {property.amenities.length > 3 && (
+          {property.amenities && property.amenities.length > 3 && (
             <span className="text-xs text-gray-600 px-1 py-1">+{property.amenities.length - 3}</span>
           )}
         </div>
@@ -321,7 +321,8 @@ export default function FeaturedListings({ isLoggedIn, userBalance }: { isLogged
     image: p.property.coverImage || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80',
     reviewCount: p.property.totalReviews || 0,
     capacity: p.property.roomCount ? p.property.roomCount * 2 : 2,
-    amenities: p.property.amenities && p.property.amenities.length > 0 ? p.property.amenities : ['WiFi', 'AC'],
+    amenities: p.property.amenities,
+    sizeSqft: p.property.sizeSqft,
     tag: p.property.averageRating >= 4.5 ? 'Top Rated' : null,
     isSaved: !!p.savedId,
     hasUnlocked: !!p.unlockedId

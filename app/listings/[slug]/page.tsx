@@ -7,7 +7,8 @@ import {
   Calendar, Clock, Building2, Check, Home, Landmark, Building,
   Briefcase, Castle, Store, Crown, Dumbbell, ShieldCheck, ArrowUpDown,
   Sofa, Zap, Flame, Waves, Coffee, Cctv, HousePlus,
-  Refrigerator, Microwave, Tv, Flower
+  Refrigerator, Microwave, Tv, Flower,
+  Ruler
 } from 'lucide-react';
 
 // Components
@@ -116,6 +117,7 @@ export default async function ListingDetail(props: { params: Promise<{ slug: str
     city: item.zone?.city || 'Unknown City',
     description: item.property.description || 'No description provided.',
     roomCount: item.property.roomCount || 0,
+    sizeSqft: item.property.sizeSqft || 0,
     capacity: item.property.roomCount ? item.property.roomCount * 2 : 50,
     rating: Number(item.property.averageRating) || 0,
     reviews: Number(item.property.totalReviews) || 0,
@@ -139,6 +141,9 @@ export default async function ListingDetail(props: { params: Promise<{ slug: str
     type: s.property.type,
     area: s.zone?.name || 'Unknown Area', city: s.zone?.city || 'Unknown City',
     description: s.property.description || '', capacity: s.property.roomCount ? s.property.roomCount * 2 : 50,
+    sizeSqft: s.property.sizeSqft || 0,
+    priceType: s.property.priceType || 'one-time',
+    roomCount: s.property.roomCount || 0,
     rating: Number(s.property.averageRating) || 0, reviews: Number(s.property.totalReviews) || 0,
     price: TakaDisplay(Number(s.property.price)),
     amenities: Array.isArray(s.property.amenities) ? s.property.amenities : [],
@@ -203,8 +208,8 @@ export default async function ListingDetail(props: { params: Promise<{ slug: str
               {[
                 { icon: <Star className="w-4 h-4 fill-[#F59E0B] text-[#F59E0B]" />, label: `${listing.rating} rating`, sub: `${listing.reviews} reviews` },
                 { icon: <HousePlus className="w-4 h-4 text-[#3B82F6]" />, label: `Up to ${listing.roomCount}`, sub: 'Rooms' },
+                { icon: <Ruler className="w-4 h-4 text-[#3B82F6]" />, label: `${listing.sizeSqft || 0} sqft`, sub: 'Big Space' },
                 { icon: <Clock className="w-4 h-4 text-[#3B82F6]" />, label: `${listing.priceType === 'year' ? 'Yearly' : listing.priceType === 'month' ? 'Monthly' : listing.priceType === 'day' ? 'Daily' : 'Negotiable'} Booking`, sub: 'flexible booking' },
-                { icon: <Calendar className="w-4 h-4 text-[#3B82F6]" />, label: 'Available now', sub: 'request a tour' },
               ].map((s, i) => (
                 <div key={i} className="flex items-center gap-3 bg-[#111111] border border-white/[0.07] rounded-xl px-4 py-3">
                   <div className="w-8 h-8 rounded-lg bg-[#3B82F6]/10 flex items-center justify-center shrink-0">{s.icon}</div>
