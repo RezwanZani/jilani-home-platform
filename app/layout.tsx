@@ -8,6 +8,7 @@ import { db } from "@/lib/db/index";
 import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
+import { Toaster } from "@/components/ui/sonner";
 
 // FIX: Node v25 introduces a broken `localStorage` global object without methods.
 // Many third-party libraries (like Radix UI or Framer Motion) check `typeof localStorage !== 'undefined'`
@@ -56,6 +57,7 @@ export default async function RootLayout({
       >
         <ThemeProvider>
           <Providers>{children}</Providers>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

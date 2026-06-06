@@ -10,7 +10,7 @@ export default auth((req) => {
 
     const path = req.nextUrl.pathname;
     const isOnboardingPage = path === "/onboarding";
-    const isAuthPage = path === "/login" || path === "/signup";
+    const isAuthPage = path === "/login" || path === "/signup" || path.startsWith("/forgot-password");
 
     // Define the routes you want to lock behind authentication
     const isProtectedRoute = path.startsWith("/dashboard") || path.startsWith("/admin");
