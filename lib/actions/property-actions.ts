@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { properties, propertyImages, users, ownerContacts, propertyLocationsPrivate, zones, savedProperties } from "@/lib/db/schema";
+import { properties, propertyImages, users, ownerContacts, propertyLocationsPrivate, zones, savedProperties, unlocks } from "@/lib/db/schema";
 import { eq, desc, asc, or, ilike, inArray, and, isNull, arrayContains, gte, lte, ne, sql } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
@@ -547,6 +547,15 @@ export async function getTopRatedProperties() {
             )
             : sql`FALSE`;
 
+        // Create the Unlock Join Condition
+        const unlockJoinCondition = userId
+            ? and(
+                eq(unlocks.propertyId, properties.id),
+                eq(unlocks.userId, userId),
+                gte(unlocks.expiresAt, new Date()) // Must be active!
+            )
+            : sql`FALSE`;
+
         const data = await db
             // 1. Explicitly select the property data AND the joined zone data
             .select({
@@ -559,12 +568,14 @@ export async function getTopRatedProperties() {
                     area: zones.area,
                 },
                 // If savedId is not null, the user has saved this property
-                savedId: savedProperties.id
+                savedId: savedProperties.id,
+                unlockedId: unlocks.id
             })
             .from(properties)
             // 2. Join the zones table where the IDs match
             .leftJoin(zones, eq(properties.zoneId, zones.id))
             .leftJoin(savedProperties, savedJoinCondition)
+            .leftJoin(unlocks, unlockJoinCondition)
             .where(eq(properties.status, 'active'))
             .orderBy(desc(properties.averageRating))
             .limit(10);
@@ -684,16 +695,27 @@ export async function getPaginatedProperties(params: {
             )
             : sql`FALSE`;
 
+        // Create the Unlock Join Condition
+        const unlockJoinCondition = userId
+            ? and(
+                eq(unlocks.propertyId, properties.id),
+                eq(unlocks.userId, userId),
+                gte(unlocks.expiresAt, new Date()) // Must be active!
+            )
+            : sql`FALSE`;
+
         const data = await db
             .select({
                 property: properties,
                 zone: { id: zones.id, name: zones.name, city: zones.city },
                 // If savedId is not null, the user has saved this property
-                savedId: savedProperties.id
+                savedId: savedProperties.id,
+                unlockedId: unlocks.id
             })
             .from(properties)
             .leftJoin(zones, eq(properties.zoneId, zones.id))
-            .leftJoin(savedProperties, savedJoinCondition) // <-- NEW LEFT JOIN
+            .leftJoin(savedProperties, savedJoinCondition)
+            .leftJoin(unlocks, unlockJoinCondition)
             .where(and(...conditions))
             .orderBy(orderBy)
             .limit(limit)
@@ -720,6 +742,8 @@ export async function getPropertyBySlug(slug: string) {
                     id: zones.id,
                     name: zones.name,
                     city: zones.city,
+                    thana: zones.thana,
+                    area: zones.area,
                 }
             })
             .from(properties)
@@ -741,20 +765,58 @@ export async function getPropertyBySlug(slug: string) {
 
         const imageUrls = imagesData.map(img => img.url);
 
-        // 3. Return a NEW object to satisfy TypeScript. 
-        // This spreads the existing property columns and appends the images array.
+        // 3. CHECK ACTIVE UNLOCK STATUS
+        const session = await auth();
+        const userId = session?.user?.id;
+
+        let hasActiveUnlock = false;
+        let ownerData = null;
+        let exactAddress = null;
+
+        if (userId) {
+            const unlockCheck = await db.select().from(unlocks).where(
+                and(
+                    eq(unlocks.userId, userId),
+                    eq(unlocks.propertyId, result.property.id),
+                    gte(unlocks.expiresAt, new Date()) // Ensure it hasn't expired!
+                )
+            ).limit(1);
+
+            if (unlockCheck.length > 0) hasActiveUnlock = true;
+        }
+
+        // 4. SECURELY FETCH OWNER & PRIVATE LOCATION DATA (Only if unlocked)
+        if (hasActiveUnlock) {
+            const owner = await db.select().from(ownerContacts).where(eq(ownerContacts.id, result.property.ownerId)).limit(1);
+            ownerData = owner[0] || null;
+
+            const privLoc = await db.select().from(propertyLocationsPrivate).where(eq(propertyLocationsPrivate.propertyId, result.property.id)).limit(1);
+            if (privLoc.length > 0) exactAddress = privLoc[0]; // Grab the whole object
+        }
+
         return {
             success: true,
             data: {
-                property: {
-                    ...result.property,
-                    images: imageUrls
-                },
-                zone: result.zone
+                property: { ...result.property, images: imageUrls },
+                zone: result.zone,
+
+                // NEW: Send the structured detailed data, completely excluding email
+                protectedContact: hasActiveUnlock ? {
+                    ownerName: ownerData?.name || "N/A",
+                    phone: ownerData?.phone || "N/A",
+                    whatsapp: ownerData?.whatsapp || "Not Provided",
+                    house: exactAddress?.house || "",
+                    road: exactAddress?.road || "",
+                    block: exactAddress?.block || "",
+                    landmark: exactAddress?.landmark || "",
+                    additionalLine: exactAddress?.additionalLine || "",
+                } : null,
+
+                hasUnlocked: hasActiveUnlock
             }
         };
     } catch (error) {
-        console.error("Database error fetching property by ID:", error);
+        console.error("Database error fetching property by Slug:", error);
         return { success: false, data: null };
     }
 }

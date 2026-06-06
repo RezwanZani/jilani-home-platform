@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { Listing } from '@/types/listings';
 import SaveButton from './SaveButton';
+import CardUnlockButton from './CardUnlockButton';
 
 // Fixed keys to be strictly lowercase for robust matching
 const AMENITY_ICONS: Record<string, React.ReactNode> = {
@@ -121,7 +122,17 @@ const getPropertyTypeStyle = (type: string) => {
     };
 };
 
-export default function ListingCard({ listing, view }: { listing: Listing; view: 'grid' | 'list' }) {
+export default function ListingCard({
+    listing,
+    view,
+    isLoggedIn = false,
+    userBalance = 0
+}: {
+    listing: any;
+    view: 'grid' | 'list';
+    isLoggedIn?: boolean;
+    userBalance?: number;
+}) {
     const router = useRouter();
     const goToDetail = () => router.push(`/listings/${listing.slug}`);
     const propStyle = getPropertyTypeStyle(listing.type);
@@ -131,16 +142,26 @@ export default function ListingCard({ listing, view }: { listing: Listing; view:
             <motion.div layout initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} transition={{ duration: 0.3 }} onClick={goToDetail} className="flex flex-col sm:flex-row bg-[#111111] border border-white/[0.07] rounded-2xl overflow-hidden hover:border-[#3B82F6]/30 transition-all duration-300 group cursor-pointer">
                 <div className="relative w-full h-44 sm:w-48 sm:h-auto shrink-0 overflow-hidden bg-gray-900">
                     <img src={listing.image} alt={listing.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    <div className="absolute top-3 left-3">
+
+                    <div className="absolute top-3 left-3 z-20">
                         <span className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full backdrop-blur-md border ${propStyle.bgColor} ${propStyle.borderColor} ${propStyle.textColor}`}>
                             {propStyle.Icon()} {propStyle.text}
                         </span>
                     </div>
-                    <div className="absolute top-3 right-3 z-1000">
+
+                    {/* Stacked Save and Unlock buttons */}
+                    <div className="absolute top-3 right-3 z-[1000] flex flex-col items-end gap-2">
                         <SaveButton
                             propertyId={listing.id}
                             initialSavedState={listing.isSaved}
-                            styleType="card" />
+                            styleType="card"
+                        />
+                        <CardUnlockButton
+                            propertyId={listing.id}
+                            isUnlockedInitially={listing.hasUnlocked}
+                            isLoggedIn={isLoggedIn}
+                            userBalance={userBalance}
+                        />
                     </div>
                 </div>
 
@@ -153,12 +174,10 @@ export default function ListingCard({ listing, view }: { listing: Listing; view:
                         <h3 className="font-['Space_Grotesk'] text-white font-semibold">{listing.title}</h3>
                         <p className="text-gray-500 text-sm flex items-center gap-1 mt-0.5"><MapPin className="w-3.5 h-3.5 shrink-0 text-gray-600" />{listing.area}, {listing.city}</p>
 
-                        {/* Short Description */}
                         <p className="text-gray-600 text-xs mt-2 line-clamp-2">{listing.description}</p>
 
-                        {/* Added Amenities for List View */}
                         <div className="flex flex-wrap gap-1.5 mt-3">
-                            {listing.amenities?.slice(0, 3).map(a => (
+                            {listing.amenities?.slice(0, 3).map((a: string) => (
                                 <span key={a} className="flex items-center gap-1 text-xs text-gray-400 bg-white/[0.05] border border-white/[0.07] px-2 py-1 rounded-lg">
                                     {AMENITY_ICONS[a.toLowerCase()] || <Check className="w-3.5 h-3.5" />}{a}
                                 </span>
@@ -184,11 +203,6 @@ export default function ListingCard({ listing, view }: { listing: Listing; view:
                             <span className="text-xs text-gray-500 block">Starting from</span>
                             <span className="text-white font-['Space_Grotesk'] font-bold">{listing.price}</span>
                         </div>
-                        <div className="flex flex-col items-end gap-2">
-                            <Link href="/signup" onClick={e => e.stopPropagation()}>
-                                <button className="bg-[#3B82F6] hover:bg-[#2563EB] text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all">Unlock Info</button>
-                            </Link>
-                        </div>
                     </div>
                 </div>
             </motion.div>
@@ -201,26 +215,36 @@ export default function ListingCard({ listing, view }: { listing: Listing; view:
             <div className="relative h-48 overflow-hidden bg-gray-900">
                 <img src={listing.image} alt={listing.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-transparent to-transparent opacity-60" />
-                <div className="absolute top-3 left-3">
+
+                <div className="absolute top-3 left-3 z-20">
                     <span className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full backdrop-blur-md border ${propStyle.bgColor} ${propStyle.borderColor} ${propStyle.textColor}`}>
                         {propStyle.Icon()} {propStyle.text}
                     </span>
                 </div>
-                {listing.tag && (
-                    <div className="absolute top-3 right-3">
-                        <span className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-[#0D0D0D]/80 backdrop-blur-md border border-white/10 text-white">
-                            <Sparkles className="w-3 h-3 text-[#F59E0B]" /> {listing.tag}
-                        </span>
-                    </div>
-                )}
 
-                <div className="absolute bottom-3 left-3 z-20 flex flex-col items-end gap-2">
+                {/* Stacked Save, Unlock, and Tag components safely in one container */}
+                <div className="absolute top-3 right-3 z-20 flex flex-col items-end gap-2">
                     <SaveButton
                         propertyId={listing.id}
                         initialSavedState={listing.isSaved}
-                        styleType="card" />
+                        styleType="card"
+                    />
+
+                    <CardUnlockButton
+                        propertyId={listing.id}
+                        isUnlockedInitially={listing.hasUnlocked}
+                        isLoggedIn={isLoggedIn}
+                        userBalance={userBalance}
+                    />
+
+                    {listing.tag && (
+                        <span className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-[#0D0D0D]/80 backdrop-blur-md border border-white/10 text-white">
+                            <Sparkles className="w-3 h-3 text-[#F59E0B]" /> {listing.tag}
+                        </span>
+                    )}
                 </div>
-                <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-[#0D0D0D]/80 backdrop-blur-md rounded-lg px-2 py-1">
+
+                <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-[#0D0D0D]/80 backdrop-blur-md rounded-lg px-2 py-1 z-20">
                     <Star className="w-3 h-3 fill-[#F59E0B] text-[#F59E0B]" />
                     <span className="text-white text-xs font-semibold">{listing.rating}</span>
                     <span className="text-gray-400 text-xs">({listing.reviews})</span>
@@ -236,7 +260,6 @@ export default function ListingCard({ listing, view }: { listing: Listing; view:
                     <h3 className="font-['Space_Grotesk'] text-white font-semibold leading-snug group-hover:text-[#3B82F6] transition-colors line-clamp-1">{listing.title}</h3>
                     <p className="text-gray-500 text-sm flex items-center gap-1 mt-1"><MapPin className="w-3.5 h-3.5 shrink-0 text-gray-600" />{listing.area}, {listing.city}</p>
 
-                    {/* Added Description for Grid View */}
                     <p className="text-gray-600 text-xs mt-2 line-clamp-2">{listing.description}</p>
                 </div>
 
@@ -244,8 +267,9 @@ export default function ListingCard({ listing, view }: { listing: Listing; view:
                     <HousePlus className="w-3.5 h-3.5 text-gray-600" />
                     <span>{listing.roomCount || 0} {(listing.roomCount === 1) ? 'Room' : 'Rooms'}</span>
                 </div>
+
                 <div className="flex flex-wrap gap-1.5">
-                    {listing.amenities?.slice(0, 3).map(a => (
+                    {listing.amenities?.slice(0, 3).map((a: string) => (
                         <span key={a} className="flex items-center gap-1 text-xs text-gray-400 bg-white/[0.05] border border-white/[0.07] px-2 py-1 rounded-lg">
                             {AMENITY_ICONS[a.toLowerCase()] || <Check className="w-3.5 h-3.5" />}{a}
                         </span>
@@ -256,20 +280,6 @@ export default function ListingCard({ listing, view }: { listing: Listing; view:
                     <div>
                         <span className="text-gray-600 text-xs block">Starting from</span>
                         <span className="inline text-white font-['Space_Grotesk'] font-semibold">{listing.price} {listing.priceType !== 'one-time' && listing.priceType ? <span className="inline text-gray-600 text-xs">&nbsp;/&nbsp;{listing.priceType}</span> : ''}</span>
-                    </div>
-                </div>
-
-                <div className="relative rounded-xl bg-white/[0.03] border border-white/[0.07] overflow-hidden mt-2">
-                    <div className="p-3 space-y-2 blur-[5px] select-none pointer-events-none opacity-50">
-                        <div className="flex items-center gap-2 text-gray-400 text-xs"><MapPin className="w-3.5 h-3.5 shrink-0" /><span>Locked Address</span></div>
-                        <div className="flex items-center gap-2 text-gray-400 text-xs"><Phone className="w-3.5 h-3.5 shrink-0" /><span>Locked Phone</span></div>
-                    </div>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0D0D0D]/60 backdrop-blur-[2px] gap-2">
-                        <Link href="/signup" onClick={e => e.stopPropagation()}>
-                            <button className="flex items-center gap-1.5 bg-[#3B82F6] hover:bg-[#2563EB] text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all shadow-[0_0_12px_rgba(59,130,246,0.3)]">
-                                <Shield className="w-3.5 h-3.5" /> Unlock Contact Info
-                            </button>
-                        </Link>
                     </div>
                 </div>
             </div>

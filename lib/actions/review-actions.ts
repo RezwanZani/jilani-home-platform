@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 import { propertyReviews, users, properties, unlocks } from "@/lib/db/schema";
-import { eq, desc, asc, ilike, inArray, and, or, sql } from "drizzle-orm";
+import { eq, gte, desc, asc, ilike, inArray, and, or, sql } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
@@ -325,17 +325,18 @@ export async function checkUserUnlockedProperty(propertyId: string) {
         const session = await auth();
         if (!session?.user?.id) return false;
 
-        const hasUnlocked = await db.select()
+        const activeUnlock = await db.select()
             .from(unlocks)
             .where(
                 and(
                     eq(unlocks.userId, session.user.id),
-                    eq(unlocks.propertyId, propertyId)
+                    eq(unlocks.propertyId, propertyId),
+                    gte(unlocks.expiresAt, new Date()) // Must not be expired!
                 )
             )
             .limit(1);
 
-        return hasUnlocked.length > 0;
+        return activeUnlock.length > 0;
     } catch (error) {
         return false;
     }

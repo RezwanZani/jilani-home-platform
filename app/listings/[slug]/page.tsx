@@ -19,13 +19,15 @@ import SimilarListings from '@/components/listings/individual/SimilarListings';
 import SaveButton from '@/components/listings/SaveButton';
 import ShareButton from '@/components/listings/individual/ShareButton';
 import ReviewSection from '@/components/listings/individual/ReviewSection';
+import ContactInfoReveal from '@/components/listings/individual/ContactInfoReveal';
+import LocationAndContact from '@/components/listings/individual/LocationAndContact';
 
 // Actions & Types
 import { getPropertyBySlug, getSimilarProperties } from '@/lib/actions/property-actions';
 import { checkIfPropertyIsSaved } from '@/lib/actions/save-actions';
-import { checkUserUnlockedProperty } from '@/lib/actions/review-actions';
 import { Listing } from '@/types/listings';
 import { auth } from '@/lib/auth';
+import { getUserBalance } from '@/lib/actions/unlock-actions';
 
 // ─── Amenity icon map ─────────────────────────────────────────────────────────
 const A_ICONS: Record<string, React.ReactNode> = {
@@ -73,11 +75,6 @@ const AMENITY_LABELS: Record<string, string> = {
 };
 
 function TakaDisplay(amount: number) {
-  // return new Intl.NumberFormat('en-US', {
-  //   style: 'currency',
-  //   currency: 'BDT',
-  //   maximumFractionDigits: 0
-  // }).format(amount);
   return `৳ ${amount}`
 }
 
@@ -93,6 +90,13 @@ export default async function ListingDetail(props: { params: Promise<{ slug: str
   if (!propData) {
     return notFound();
   }
+
+  // Fetch User Balance
+  const userBalance = await getUserBalance();
+
+  // Extracted secure properties from our updated Server Action
+  const hasUnlocked = propData.hasUnlocked;
+  const protectedContact = propData.protectedContact;
 
   // 3. Get User Session
   const session = await auth();
@@ -115,7 +119,7 @@ export default async function ListingDetail(props: { params: Promise<{ slug: str
     capacity: item.property.roomCount ? item.property.roomCount * 2 : 50,
     rating: Number(item.property.averageRating) || 0,
     reviews: Number(item.property.totalReviews) || 0,
-    price: TakaDisplay(Number(item.property.price)), // Using your TakaDisplay helper!
+    price: TakaDisplay(Number(item.property.price)),
     priceType: item.property.priceType,
     amenities: Array.isArray(item.property.amenities) ? item.property.amenities : ['WiFi'],
     verified: item.property.status === 'active',
@@ -123,9 +127,8 @@ export default async function ListingDetail(props: { params: Promise<{ slug: str
   };
 
   // 4. Fetch the boolean states and similar properties concurrently for speed
-  const [isCurrentlySaved, hasUnlocked, { data: simData }] = await Promise.all([
+  const [isCurrentlySaved, { data: simData }] = await Promise.all([
     checkIfPropertyIsSaved(listing.id),
-    checkUserUnlockedProperty(listing.id),
     getSimilarProperties(item.property.type, item.property.id)
   ]);
 
@@ -229,20 +232,16 @@ export default async function ListingDetail(props: { params: Promise<{ slug: str
               </div>
             </div>
 
-            {/* Location */}
-            <div className="bg-[#111111] border border-white/[0.07] rounded-2xl p-6 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300 fill-mode-both">
-              <h2 className="font-['Space_Grotesk'] text-white font-semibold mb-3">Location</h2>
-              <div className="flex items-start gap-3 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-[#3B82F6]/10 flex items-center justify-center text-[#3B82F6] shrink-0 mt-0.5"><MapPin className="w-4 h-4" /></div>
-                <div>
-                  <p className="text-white font-medium">{listing.area}, {listing.city}</p>
-                  <p className="text-gray-500 text-sm mt-0.5">Approximate area shown. Unlock contact info to get the exact street address.</p>
-                </div>
-              </div>
-              <div className="h-36 rounded-xl bg-white/[0.03] border border-white/[0.07] flex items-center justify-center overflow-hidden relative">
-                <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.015)_0px,rgba(255,255,255,0.015)_1px,transparent_1px,transparent_16px)]" />
-                <div className="flex flex-col items-center gap-2 text-gray-600 relative z-10"><MapPin className="w-6 h-6 text-[#3B82F6]/40" /><span className="text-sm">Exact map unlocked after sign-up</span></div>
-              </div>
+            {/* ── NEW DETAILED LOCATION & CONTACT SECTION ── */}
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300 fill-mode-both">
+              <LocationAndContact
+                propertyId={listing.id}
+                zone={propData.zone} // Pass the zone data from the server
+                hasUnlockedInitially={hasUnlocked}
+                initialContactData={protectedContact}
+                isLoggedIn={isLoggedIn}
+                userBalance={userBalance as number}
+              />
             </div>
 
             {/* Reviews Section */}
@@ -273,20 +272,19 @@ export default async function ListingDetail(props: { params: Promise<{ slug: str
                 <span className="text-gray-500 text-sm">({listing.reviews} reviews)</span>
               </div>
 
-              <div className="relative rounded-xl bg-white/[0.03] border border-white/[0.07] overflow-hidden mb-4">
-                <div className="p-4 space-y-3 blur-[5px] select-none pointer-events-none opacity-50">
-                  <div className="flex items-center gap-2.5 text-gray-400 text-sm"><MapPin className="w-4 h-4 shrink-0" /><span>House 12, Road 6, {listing.area.split(',')[0]}</span></div>
-                  <div className="flex items-center gap-2.5 text-gray-400 text-sm"><Phone className="w-4 h-4 shrink-0" /><span>+880 1711-234567</span></div>
-                  <div className="flex items-center gap-2.5 text-gray-400 text-sm"><Mail className="w-4 h-4 shrink-0" /><span>contact@venue.com</span></div>
-                </div>
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0D0D0D]/65 backdrop-blur-[2px] gap-2 p-4">
-                  <div className="flex items-center gap-1.5 text-gray-400 text-xs text-center"><Lock className="w-3.5 h-3.5 text-[#3B82F6] shrink-0" /><span>Exact address & contacts are hidden</span></div>
-                  <Link href="/signup" className="w-full">
-                    <button className="w-full flex items-center justify-center gap-1.5 bg-[#3B82F6] hover:bg-[#2563EB] text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-all shadow-[0_0_14px_rgba(59,130,246,0.35)]"><Shield className="w-4 h-4" /> Unlock Contact Info</button>
-                  </Link>
-                </div>
-              </div>
-              <p className="text-gray-600 text-xs text-center">One-time access fee · Cancel anytime</p>
+              {/* ── INTERACTIVE UNLOCK REVEAL COMPONENT ── */}
+              <ContactInfoReveal
+                propertyId={listing.id}
+                hasUnlockedInitially={hasUnlocked}
+                zone={propData.zone} // Pass the zone data from the server
+                initialContactData={protectedContact}
+                isLoggedIn={isLoggedIn}
+                approximateArea={listing.area}
+                userBalance={userBalance as number}
+              />
+              {/* ─────────────────────────────────────── */}
+
+              <p className="text-gray-600 text-xs text-center">Pay once · See the contact details for two months.</p>
             </div>
 
             <TourRequestPanel listingTitle={listing.title} />

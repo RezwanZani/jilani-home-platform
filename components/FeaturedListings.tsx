@@ -18,6 +18,7 @@ import {
 import Link from 'next/link';
 import { getTopRatedProperties } from '@/lib/actions/property-actions';
 import SaveButton from './listings/SaveButton';
+import CardUnlockButton from './listings/CardUnlockButton';
 
 // ─── Amenity icon map ─────────────────────────────────────────────────────────
 const A_ICONS: Record<string, React.ReactNode> = {
@@ -123,7 +124,7 @@ function TakaDisplay(amount: number) {
 }
 
 // ─── Card ─────────────────────────────────────────────────────────────────────
-function FeaturedCard({ property, state }: { property: any; state: CardState }) {
+function FeaturedCard({ property, state, isLoggedIn, userBalance }: { property: any; state: CardState, isLoggedIn: boolean, userBalance: number }) {
   const animProps =
     state === 'active' ? { scale: 1, opacity: 1 } :
       state === 'visible' ? { scale: 0.97, opacity: 0.72 } :
@@ -180,6 +181,16 @@ function FeaturedCard({ property, state }: { property: any; state: CardState }) 
             styleType="card" />
         </div>
 
+        {/* Contact info */}
+        <div className={`absolute inset-x-15 bottom-3 z-10`}>
+          <CardUnlockButton
+            propertyId={property.id}
+            isUnlockedInitially={property.hasUnlocked}
+            isLoggedIn={isLoggedIn}
+            userBalance={userBalance}
+          />
+        </div>
+
         {/* Rating */}
         <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-[#0D0D0D]/80 backdrop-blur-md rounded-lg px-2 py-1">
           <Star className="w-3 h-3 fill-[#F59E0B] text-[#F59E0B]" />
@@ -225,41 +236,12 @@ function FeaturedCard({ property, state }: { property: any; state: CardState }) 
             <span className="text-gray-600 text-xs block">Starting from</span>
             <span className="text-white font-['Space_Grotesk'] font-semibold text-sm">{TakaDisplay(property.price)} <span className="text-xs text-gray-600"> {property.priceType !== "one-time" ? " / " + property.priceType : ""}</span></span>
           </div>
-          <Link href={`/listings/${property.id}`}
+          <Link href={`/listings/${property.slug}`}
             className="text-xs text-white bg-[#3B82F6] hover:bg-[#2563EB] px-4 py-2 rounded-lg transition-all font-semibold keep-white"
             onClick={e => e.stopPropagation()}
           >
             View →
           </Link>
-        </div>
-
-        {/* Locked contact */}
-        <div className="relative rounded-xl bg-white/[0.03] border border-white/[0.07] overflow-hidden mt-auto">
-          <div className="p-3 space-y-1.5 blur-[5px] select-none pointer-events-none opacity-50">
-            <div className="flex items-center gap-2 text-gray-400 text-xs">
-              <MapPin className="w-3.5 h-3.5 shrink-0" />
-              <span>House 12, Road 6, {property.zone.name.split(',')[0]} 1212</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-400 text-xs">
-              <Phone className="w-3.5 h-3.5 shrink-0" />
-              <span>+880 1711-234567</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-400 text-xs">
-              <Mail className="w-3.5 h-3.5 shrink-0" />
-              <span>contact@venue.com</span>
-            </div>
-          </div>
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0D0D0D]/60 backdrop-blur-[2px] gap-2 p-3">
-            <div className="flex items-center gap-1.5 text-gray-400 text-xs">
-              <Lock className="w-3 h-3 text-[#3B82F6]" />
-              <span>Address & contacts locked</span>
-            </div>
-            <Link href="/signup" onClick={e => e.stopPropagation()}>
-              <button className="flex items-center gap-1.5 bg-[#3B82F6] hover:bg-[#2563EB] text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all shadow-[0_0_12px_rgba(59,130,246,0.3)]">
-                <Shield className="w-3.5 h-3.5" /> Unlock Info
-              </button>
-            </Link>
-          </div>
         </div>
       </div>
     </motion.div>
@@ -310,7 +292,7 @@ function DotPager({ total, current, onChange }: { total: number; current: number
 }
 
 // ─── Section ──────────────────────────────────────────────────────────────────
-export default function FeaturedListings() {
+export default function FeaturedListings({ isLoggedIn, userBalance }: { isLoggedIn: boolean, userBalance: number }) {
   const [current, setCurrent] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -341,7 +323,8 @@ export default function FeaturedListings() {
     capacity: p.property.roomCount ? p.property.roomCount * 2 : 2,
     amenities: p.property.amenities && p.property.amenities.length > 0 ? p.property.amenities : ['WiFi', 'AC'],
     tag: p.property.averageRating >= 4.5 ? 'Top Rated' : null,
-    isSaved: !!p.savedId
+    isSaved: !!p.savedId,
+    hasUnlocked: !!p.unlockedId
   }));
 
   const total = properties.length;
@@ -458,7 +441,12 @@ export default function FeaturedListings() {
                   key={property.id}
                   style={{ width: cardW, flexShrink: 0 }}
                 >
-                  <FeaturedCard property={property} state={cardState(i)} />
+                  <FeaturedCard
+                    property={property}
+                    state={cardState(i)}
+                    isLoggedIn={isLoggedIn}
+                    userBalance={userBalance}
+                  />
                 </div>
               ))}
             </motion.div>

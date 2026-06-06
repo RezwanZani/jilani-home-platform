@@ -71,8 +71,8 @@ export default function TourRequestPanel({ listingTitle }: { listingTitle: strin
                         {selectedTime && <div className="flex items-center gap-2 text-xs text-gray-300"><Clock className="w-3.5 h-3.5 text-[#3B82F6] shrink-0" /><span>{selectedTime}</span></div>}
                     </motion.div>
                 )}
-                <button onClick={handleRequest} disabled={!selectedDate || !selectedTime} className={`w-full flex items-center justify-center gap-2 text-sm font-semibold py-3 rounded-xl transition-all ${selectedDate && selectedTime ? 'bg-[#3B82F6] hover:bg-[#2563EB] text-white shadow-[0_0_16px_rgba(59,130,246,0.35)] hover:shadow-[0_0_24px_rgba(59,130,246,0.55)]' : 'bg-white/[0.05] text-gray-600 cursor-not-allowed border border-white/[0.07]'}`}><Calendar className="w-4 h-4" /> Request a Tour</button>
-                <p className="text-gray-700 text-xs text-center -mt-2">Sign up required to confirm your booking</p>
+                <button onClick={handleRequest} disabled={true} className={`w-full flex items-center justify-center gap-2 text-sm font-semibold py-3 rounded-xl transition-all ${false ? 'bg-[#3B82F6] hover:bg-[#2563EB] text-white shadow-[0_0_16px_rgba(59,130,246,0.35)] hover:shadow-[0_0_24px_rgba(59,130,246,0.55)]' : 'bg-white/[0.05] text-gray-600 cursor-not-allowed border border-white/[0.07]'}`}><Calendar className="w-4 h-4" /> Request a Tour</button>
+                <p className="text-gray-700 text-xs text-center -mt-2">This service is not available for this property.</p>
             </div>
         </motion.div>
     );
