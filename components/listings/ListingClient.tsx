@@ -16,9 +16,10 @@ import { SortOption, Listing } from '@/types/listings';
 type ListingsClientProps = {
     isLoggedIn: boolean;
     userBalance: number;
+    hideNavAndFooter?: boolean;
 };
 
-export default function ListingsClient({ isLoggedIn, userBalance }: ListingsClientProps) {
+export default function ListingsClient({ isLoggedIn, userBalance, hideNavAndFooter }: ListingsClientProps) {
     const [dbListings, setDbListings] = useState<Listing[]>([]);
     const [availableCities, setAvailableCities] = useState<string[]>(['All Cities']);
 
@@ -128,9 +129,9 @@ export default function ListingsClient({ isLoggedIn, userBalance }: ListingsClie
     ].filter(Boolean).length;
 
     return (
-        <div className="min-h-screen bg-[#0D0D0D] text-white font-['Inter'] overflow-x-hidden">
-            <Navbar />
-            <div className="pt-28 pb-8 border-b border-white/[0.06] relative overflow-hidden">
+        <div className={`min-h-screen text-white font-['Inter'] overflow-x-hidden ${hideNavAndFooter ? 'bg-transparent' : 'bg-[#0D0D0D]'}`}>
+            {!hideNavAndFooter && <Navbar />}
+            <div className={`pb-8 border-b border-white/[0.06] relative overflow-hidden ${hideNavAndFooter ? 'pt-4' : 'pt-28'}`}>
                 <div className="max-w-7xl mx-auto px-6 relative z-10">
                     <h1 className="font-['Space_Grotesk'] text-3xl md:text-4xl font-bold text-white mb-1">Browse Spaces</h1>
                     <div className="flex gap-3 mt-5">
@@ -139,7 +140,7 @@ export default function ListingsClient({ isLoggedIn, userBalance }: ListingsClie
                             <input type="text" placeholder="Search by name, city or area…" value={search} onChange={e => setSearch(e.target.value)} className="w-full bg-[#141414] border border-white/[0.08] rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-[#3B82F6]/50 transition-colors" />
                             {search && <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white"><X className="w-4 h-4" /></button>}
                         </div>
-                        <button onClick={() => setSidebarOpen(true)} className="lg:hidden flex items-center gap-2 bg-[#141414] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-gray-300 hover:text-white">
+                        <button onClick={() => setSidebarOpen(true)} className={`flex items-center gap-2 bg-[#141414] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-gray-300 hover:text-white ${hideNavAndFooter ? '' : 'lg:hidden'}`}>
                             <SlidersHorizontal className="w-4 h-4" /> Filters {activeFilterCount > 0 && <span className="bg-[#3B82F6] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{activeFilterCount}</span>}
                         </button>
                     </div>
@@ -148,29 +149,31 @@ export default function ListingsClient({ isLoggedIn, userBalance }: ListingsClie
 
             <div className="max-w-7xl mx-auto px-6 py-8">
                 <div className="flex gap-8">
-                    <aside className="hidden lg:block w-64 shrink-0">
-                        <div className="sticky top-24 bg-[#111111] border border-white/[0.07] rounded-2xl p-6">
-                            <div className="flex items-center justify-between mb-6">
-                                <span className="font-['Space_Grotesk'] font-semibold text-white flex items-center gap-2"><SlidersHorizontal className="w-4 h-4 text-[#3B82F6]" /> Filters</span>
+                    {!hideNavAndFooter && (
+                        <aside className="hidden lg:block w-64 shrink-0">
+                            <div className="sticky top-24 bg-[#111111] border border-white/[0.07] rounded-2xl p-6">
+                                <div className="flex items-center justify-between mb-6">
+                                    <span className="font-['Space_Grotesk'] font-semibold text-white flex items-center gap-2"><SlidersHorizontal className="w-4 h-4 text-[#3B82F6]" /> Filters</span>
+                                </div>
+                                <FilterSidebar
+                                    typeFilter={typeFilter} setTypeFilter={setTypeFilter}
+                                    availableCities={availableCities} cityFilter={cityFilter} setCityFilter={setCityFilter}
+                                    roomCount={roomCount} setRoomCount={setRoomCount}
+                                    amenityFilters={amenityFilters} toggleAmenity={toggleAmenity}
+                                    minPrice={minPrice} setMinPrice={setMinPrice}
+                                    maxPrice={maxPrice} setMaxPrice={setMaxPrice}
+                                    priceType={priceType} setPriceType={setPriceType}
+                                    activeFilterCount={activeFilterCount} clearFilters={clearFilters}
+                                />
                             </div>
-                            <FilterSidebar
-                                typeFilter={typeFilter} setTypeFilter={setTypeFilter}
-                                availableCities={availableCities} cityFilter={cityFilter} setCityFilter={setCityFilter}
-                                roomCount={roomCount} setRoomCount={setRoomCount}
-                                amenityFilters={amenityFilters} toggleAmenity={toggleAmenity}
-                                minPrice={minPrice} setMinPrice={setMinPrice}
-                                maxPrice={maxPrice} setMaxPrice={setMaxPrice}
-                                priceType={priceType} setPriceType={setPriceType}
-                                activeFilterCount={activeFilterCount} clearFilters={clearFilters}
-                            />
-                        </div>
-                    </aside>
+                        </aside>
+                    )}
 
                     <AnimatePresence>
                         {sidebarOpen && (
                             <>
-                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSidebarOpen(false)} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden" />
-                                <motion.div initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} transition={{ type: 'spring', damping: 28, stiffness: 280 }} className="fixed left-0 top-0 bottom-0 w-80 bg-[#111111] border-r border-white/[0.07] z-50 overflow-y-auto p-6 lg:hidden">
+                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSidebarOpen(false)} className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-40 ${hideNavAndFooter ? '' : 'lg:hidden'}`} />
+                                <motion.div initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} transition={{ type: 'spring', damping: 28, stiffness: 280 }} className={`fixed left-0 top-0 bottom-0 w-80 bg-[#111111] border-r border-white/[0.07] z-50 overflow-y-auto p-6 ${hideNavAndFooter ? '' : 'lg:hidden'}`}>
                                     <div className="flex items-center justify-between mb-6"><span className="font-['Space_Grotesk'] font-semibold text-white">Filters</span><button onClick={() => setSidebarOpen(false)} className="text-gray-500"><X className="w-5 h-5" /></button></div>
                                     <FilterSidebar
                                         typeFilter={typeFilter} setTypeFilter={setTypeFilter}
@@ -197,8 +200,8 @@ export default function ListingsClient({ isLoggedIn, userBalance }: ListingsClie
                                     </button>
                                     <AnimatePresence>
                                         {sortOpen && (
-                                            <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }} className="absolute right-0 top-full mt-2 w-52 bg-[#1a1a1a] border border-white/10 rounded-xl overflow-hidden shadow-2xl z-20">
-                                                {(['Newest', 'Top Rated'] as SortOption[]).map(s => (
+                                            <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }} className="absolute right-0 top-full mt-2 w-52 bg-[#1a1a1a] border border-white/10 rounded-xl overflow-hidden shadow-2xl z-50">
+                                                {(['Newest', 'Top Rated', 'Price: Low to High', 'Price: High to Low'] as SortOption[]).map(s => (
                                                     <button key={s} onClick={() => { setSortBy(s); setSortOpen(false); }} className={`w-full text-left px-4 py-3 text-sm transition-colors ${sortBy === s ? 'text-[#3B82F6] bg-[#3B82F6]/10' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>{s}</button>
                                                 ))}
                                             </motion.div>
@@ -246,7 +249,7 @@ export default function ListingsClient({ isLoggedIn, userBalance }: ListingsClie
                     </div>
                 </div>
             </div>
-            <Footer />
+            {!hideNavAndFooter && <Footer />}
         </div>
     );
 }

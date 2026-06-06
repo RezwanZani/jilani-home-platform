@@ -684,8 +684,10 @@ export async function getPaginatedProperties(params: {
         }
 
         // Sorting
-        let orderBy = desc(properties.createdAt);
+        let orderBy: any = desc(properties.createdAt);
         if (sortBy === 'Top Rated') orderBy = desc(properties.averageRating);
+        else if (sortBy === 'Price: Low to High') orderBy = asc(sql`${properties.price}::numeric`);
+        else if (sortBy === 'Price: High to Low') orderBy = desc(sql`${properties.price}::numeric`);
 
         // Safely create the join condition for saved properties
         const savedJoinCondition = userId
