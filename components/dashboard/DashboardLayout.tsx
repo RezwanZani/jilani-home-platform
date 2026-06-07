@@ -1,6 +1,7 @@
 'use client';
 
 import { useUser } from "@/components/providers/UserProvider";
+import { useTheme } from "@/providers/ThemeProvider";
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -26,7 +27,8 @@ import {
   DollarSign,
   Ticket,
   BadgeDollarSign,
-  Coins, Star, Key
+  Coins, Star, Key,
+  MessageSquare, Sun, Moon
 } from "lucide-react";
 
 interface DashboardLayoutProps {
@@ -35,6 +37,7 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const user = useUser();
+  const { theme, toggle } = useTheme();
 
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
@@ -47,12 +50,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "Unlocks", path: "/dashboard/unlocks", icon: Key },
     { name: "Transactions", path: "/dashboard/transactions", icon: BadgeDollarSign },
     { name: "Get Points", path: "/dashboard/store", icon: Coins },
+    { name: "Support Tickets", path: "/dashboard/inquiries", icon: MessageSquare },
     { name: "Settings", path: "/dashboard/settings", icon: Settings },
   ];
 
   const adminLinks = [
     { name: "Dashboard", path: "/admin", icon: LayoutDashboard },
     { name: "Properties", path: "/admin/properties", icon: Building2 },
+    { name: "Inquiries", path: "/admin/inquiries", icon: MessageSquare },
     { name: "Reviews", path: "/admin/reviews", icon: Star },
     { name: "Owners", path: "/admin/owners", icon: UserCheck },
     { name: "Zones", path: "/admin/zones", icon: MapPinned },
@@ -204,6 +209,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
 
           <div className="flex items-center gap-5">
+            <button 
+              onClick={toggle}
+              className="relative p-2.5 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
+            >
+              {theme === 'dark' ? <Sun className="w-5 h-5 text-gray-300" /> : <Moon className="w-5 h-5 text-gray-600" />}
+            </button>
             <button className="relative p-2.5 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors">
               <Bell className="w-5 h-5 text-gray-600 dark:text-gray-300" />
               <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-blue-500 border-2 border-white dark:border-[#1E293B] rounded-full" />

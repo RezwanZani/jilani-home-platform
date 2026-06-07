@@ -130,10 +130,6 @@ export async function verifyAndSavePhoneOTP(phoneNumber: string, otp: string) {
         console.error("Error verifying onboarding OTP:", error);
         return { success: false, message: "An error occurred. Please try again." };
     }
-
-    // 2. Trigger a hard server-side redirect to the dashboard
-    // (Note: redirect() must be called OUTSIDE the try/catch block in Next.js)
-    redirect("/dashboard");
 }
 
 export async function verifyAndUpdatePhone(newPhone: string, otp: string) {

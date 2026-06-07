@@ -1,6 +1,7 @@
 "use server";
 
 import { S3Client, PutObjectCommand, DeleteObjectsCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import crypto from "crypto";
 
 const s3Client = new S3Client({
@@ -99,5 +100,28 @@ export async function deleteFilesFromR2(urls: string[]) {
     } catch (error) {
         console.error("R2 Delete Error:", error);
         return { success: false, error: "Failed to delete from Cloudflare R2" };
+    }
+}
+
+export async function getPresignedR2Url(fileName: string, fileType: string) {
+    try {
+        const ext = fileName.split('.').pop() || 'bin';
+        const key = `tickets/attachments/${crypto.randomUUID()}.${ext}`;
+
+        const command = new PutObjectCommand({
+            Bucket: process.env.R2_BUCKET_NAME!,
+            Key: key,
+            ContentType: fileType,
+        });
+
+        // 3600 seconds = 1 hour expiration
+        // @ts-ignore - mismatch between S3Client types across aws-sdk packages
+        const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+        const finalUrl = `${process.env.R2_PUBLIC_DOMAIN}/${key}`;
+
+        return { success: true, uploadUrl: url, finalUrl };
+    } catch (error) {
+        console.error("R2 Presigned URL Error:", error);
+        return { success: false, error: "Failed to generate upload URL" };
     }
 }

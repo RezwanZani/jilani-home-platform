@@ -23,7 +23,7 @@ export default async function OnboardingLayout({ children }: { children: React.R
         redirect("/logout");
     }
 
-    // 4. 🚨 THE VAULT DOOR: If they already have a phone number, kick them to Dashboard
+    // 4. If they already have a phone number, kick them to Dashboard
     if (dbUser.phoneNumber) {
         redirect("/dashboard");
     }

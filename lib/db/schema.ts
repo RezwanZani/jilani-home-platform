@@ -25,6 +25,8 @@ export const propertyTypeEnum = pgEnum('property_type', ['house', 'office', 'hal
 export const propertyStatusEnum = pgEnum('property_status', ['pending', 'active', 'inactive', 'expired']);
 export const transactionStatusEnum = pgEnum('transaction_status', ['pending', 'success', 'failed']);
 export const inquiryStatusEnum = pgEnum('inquiry_status', ['pending', 'contacted', 'closed']);
+export const ticketTypeEnum = pgEnum('ticket_type', ['support', 'billing_issue', 'report_property', 'other']);
+export const ticketStatusEnum = pgEnum('ticket_status', ['open', 'closed']);
 export const discountTypeEnum = pgEnum('discount_type', ['percentage', 'fixed_amount']); // NEW
 export const priceTypeEnum = pgEnum('price_type', ['hour', 'month', 'day', 'year', 'event', 'one-time']);
 
@@ -342,4 +344,29 @@ export const propertyViewHistory = pgTable('property_view_history', {
         propIpIdx: index('prop_ip_idx').on(table.propertyId, table.ipAddress),
         timeIdx: index('view_time_idx').on(table.viewedAt)
     };
+});
+
+// ==========================================
+// 13. TICKET SYSTEM (Support & Inquiries)
+// ==========================================
+export const tickets = pgTable('tickets', {
+    id: uuid('id').defaultRandom().primaryKey(),
+    ticketNumber: varchar('ticket_number', { length: 10 }).unique().notNull(),
+    title: varchar('title').notNull(),
+    type: ticketTypeEnum('type').notNull(),
+    userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+    transactionId: uuid('transaction_id').references(() => transactions.id, { onDelete: 'set null' }),
+    propertyId: uuid('property_id').references(() => properties.id, { onDelete: 'set null' }),
+    status: ticketStatusEnum('status').default('open').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(),
+});
+
+export const ticketMessages = pgTable('ticket_messages', {
+    id: uuid('id').defaultRandom().primaryKey(),
+    ticketId: uuid('ticket_id').references(() => tickets.id, { onDelete: 'cascade' }).notNull(),
+    senderId: uuid('sender_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+    message: text('message').notNull(),
+    fileUrls: jsonb('file_urls'), // Array of strings e.g. ["url1", "url2"]
+    createdAt: timestamp('created_at').defaultNow().notNull(),
 });
