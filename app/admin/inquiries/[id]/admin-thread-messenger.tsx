@@ -29,7 +29,7 @@ export function AdminThreadMessenger({ ticket, messages, currentUserId }: { tick
 
         try {
             let fileUrls: string[] = [];
-            
+
             if (file && file.size > 0) {
                 const { success, uploadUrl, finalUrl } = await getPresignedR2Url(file.name, file.type);
                 if (success && uploadUrl && finalUrl) {
@@ -107,33 +107,33 @@ export function AdminThreadMessenger({ ticket, messages, currentUserId }: { tick
                 </div>
                 <div className="flex flex-wrap gap-2">
                     {ticket.propertyId && (
-                        <Button 
-                            variant="destructive" 
-                            size="sm" 
+                        <Button
+                            variant="destructive"
+                            size="sm"
                             onClick={handleDeleteProperty}
                             disabled={actionLoading === 'property'}
                             className="bg-red-600 hover:bg-red-700"
                         >
-                            {actionLoading === 'property' ? <Loader2 className="w-4 h-4 animate-spin mr-2"/> : <Ban className="w-4 h-4 mr-2" />}
+                            {actionLoading === 'property' ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Ban className="w-4 h-4 mr-2" />}
                             Delete Property Link
                         </Button>
                     )}
-                    <Button 
-                        variant="secondary" 
-                        size="sm" 
+                    <Button
+                        variant="secondary"
+                        size="sm"
                         onClick={handlePurge}
                         disabled={actionLoading === 'purge'}
                     >
-                        {actionLoading === 'purge' ? <Loader2 className="w-4 h-4 animate-spin mr-2"/> : <Trash2 className="w-4 h-4 mr-2" />}
+                        {actionLoading === 'purge' ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Trash2 className="w-4 h-4 mr-2" />}
                         Purge Files
                     </Button>
-                    <Button 
-                        variant={ticket.status === 'open' ? 'outline' : 'default'} 
-                        size="sm" 
+                    <Button
+                        variant={ticket.status === 'open' ? 'outline' : 'default'}
+                        size="sm"
                         onClick={handleToggleStatus}
                         disabled={actionLoading === 'status'}
                     >
-                        {actionLoading === 'status' ? <Loader2 className="w-4 h-4 animate-spin mr-2"/> : (
+                        {actionLoading === 'status' ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : (
                             ticket.status === 'open' ? <Lock className="w-4 h-4 mr-2" /> : <LockOpen className="w-4 h-4 mr-2" />
                         )}
                         {ticket.status === 'open' ? 'Close Conversation' : 'Re-Open Conversation'}
@@ -160,12 +160,12 @@ export function AdminThreadMessenger({ ticket, messages, currentUserId }: { tick
 
                     return (
                         <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                            <div className={`max-w-[70%] rounded-2xl px-4 py-2 ${isMe ? 'bg-blue-600 text-white rounded-br-none' : 'bg-gray-100 dark:bg-white/5 text-gray-900 dark:text-white rounded-bl-none'}`}>
-                                <div 
+                            <div className={`max-w-[70%] rounded-2xl px-4 py-2 ${isMe ? 'bg-gray-900 text-gray-100 dark:bg-blue-800 dark:text-white rounded-br-none' : 'bg-gray-100 dark:bg-white/5 text-gray-900 dark:text-white rounded-bl-none'}`}>
+                                <div
                                     className="whitespace-pre-wrap text-sm"
                                     dangerouslySetInnerHTML={{ __html: safeMessage }}
                                 />
-                                
+
                                 {msg.fileUrls && msg.fileUrls.length > 0 && (
                                     <div className="mt-2 space-y-1">
                                         {msg.fileUrls.map((url: string, i: number) => (
@@ -189,9 +189,9 @@ export function AdminThreadMessenger({ ticket, messages, currentUserId }: { tick
                 {ticket.status === 'closed' ? (
                     <div className="flex flex-col items-center justify-center p-4 bg-yellow-50 text-yellow-800 rounded-lg border border-yellow-200">
                         <p className="font-medium text-sm">This conversation is locked.</p>
-                        <Button 
-                            variant="outline" 
-                            size="sm" 
+                        <Button
+                            variant="outline"
+                            size="sm"
                             className="mt-3 bg-white hover:bg-yellow-100 border-yellow-300 text-yellow-900"
                             onClick={handleToggleStatus}
                             disabled={actionLoading !== null}
@@ -203,7 +203,7 @@ export function AdminThreadMessenger({ ticket, messages, currentUserId }: { tick
                 ) : (
                     <div className="flex items-end gap-2">
                         <div className="flex-1 bg-white dark:bg-[#0F172A] border border-gray-200 dark:border-white/10 rounded-lg focus-within:ring-1 focus-within:ring-blue-500">
-                            <Textarea 
+                            <Textarea
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
                                 placeholder="Type your message as an agent..."
@@ -227,14 +227,14 @@ export function AdminThreadMessenger({ ticket, messages, currentUserId }: { tick
                                 <div className="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#0F172A] hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
                                     <Paperclip className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                                 </div>
-                                <input 
-                                    type="file" 
-                                    className="hidden" 
+                                <input
+                                    type="file"
+                                    className="hidden"
                                     onChange={(e) => {
                                         if (e.target.files && e.target.files[0]) {
                                             setFile(e.target.files[0]);
                                         }
-                                    }} 
+                                    }}
                                 />
                             </label>
                             <Button size="icon" className="w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white" onClick={handleSend} disabled={loading || (!message.trim() && !file)}>
