@@ -222,23 +222,23 @@ export function CheckoutModal({ isOpen, onClose, selectedPackage, user }: Checko
                     exit={{ opacity: 0, height: 0 }}
                     className="overflow-hidden"
                   >
-                    <div className="bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 p-4 rounded-xl space-y-3 text-sm text-blue-900 dark:text-blue-100">
-                      <p className="font-bold flex items-center gap-2">
-                        <Shield className="w-4 h-4" /> Instructions for {gateway.toUpperCase()}
+                    <div className="bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 p-4 rounded-xl space-y-3 text-sm text-blue-900 dark:text-blue-100 font-bengali">
+                      <p className="font-bold flex items-center gap-2 font-sans">
+                        <Shield className="w-4 h-4" /> {gateway.toUpperCase()} এর জন্য নির্দেশনাবলী
                       </p>
-                      <ol className="list-decimal list-inside space-y-1.5 ml-1">
-                        <li>Go to your {gateway.toUpperCase()} App or dial USSD.</li>
-                        <li>Select <strong>Send Money</strong> or <strong>Make Payment</strong>.</li>
-                        <li>Enter this number: <strong className="text-lg tracking-wider ml-1">017XXXXXXXX</strong></li>
-                        <li>Enter the amount: <strong>৳{getFinalPrice().toFixed(2)}</strong></li>
-                        <li>Enter Reference: <strong>JH-POINTS</strong></li>
-                        <li>Complete the transaction and save the <strong>TrxID</strong>.</li>
+                      <ol className="list-decimal list-inside space-y-1.5 ml-1 leading-relaxed">
+                        <li>আপনার <span className="font-sans font-bold">{gateway.toUpperCase()}</span> অ্যাপে যান অথবা USSD ডায়াল করুন।</li>
+                        <li><strong className="font-sans">Send Money</strong> অথবা <strong className="font-sans">Make Payment</strong> নির্বাচন করুন।</li>
+                        <li>এই নম্বরটি দিন: <strong className="font-sans text-lg tracking-wider ml-1">01560034744</strong></li>
+                        <li>পরিমাণ দিন: <strong className="font-sans">৳{getFinalPrice().toFixed(2)}</strong></li>
+                        <li>রেফারেন্স দিন: <strong className="font-sans">Jilani Home</strong></li>
+                        <li>লেনদেন সম্পন্ন করুন এবং <strong className="font-sans">TrxID</strong> সংরক্ষণ করুন।</li>
                       </ol>
                       {gateway === 'bkash' && (
                         <div className="mt-3 pt-3 border-t border-blue-200 dark:border-blue-500/30">
-                          <p className="text-xs mb-2">Or use our direct payment link:</p>
+                          <p className="text-xs mb-2 text-gray-700 dark:text-gray-300">অথবা আমাদের ডিরেক্ট পেমেন্ট লিঙ্ক ব্যবহার করুন:</p>
                           <a href="https://shop.bkash.com/jilani-home-a-rental-platform0/paymentlink" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#E2136E] text-white font-bold rounded-lg hover:bg-[#c40e5d] transition-colors text-xs">
-                            bKash Payment Link <ArrowRight className="w-3 h-3" />
+                            বিকাশ পেমেন্ট লিঙ্ক <ArrowRight className="w-3 h-3" />
                           </a>
                         </div>
                       )}
@@ -250,7 +250,7 @@ export function CheckoutModal({ isOpen, onClose, selectedPackage, user }: Checko
               {/* Form Fields */}
               <div className="space-y-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="senderNumber">Sender Wallet Number *</Label>
+                  <Label htmlFor="senderNumber">Sender {gateway.toUpperCase() || "Wallet"} Number *</Label>
                   <Input
                     id="senderNumber"
                     placeholder="e.g. 01700000000"
