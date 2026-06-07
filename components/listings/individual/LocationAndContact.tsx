@@ -48,13 +48,13 @@ export default function LocationAndContact({ propertyId, zone, hasUnlockedInitia
 
     const InfoRow = ({ label, value, isPrivate = false }: { label: string, value: string | undefined, isPrivate?: boolean }) => (
         <div className="flex items-start gap-4 border-b border-white/[0.04] py-3 last:border-0">
-            <span className="text-gray-500 text-sm min-w-[130px]">{label}:</span>
+            <span className="text-gray-600 dark:text-gray-500 text-sm min-w-[130px]">{label}:</span>
             {isPrivate && !isUnlocked ? (
-                <span className="text-white/20 text-sm blur-[4px] select-none font-mono tracking-widest">
+                <span className="text-gray-500 dark:text-white/20 text-sm blur-[4px] select-none font-mono tracking-widest">
                     Hidden Data
                 </span>
             ) : (
-                <span className="text-gray-200 text-sm font-medium">
+                <span className="text-gray-700 dark:text-gray-200 text-sm font-medium">
                     {value || "N/A"}
                 </span>
             )}

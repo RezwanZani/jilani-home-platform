@@ -72,15 +72,15 @@ export default function ContactInfoReveal({ propertyId, hasUnlockedInitially, zo
                     <CheckCircle2 className="w-5 h-5" />
                     <span className="font-semibold text-sm">Contact Info Unlocked</span>
                 </div>
-                <div className="flex items-center gap-3 text-gray-200 text-sm">
-                    <MapPin className="w-4 h-4 shrink-0 text-gray-500" />
+                <div className="flex items-center gap-3 text-gray-700 dark:text-gray-200 text-sm">
+                    <MapPin className="w-4 h-4 shrink-0 dark:text-gray-500" />
                     <span>{renderedContactData1 ?? "Detailed address not provided."} <br /> {renderedContactData2 ?? ""} <br /> {renderedContactData3 ?? ""} </span>
                 </div>
-                <div className="flex items-center gap-3 text-gray-200 text-sm">
+                <div className="flex items-center gap-3 text-gray-700 dark:text-gray-200 text-sm">
                     <Phone className="w-4 h-4 shrink-0 text-blue-500" />
                     <a href={`tel:${contactData?.phone}`}><span className='hover:text-blue-400 transition-colors'>{contactData?.phone || "N/A"}</span></a>
                 </div>
-                <div className="flex items-center gap-3 text-gray-200 text-sm">
+                <div className="flex items-center gap-3 text-gray-700 dark:text-gray-200 text-sm">
                     <MessageCircle className="w-4 h-4 shrink-0 text-green-500" />
                     <a href={`https://wa.me/+88${contactData?.whatsapp}`}><span className='hover:text-green-400 transition-colors'>{contactData?.whatsapp || "N/A"}</span></a>
                 </div>
