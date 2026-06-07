@@ -30,6 +30,7 @@ import {
   Coins, Star, Key,
   MessageSquare, Sun, Moon
 } from "lucide-react";
+import { ImageWithFallback } from "../figma/ImageWithFallback";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -128,36 +129,30 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         })}
       </nav>
 
-      {/* Bottom user section */}
-      <div className="pt-6 border-t border-gray-100 dark:border-white/10 mt-6 space-y-5 flex-shrink-0">
-        <div className="flex items-center gap-3 px-2">
-          <img
-            src={user?.image || '/avatar-default.png'}
-            alt="User"
-            className="w-10 h-10 rounded-full object-cover border-2 border-gray-100 dark:border-white/15 flex-shrink-0"
-          />
-          <div className="overflow-hidden flex-1 min-w-0">
-            <div className="flex items-center gap-1.5">
-              <p className="font-bold text-sm text-gray-900 dark:text-white truncate">
-                {user?.name}
-              </p>
-              {!isAdmin && (
-                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full flex-shrink-0" />
-              )}
+      {/* Bottom Agency Section */}
+      <div className="pt-3 border-t border-gray-100 dark:border-white/10 mt-3 space-y-5 flex-shrink-0">
+        <p className="text-gray-300 dark:text-gray-500 font-bold mb-1 mx-auto text-sm text-center">Developed By</p>
+        <div className="border border-blue-500/50 rounded-2xl p-3 transition-colors">
+          <div className="flex items-center gap-3">
+            <ImageWithFallback
+              src="/agency/neosparkx.jpeg"
+              alt="NeoSparkX"
+              className="w-12 h-12 rounded-xl object-cover bg-gray-900"
+            />
+            <div>
+              <h5 className="text-white font-bold tracking-wide text-sm">NEOSPARKX</h5>
+              <p className="text-[#3B82F6] text-xs font-medium mt-0.5">A Software Agency</p>
             </div>
-            <p className="text-[11px] font-medium text-gray-500 truncate">
-              {user?.email || user?.phoneNumber || "Member"}
-            </p>
           </div>
         </div>
-        <Link
-          href="/logout"
-          className="flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors text-sm font-bold"
-        >
-          <LogOut className="w-4.5 h-4.5" />
-          Sign Out
-        </Link>
       </div>
+      <Link
+        href="/logout"
+        className="flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors text-sm font-bold"
+      >
+        <LogOut className="w-4.5 h-4.5" />
+        Sign Out
+      </Link>
     </div>
   );
 
@@ -209,7 +204,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
 
           <div className="flex items-center gap-5">
-            <button 
+            <button
               onClick={toggle}
               className="relative p-2.5 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
             >
@@ -222,6 +217,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <div className="flex items-center gap-3 pl-2 border-l border-gray-200 dark:border-white/10">
               <div className="text-right hidden sm:block">
                 <p className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">{user?.name}</p>
+                <p className="text-[10px] font-medium text-gray-500 dark:text-gray-300">{user?.email}</p>
                 <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-tighter">{user?.role === 'user' ? 'Member' : 'Admin'}</p>
               </div>
               <img
