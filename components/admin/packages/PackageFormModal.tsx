@@ -12,6 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { createPackage, updatePackage } from "@/lib/actions/package-actions";
+import { Switch } from "@/components/ui/switch";
+import { Plus, Trash2 } from "lucide-react";
 
 interface PackageFormModalProps {
   isOpen: boolean;
@@ -22,12 +24,22 @@ interface PackageFormModalProps {
 export default function PackageFormModal({ isOpen, onClose, initialData }: PackageFormModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    name_bn: string;
+    points: string;
+    price: string;
+    isActive: boolean;
+    isPopular: boolean;
+    features: { text: string; text_bn: string }[];
+  }>({
     name: "",
     name_bn: "",
     points: "",
     price: "",
     isActive: true,
+    isPopular: false,
+    features: [],
   });
 
   useEffect(() => {
@@ -38,6 +50,8 @@ export default function PackageFormModal({ isOpen, onClose, initialData }: Packa
         points: initialData?.points || "",
         price: initialData?.price || "",
         isActive: initialData ? initialData.isActive : true,
+        isPopular: initialData ? initialData.isPopular : false,
+        features: initialData?.features || [],
       });
     }
   }, [isOpen, initialData]);
@@ -68,6 +82,8 @@ export default function PackageFormModal({ isOpen, onClose, initialData }: Packa
         points: "",
         price: "",
         isActive: true,
+        isPopular: false,
+        features: [],
       });
       setIsSubmitting(false);
       onClose();
@@ -101,6 +117,79 @@ export default function PackageFormModal({ isOpen, onClose, initialData }: Packa
             <div className="space-y-2 col-span-2 sm:col-span-1">
               <Label htmlFor="price" className="text-gray-400">Price (BDT) *</Label>
               <Input id="price" type="number" step="0.01" placeholder="500.00" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} className="bg-white/5 border-white/10 text-white placeholder:text-gray-600" />
+            </div>
+            <div className="space-y-2 col-span-2 sm:col-span-1 flex flex-col justify-center">
+              <Label htmlFor="isPopular" className="text-gray-400">Mark as Popular?</Label>
+              <div className="flex items-center gap-3">
+                <Switch 
+                  id="isPopular" 
+                  checked={formData.isPopular} 
+                  onCheckedChange={(checked) => setFormData({ ...formData, isPopular: checked })} 
+                />
+                <span className="text-sm text-gray-400">{formData.isPopular ? "Yes" : "No"}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Features Section */}
+          <div className="space-y-4 py-2 border-t border-white/10 mt-2 mb-4">
+            <div className="flex items-center justify-between">
+              <Label className="text-gray-400">Package Features</Label>
+              <Button 
+                type="button" 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setFormData({ ...formData, features: [...formData.features, { text: "", text_bn: "" }] })}
+                className="bg-transparent border-white/20 text-white hover:bg-white/10 h-8"
+              >
+                <Plus className="w-4 h-4 mr-1" /> Add Feature
+              </Button>
+            </div>
+            <div className="max-h-48 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+              {formData.features.map((feature, index) => (
+                <div key={index} className="grid grid-cols-12 gap-2 items-center">
+                  <div className="col-span-5">
+                    <Input 
+                      placeholder="Feature (English)" 
+                      value={feature.text} 
+                      onChange={(e) => {
+                        const newFeatures = [...formData.features];
+                        newFeatures[index].text = e.target.value;
+                        setFormData({ ...formData, features: newFeatures });
+                      }} 
+                      className="bg-white/5 border-white/10 text-white placeholder:text-gray-600 h-9 text-sm" 
+                    />
+                  </div>
+                  <div className="col-span-6">
+                    <Input 
+                      placeholder="Feature (Bengali)" 
+                      value={feature.text_bn} 
+                      onChange={(e) => {
+                        const newFeatures = [...formData.features];
+                        newFeatures[index].text_bn = e.target.value;
+                        setFormData({ ...formData, features: newFeatures });
+                      }} 
+                      className="bg-white/5 border-white/10 text-white placeholder:text-gray-600 h-9 text-sm" 
+                    />
+                  </div>
+                  <div className="col-span-1 flex justify-end">
+                    <button 
+                      type="button" 
+                      onClick={() => {
+                        const newFeatures = [...formData.features];
+                        newFeatures.splice(index, 1);
+                        setFormData({ ...formData, features: newFeatures });
+                      }}
+                      className="p-1.5 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors outline-none"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+              {formData.features.length === 0 && (
+                <p className="text-xs text-gray-500 text-center py-4 border border-dashed border-white/10 rounded-lg">No features added yet.</p>
+              )}
             </div>
           </div>
 

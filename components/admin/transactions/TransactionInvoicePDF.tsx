@@ -267,9 +267,6 @@ export const TransactionInvoicePDF = ({ transaction }: TransactionInvoiceProps) 
           </View>
           <View>
             <Text style={styles.invoiceTitle}>INVOICE</Text>
-            <Text style={{ fontSize: 10, color: '#6b7280', textAlign: 'right', marginTop: 4 }}>
-              TRX: {transaction.gatewayTrxId || transaction.id.substring(0, 8).toUpperCase()}
-            </Text>
           </View>
         </View>
 
@@ -285,6 +282,17 @@ export const TransactionInvoicePDF = ({ transaction }: TransactionInvoiceProps) 
               <Text style={styles.label}>Date</Text>
               <Text style={styles.value}>{date}</Text>
               <Text style={{ fontSize: 10, color: '#6b7280', marginTop: 2 }}>{time}</Text>
+            </View>
+          </View>
+
+          <View style={[styles.row, { marginTop: 20 }]}>
+            <View style={styles.column}>
+              <Text style={styles.label}>Invoice Number</Text>
+              <Text style={styles.value}>{transaction.invoiceNumber || 'N/A'}</Text>
+            </View>
+            <View style={styles.column}>
+              <Text style={styles.label}>Transaction ID</Text>
+              <Text style={styles.value}>{transaction.gatewayTrxId || transaction.id.substring(0, 8).toUpperCase()}</Text>
             </View>
           </View>
 

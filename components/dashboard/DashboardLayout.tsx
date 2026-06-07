@@ -26,7 +26,7 @@ import {
   DollarSign,
   Ticket,
   BadgeDollarSign,
-  Coins, Star
+  Coins, Star, Key
 } from "lucide-react";
 
 interface DashboardLayoutProps {
@@ -44,6 +44,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "Overview", path: "/dashboard", icon: Home },
     { name: "Explore", path: "/dashboard/explore", icon: Compass },
     { name: "Your Listings", path: "/dashboard/saved", icon: Heart },
+    { name: "Unlocks", path: "/dashboard/unlocks", icon: Key },
+    { name: "Transactions", path: "/dashboard/transactions", icon: BadgeDollarSign },
+    { name: "Get Points", path: "/dashboard/store", icon: Coins },
     { name: "Settings", path: "/dashboard/settings", icon: Settings },
   ];
 

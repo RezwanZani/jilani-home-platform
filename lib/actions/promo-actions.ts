@@ -98,6 +98,7 @@ export async function createPromoCode(data: any) {
             discountType: data.discountType, // 'percentage' | 'fixed_amount'
             discountValue: String(data.discountValue),
             maxUses: data.maxUses ? Number(data.maxUses) : null,
+            maxUsesPerUser: data.maxUsesPerUser ? Number(data.maxUsesPerUser) : null,
             validUntil: data.validUntil ? new Date(data.validUntil) : null,
             isActive: data.isActive ?? true,
         });
@@ -133,6 +134,7 @@ export async function updatePromoCode(id: string, data: any) {
                 discountType: data.discountType,
                 discountValue: String(data.discountValue),
                 maxUses: data.maxUses ? Number(data.maxUses) : null,
+                maxUsesPerUser: data.maxUsesPerUser ? Number(data.maxUsesPerUser) : null,
                 validUntil: data.validUntil ? new Date(data.validUntil) : null,
                 isActive: data.isActive,
             })
@@ -163,5 +165,79 @@ export async function bulkUpdatePromoStatus(ids: string[], isActive: boolean) {
         return { success: true };
     } catch (error: any) {
         return { success: false, error: "Failed to update promo statuses." };
+    }
+}
+
+export async function validatePromoCode(code: string, userId: string, packagePrice: number) {
+    try {
+        const promo = await db.query.promoCodes.findFirst({
+            where: eq(promoCodes.code, code.toUpperCase())
+        });
+
+        if (!promo) {
+            return { success: false, error: "Invalid promo code." };
+        }
+
+        if (!promo.isActive) {
+            return { success: false, error: "Promo code is no longer active." };
+        }
+
+        if (promo.validUntil && promo.validUntil < new Date()) {
+            return { success: false, error: "Promo code has expired." };
+        }
+
+        if (promo.maxUses !== null && promo.timesUsed >= promo.maxUses) {
+            return { success: false, error: "Promo code usage limit reached." };
+        }
+
+        // Check user specific limit from transactions table
+        if (promo.maxUsesPerUser !== null) {
+            // Need to query transactions table where userId = userId, promoCodeId = promo.id, and status in ('success', 'pending')
+            // Import transactions table at top
+            const { transactions } = require("@/lib/db/schema");
+            const userTransactions = await db.select().from(transactions).where(
+                and(
+                    eq(transactions.userId, userId),
+                    eq(transactions.promoCodeId, promo.id),
+                    or(
+                        eq(transactions.status, 'success'),
+                        eq(transactions.status, 'pending')
+                    )
+                )
+            );
+
+            if (userTransactions.length >= promo.maxUsesPerUser) {
+                return { success: false, error: "You have reached the maximum usage limit for this promo code." };
+            }
+        }
+
+        // Calculate discount
+        let discountAmount = 0;
+        if (promo.discountType === 'percentage') {
+            discountAmount = (packagePrice * Number(promo.discountValue)) / 100;
+        } else {
+            discountAmount = Number(promo.discountValue);
+        }
+
+        // Ensure discount doesn't exceed package price
+        if (discountAmount > packagePrice) {
+            discountAmount = packagePrice;
+        }
+
+        const finalPrice = packagePrice - discountAmount;
+
+        return { 
+            success: true, 
+            data: {
+                promoId: promo.id,
+                discountType: promo.discountType,
+                discountValue: Number(promo.discountValue),
+                discountAmount: Number(discountAmount.toFixed(2)),
+                finalPrice: Number(finalPrice.toFixed(2))
+            } 
+        };
+    } catch (error) {
+        console.error("Promo validation error:", error);
+        return { success: false, error: "Failed to validate promo code." };
     }
 }

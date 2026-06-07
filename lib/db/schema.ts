@@ -173,6 +173,8 @@ export const pointPackages = pgTable('point_packages', {
     name_bn: varchar('name_bn'),
     points: integer('points').notNull(),      // e.g., 1000
     price: decimal('price', { precision: 10, scale: 2 }).notNull(), // e.g., 500.00
+    features: jsonb('features'),              // Array of { text: string, text_bn: string }
+    isPopular: boolean('is_popular').default(false).notNull(),
     isActive: boolean('is_active').default(true).notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
 });
@@ -183,6 +185,7 @@ export const promoCodes = pgTable('promo_codes', {
     discountType: discountTypeEnum('discount_type').notNull(),
     discountValue: decimal('discount_value', { precision: 10, scale: 2 }).notNull(),
     maxUses: integer('max_uses'),
+    maxUsesPerUser: integer('max_uses_per_user'), // NEW: limit uses per user
     timesUsed: integer('times_used').default(0).notNull(),
     validUntil: timestamp('valid_until'),
     isActive: boolean('is_active').default(true).notNull(),
@@ -197,14 +200,20 @@ export const transactions = pgTable('transactions', {
     packageId: uuid('package_id').references(() => pointPackages.id, { onDelete: 'restrict' }).notNull(),
     promoCodeId: uuid('promo_code_id').references(() => promoCodes.id, { onDelete: 'set null' }),
 
+    invoiceNumber: varchar('invoice_number', { length: 20 }).unique().notNull(), // e.g. 2602123456
+
     originalAmount: decimal('original_amount', { precision: 10, scale: 2 }).notNull(), // The base price of the package
     discountAmount: decimal('discount_amount', { precision: 10, scale: 2 }).default('0').notNull(), // The exact Taka discounted
     amountPaid: decimal('amount_paid', { precision: 10, scale: 2 }).notNull(), // The final amount (Original - Discount)
     pointsCredited: integer('points_credited').notNull(), // Points added to wallet
 
-    gateway: varchar('gateway'), // e.g., 'bKash'
-    gatewayTrxId: varchar('gateway_trx_id').unique(),
+    gateway: varchar('gateway'), // e.g., 'bkash', 'rocket', 'nagad', 'manual'
+    gatewayTrxId: varchar('gateway_trx_id'),
+    senderNumber: varchar('sender_number'), // The wallet/phone number the user paid from
+    paymentScreenshot: text('payment_screenshot'), // Optional proof of payment
+
     status: transactionStatusEnum('status').default('pending').notNull(),
+    remark: text('remark'), // Admin notes
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(),
 });

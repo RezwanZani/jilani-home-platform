@@ -27,6 +27,7 @@ export default function PromoFormModal({ isOpen, onClose, initialData }: PromoFo
     discountType: "percentage",
     discountValue: "",
     maxUses: "",
+    maxUsesPerUser: "",
     validUntil: "",
     isActive: true,
   });
@@ -44,6 +45,7 @@ export default function PromoFormModal({ isOpen, onClose, initialData }: PromoFo
         discountType: initialData?.discountType || "percentage",
         discountValue: initialData?.discountValue || "",
         maxUses: initialData?.maxUses || "",
+        maxUsesPerUser: initialData?.maxUsesPerUser || "",
         validUntil: formattedDate,
         isActive: initialData ? initialData.isActive : true,
       });
@@ -73,6 +75,7 @@ export default function PromoFormModal({ isOpen, onClose, initialData }: PromoFo
         discountType: "percentage",
         discountValue: "",
         maxUses: "",
+        maxUsesPerUser: "",
         validUntil: "",
         isActive: true,
       });
@@ -117,8 +120,13 @@ export default function PromoFormModal({ isOpen, onClose, initialData }: PromoFo
             </div>
 
             <div className="space-y-2 col-span-2 sm:col-span-1">
-              <Label htmlFor="maxUses" className="text-gray-400">Max Uses (Optional)</Label>
+              <Label htmlFor="maxUses" className="text-gray-400">Max Uses (Global)</Label>
               <Input id="maxUses" type="number" placeholder="e.g. 100" value={formData.maxUses} onChange={(e) => setFormData({ ...formData, maxUses: e.target.value })} className="bg-white/5 border-white/10 text-white placeholder:text-gray-600" />
+            </div>
+
+            <div className="space-y-2 col-span-2 sm:col-span-1">
+              <Label htmlFor="maxUsesPerUser" className="text-gray-400">Max Uses (Per User)</Label>
+              <Input id="maxUsesPerUser" type="number" placeholder="e.g. 1" value={formData.maxUsesPerUser} onChange={(e) => setFormData({ ...formData, maxUsesPerUser: e.target.value })} className="bg-white/5 border-white/10 text-white placeholder:text-gray-600" />
             </div>
 
             <div className="space-y-2 col-span-2 sm:col-span-1">

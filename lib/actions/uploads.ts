@@ -55,6 +55,30 @@ export async function uploadPropertyImagesToR2(formData: FormData) {
     }
 }
 
+export async function uploadPaymentScreenshot(formData: FormData) {
+    try {
+        const file = formData.get("screenshot") as File;
+        if (!file) return { success: false, error: "No file provided" };
+
+        const buffer = Buffer.from(await file.arrayBuffer());
+        const ext = file.name.split('.').pop();
+        const fileName = `transactions/screenshots/${crypto.randomUUID()}.${ext}`;
+
+        await s3Client.send(new PutObjectCommand({
+            Bucket: process.env.R2_BUCKET_NAME!,
+            Key: fileName,
+            Body: buffer,
+            ContentType: file.type,
+        }));
+
+        const url = `${process.env.R2_PUBLIC_DOMAIN}/${fileName}`;
+        return { success: true, url };
+    } catch (error) {
+        console.error("R2 Screenshot Upload Error:", error);
+        return { success: false, error: "Failed to upload screenshot" };
+    }
+}
+
 export async function deleteFilesFromR2(urls: string[]) {
     try {
         if (!urls || urls.length === 0) return { success: true };

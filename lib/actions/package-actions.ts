@@ -62,6 +62,8 @@ export async function createPackage(data: any) {
             name_bn: data.name_bn,
             points: Number(data.points),
             price: String(data.price),
+            features: data.features || [],
+            isPopular: data.isPopular ?? false,
             isActive: data.isActive ?? true,
         });
 
@@ -90,6 +92,8 @@ export async function updatePackage(id: string, data: any) {
                 name_bn: data.name_bn,
                 points: Number(data.points),
                 price: String(data.price),
+                features: data.features || [],
+                isPopular: data.isPopular ?? false,
                 isActive: data.isActive,
             })
             .where(eq(pointPackages.id, id));
