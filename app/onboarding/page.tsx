@@ -52,7 +52,10 @@ export default function OnboardingPage() {
         const result = await verifyAndSavePhoneOTP(phoneNumber, otp);
 
         if (result?.success) {
-            // 2. SUCCESS! Force a hard browser redirect to break out of the loading state
+            // 2. SUCCESS! Update the JWT session with the new phone number
+            // so the middleware sees it immediately and doesn't redirect back here
+            await update({ phoneNumber });
+            // 3. Force a hard browser redirect to break out of the loading state
             window.location.href = "/dashboard";
         } else {
             // If there's an error (like a wrong OTP), show it and turn off loading
@@ -64,7 +67,7 @@ export default function OnboardingPage() {
     return (
         <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
             <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-bold text-center mb-2">Welcome to Jilani Home!</h2>
+                <h2 className="text-2xl text-blue-700 dark:text-blue-500 font-bold text-center mb-2">Welcome to Jilani Home!</h2>
                 <p className="text-gray-600 text-center mb-6">
                     Please verify your phone number to complete your account setup.
                 </p>
@@ -79,13 +82,13 @@ export default function OnboardingPage() {
                     // STEP 1: Enter Phone Number
                     <form onSubmit={handleSendOTP} className="flex flex-col gap-4">
                         <div>
-                            <label className="block text-sm font-medium mb-1">Phone Number *</label>
+                            <label className="block text-gray-800 dark:text-gray-800 text-sm font-medium mb-1">Phone Number *</label>
                             <input
                                 type="tel"
                                 value={phoneNumber}
                                 onChange={(e) => setPhoneNumber(e.target.value)}
                                 placeholder="017..."
-                                className="w-full border rounded p-2 focus:outline-blue-500"
+                                className="w-full text-gray-800 dark:text-gray-700 border rounded p-2 focus:outline-blue-500"
                                 required
                             />
                         </div>
@@ -109,13 +112,13 @@ export default function OnboardingPage() {
                     // STEP 2: Enter OTP Code
                     <form onSubmit={handleVerifyOTP} className="flex flex-col gap-4">
                         <div>
-                            <label className="block text-sm font-medium mb-1">Enter OTP Code</label>
+                            <label className="block text-gray-800 dark:text-gray-800 text-sm font-medium mb-1">Enter OTP Code</label>
                             <input
                                 type="text"
                                 value={otp}
                                 onChange={(e) => setOtp(e.target.value)}
                                 placeholder="123456"
-                                className="w-full border rounded p-2 focus:outline-blue-500 text-center tracking-widest text-lg"
+                                className="w-full border text-gray-800 dark:text-gray-800 rounded p-2 focus:outline-blue-500 text-center tracking-widest text-lg"
                                 required
                                 maxLength={6}
                             />

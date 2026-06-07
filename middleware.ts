@@ -33,10 +33,13 @@ export default auth((req) => {
         return NextResponse.redirect(new URL(defaultLandingPage, req.nextUrl));
     }
 
-    // 3. Onboarding Shields
-    if (!hasPhoneNumber && !isOnboardingPage) {
-        return NextResponse.redirect(new URL("/onboarding", req.nextUrl));
-    }
+    // 3. Onboarding Shield: If the JWT already has a phone number
+    //    and they visit /onboarding, redirect them to their dashboard.
+    //    NOTE: We intentionally do NOT redirect to /onboarding when the JWT
+    //    lacks a phone number. The dashboard/admin layouts check the DB
+    //    (the authoritative source) and redirect to /onboarding if needed.
+    //    Doing it here from the JWT would cause an infinite redirect loop
+    //    when the JWT is stale (e.g., right after onboarding completion).
     if (hasPhoneNumber && isOnboardingPage) {
         return NextResponse.redirect(new URL(defaultLandingPage, req.nextUrl));
     }
