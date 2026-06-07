@@ -2,9 +2,13 @@
 import React, { useState } from "react";
 import { Zap, Bell, Ticket, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CheckoutModal } from "../store/CheckoutModal";
 
-export function DashboardSidebar({ packages, promo }: { packages: any[], promo: any }) {
+export function DashboardSidebar({ packages, promo, user }: { packages: any[], promo: any, user: any }) {
   const [selectedPkg, setSelectedPkg] = useState(packages.length > 0 ? packages[0].points : 1000);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+
+  const selectedPackageData = packages.find(p => p.points === selectedPkg) || packages[0];
 
   return (
     <div className="space-y-6">
@@ -45,7 +49,10 @@ export function DashboardSidebar({ packages, promo }: { packages: any[], promo: 
           ))}
         </div>
 
-        <button className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg">
+        <button 
+          onClick={() => setIsCheckoutOpen(true)}
+          className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg"
+        >
           Launch Checkout
         </button>
       </div>
@@ -92,6 +99,13 @@ export function DashboardSidebar({ packages, promo }: { packages: any[], promo: 
           </div>
         </div>
       </div>
+
+      <CheckoutModal 
+        isOpen={isCheckoutOpen} 
+        onClose={() => setIsCheckoutOpen(false)} 
+        selectedPackage={selectedPackageData} 
+        user={user} 
+      />
     </div>
   );
 }

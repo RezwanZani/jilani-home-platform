@@ -20,10 +20,10 @@ export default async function UserDashboardPage() {
 
   // Fetch metrics data
   const pointsBalance = await getUserBalance() || 0;
-  
+
   const unlockedRes = await getUnlockedProperties(1, 10);
   const activeUnlocks = unlockedRes.data || [];
-  
+
   const savedRes = await getSavedProperties();
   const savedSpaces = savedRes.data || [];
 
@@ -60,7 +60,7 @@ export default async function UserDashboardPage() {
   return (
     <div className="space-y-8 font-sans">
       <DashboardHeader user={session.user} />
-      
+
       {/* Row 1: Fast-Fact Metric Cards */}
       <StatsGrid stats={stats} />
 
@@ -71,7 +71,7 @@ export default async function UserDashboardPage() {
         </div>
 
         <div className="space-y-8">
-          <DashboardSidebar packages={activePackages} promo={promo} />
+          <DashboardSidebar packages={activePackages} promo={promo} user={session.user} />
         </div>
       </div>
 
@@ -81,9 +81,6 @@ export default async function UserDashboardPage() {
           <TabbedHistory savedSpaces={savedSpaces} inquiries={userInquiries} />
         </div>
       </div>
-
-      {/* DEBUG TOOL (Remove in production) */}
-      <SessionTester />
     </div>
   );
 }
