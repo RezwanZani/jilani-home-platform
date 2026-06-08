@@ -357,7 +357,9 @@ export const tickets = pgTable('tickets', {
     userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
     transactionId: uuid('transaction_id').references(() => transactions.id, { onDelete: 'set null' }),
     propertyId: uuid('property_id').references(() => properties.id, { onDelete: 'set null' }),
+
     status: ticketStatusEnum('status').default('open').notNull(),
+    lastNotificationSent: timestamp("last_notification_sent"),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(),
 });

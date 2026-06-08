@@ -1,11 +1,12 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { tickets, ticketMessages, properties } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { tickets, ticketMessages, properties, users } from "@/lib/db/schema";
+import { eq, desc } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { deleteFilesFromR2 } from "./uploads";
 import { revalidatePath } from "next/cache";
+import { sendTicketNotification } from "@/lib/emails/ticket-notifications";
 
 export async function createTicket(data: {
     title: string;
@@ -76,10 +77,51 @@ export async function sendTicketMessage(data: {
             .set({ updatedAt: new Date() })
             .where(eq(tickets.id, data.ticketId));
 
-        const [ticket] = await db.select({ ticketNumber: tickets.ticketNumber })
+        const [ticket] = await db.select()
             .from(tickets).where(eq(tickets.id, data.ticketId));
 
         if (ticket) {
+            // Notification logic: If admin replies to user's ticket
+            if (session.user.role === 'admin' && ticket.userId !== session.user.id) {
+                const now = new Date();
+                const lastSent = ticket.lastNotificationSent ? new Date(ticket.lastNotificationSent) : null;
+                const threeHoursInMs = 3 * 60 * 60 * 1000;
+
+                if (!lastSent || (now.getTime() - lastSent.getTime() >= threeHoursInMs)) {
+                    // Fetch user
+                    const [user] = await db.select().from(users).where(eq(users.id, ticket.userId));
+
+                    if (user && user.email) {
+                        // Fetch last 3 messages
+                        const recentMsgs = await db.select()
+                            .from(ticketMessages)
+                            .where(eq(ticketMessages.ticketId, data.ticketId))
+                            .orderBy(desc(ticketMessages.createdAt))
+                            .limit(3);
+
+                        // Reverse to chronological order for email
+                        const formattedMessages = recentMsgs.reverse().map(msg => ({
+                            sender: msg.senderId === user.id ? user.name || 'User' : 'Admin',
+                            content: msg.message
+                        }));
+
+                        await sendTicketNotification({
+                            userName: user.name || 'User',
+                            userEmail: user.email,
+                            userPhone: user.phoneNumber || '',
+                            ticketNumber: ticket.ticketNumber,
+                            title: ticket.title,
+                            messages: formattedMessages
+                        });
+
+                        // Update lastNotificationSent
+                        await db.update(tickets)
+                            .set({ lastNotificationSent: now })
+                            .where(eq(tickets.id, data.ticketId));
+                    }
+                }
+            }
+
             revalidatePath(`/dashboard/inquiries/${ticket.ticketNumber}`);
             revalidatePath(`/admin/inquiries/${ticket.ticketNumber}`);
         }
