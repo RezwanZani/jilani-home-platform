@@ -32,8 +32,12 @@ export default function Login() {
     });
 
     if (result?.error) {
-      // Auth.js passes the error message thrown from our authorize() function
-      setError(result.error);
+      // Auth.js v5 returns "CredentialsSignin" by default when authorize returns null
+      if (result.error === "CredentialsSignin" || result.error.includes("CredentialsSignin")) {
+        setError("Invalid email or password.");
+      } else {
+        setError(result.error);
+      }
       setLoading(false);
     } else {
       // Success! Send them to the dashboard.
