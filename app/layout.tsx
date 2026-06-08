@@ -1,7 +1,14 @@
 import type { Metadata } from 'next';
-import { Inter, Space_Grotesk } from 'next/font/google';
+import { Inter, Space_Grotesk, Noto_Sans_Bengali } from 'next/font/google';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 import '@/styles/globals.css';
+import { Providers } from "./providers";
+import { auth } from "@/lib/auth";
+import { db } from "@/lib/db/index";
+import { users } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
+import { Toaster } from "@/components/ui/sonner";
 
 // FIX: Node v25 introduces a broken `localStorage` global object without methods.
 // Many third-party libraries (like Radix UI or Framer Motion) check `typeof localStorage !== 'undefined'`
@@ -10,9 +17,9 @@ if (typeof global !== 'undefined' && global.localStorage && !global.localStorage
   Object.defineProperty(global, 'localStorage', {
     value: {
       getItem: () => null,
-      setItem: () => {},
-      removeItem: () => {},
-      clear: () => {},
+      setItem: () => { },
+      removeItem: () => { },
+      clear: () => { },
     },
     writable: true,
   });
@@ -30,24 +37,35 @@ const spaceGrotesk = Space_Grotesk({
   display: 'swap',
 });
 
+const notoSansBengali = Noto_Sans_Bengali({
+  subsets: ['bengali', 'latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-bengali',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
   title: 'Jilani Home',
   description:
     'Browse verified office spaces, event halls, and residential properties. Connect directly with owners, no middlemen.',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+
   return (
     <html lang="en" className="light" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${spaceGrotesk.variable} font-sans antialiased`}
+        className={`${inter.variable} ${spaceGrotesk.variable} ${notoSansBengali.variable} font-sans antialiased`}
         style={{ scrollBehavior: 'smooth' }}
       >
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <Providers>{children}</Providers>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

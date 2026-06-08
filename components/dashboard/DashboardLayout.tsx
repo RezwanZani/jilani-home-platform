@@ -1,5 +1,7 @@
 'use client';
 
+import { useUser } from "@/components/providers/UserProvider";
+import { useTheme } from "@/providers/ThemeProvider";
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -20,52 +22,69 @@ import {
   Menu,
   Bell,
   Search,
+  MapPinned,
+  UserCheck,
+  DollarSign,
+  Ticket,
+  BadgeDollarSign,
+  Coins, Star, Key,
+  MessageSquare, Sun, Moon
 } from "lucide-react";
-
-const USER_AVATAR =
-  "https://images.unsplash.com/photo-1689600944138-da3b150d9cb8?crop=entropy&cs=tinysrgb&fit=facearea&facepad=2&w=256&h=256&q=80";
+import { ImageWithFallback } from "../figma/ImageWithFallback";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
+  const user = useUser();
+  const { theme, toggle } = useTheme();
+
   const pathname = usePathname();
-  const isAdmin = pathname.startsWith("/admindashboard");
+  const isAdmin = pathname.startsWith("/admin");
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const userLinks = [
-    { name: "Overview", path: "/userdashboard", icon: Home },
-    { name: "Explore", path: "/userdashboard/explore", icon: Compass },
-    { name: "Your Listings", path: "/userdashboard/saved", icon: Heart },
-    { name: "Settings", path: "/userdashboard/settings", icon: Settings },
+    { name: "Overview", path: "/dashboard", icon: Home },
+    { name: "Explore", path: "/dashboard/explore", icon: Compass },
+    { name: "Your Listings", path: "/dashboard/saved", icon: Heart },
+    { name: "Unlocks", path: "/dashboard/unlocks", icon: Key },
+    { name: "Transactions", path: "/dashboard/transactions", icon: BadgeDollarSign },
+    { name: "Get Points", path: "/dashboard/store", icon: Coins },
+    { name: "Support Tickets", path: "/dashboard/inquiries", icon: MessageSquare },
+    { name: "Settings", path: "/dashboard/settings", icon: Settings },
   ];
 
   const adminLinks = [
-    { name: "Dashboard", path: "/admindashboard", icon: LayoutDashboard },
-    { name: "Properties", path: "/admindashboard/properties", icon: Building2 },
-    { name: "Users", path: "/admindashboard/users", icon: Users },
-    { name: "Analytics", path: "/admindashboard/analytics", icon: BarChart3 },
-    { name: "Verification", path: "/admindashboard/verification", icon: CheckCircle },
-    { name: "Settings", path: "/admindashboard/settings", icon: Settings },
+    { name: "Dashboard", path: "/admin", icon: LayoutDashboard },
+    { name: "Properties", path: "/admin/properties", icon: Building2 },
+    { name: "Inquiries", path: "/admin/inquiries", icon: MessageSquare },
+    { name: "Reviews", path: "/admin/reviews", icon: Star },
+    { name: "Owners", path: "/admin/owners", icon: UserCheck },
+    { name: "Zones", path: "/admin/zones", icon: MapPinned },
+    { name: "Users", path: "/admin/users", icon: Users },
+    { name: "Packages", path: "/admin/packages", icon: Coins },
+    { name: "Transactions", path: "/admin/transactions", icon: BadgeDollarSign },
+    { name: "Promo Code", path: "/admin/promos", icon: Ticket },
+    { name: "Analytics", path: "/admin/analytics", icon: BarChart3 },
+    { name: "Settings", path: "/admin/settings", icon: Settings },
   ];
 
   const links = isAdmin ? adminLinks : userLinks;
-  
+
   // Site's primary brand color
   const brandBlue = "#3B82F6";
   const brandGradient = "from-[#3B82F6] to-[#60A5FA]";
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full p-6">
+    <div className="flex flex-col h-full p-6 overflow-hidden">
       {/* Brand */}
-      <div className="flex items-center gap-3 mb-10">
-        <div className={cn(
-          "w-10 h-10 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-lg shadow-blue-500/20",
-          brandGradient
-        )}>
-          <Building2 className="w-5 h-5 text-white" />
-        </div>
+      <div className="flex items-center gap-3 mb-10 flex-shrink-0">
+        <ImageWithFallback
+          src="/imports/jilanihome_logo.png"
+          alt="Jilani Home"
+          className="w-14 h-14 rounded-xl object-cover bg-gray-900"
+        />
         <div>
           <h1 className="font-heading font-bold text-lg leading-tight text-gray-900 dark:text-white tracking-tight">
             Jilani Home
@@ -77,14 +96,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 space-y-1.5">
+      <nav className="flex-1 overflow-y-auto space-y-1.5 pr-2 pb-4 scrollbar-thin">
         <p className="text-[11px] font-bold tracking-[0.1em] text-gray-400 dark:text-gray-500 uppercase px-3 mb-4">
           Main Menu
         </p>
         {links.map((link) => {
           const Icon = link.icon;
-          const isActive = pathname === link.path || (link.path !== "/userdashboard" && link.path !== "/admindashboard" && pathname.startsWith(link.path));
-          
+          const isActive = pathname === link.path || (link.path !== "/dashboard" && link.path !== "/admin" && pathname.startsWith(link.path));
           return (
             <Link
               key={link.name}
@@ -98,7 +116,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               )}
             >
               {isActive && (
-                <motion.div 
+                <motion.div
                   layoutId="activeNav"
                   className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-white rounded-full"
                 />
@@ -110,42 +128,38 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         })}
       </nav>
 
-      {/* Bottom user section */}
-      <div className="pt-6 border-t border-gray-100 dark:border-white/10 mt-6 space-y-5">
-        <div className="flex items-center gap-3 px-2">
-          <img
-            src={USER_AVATAR}
-            alt="User"
-            className="w-10 h-10 rounded-full object-cover border-2 border-gray-100 dark:border-white/15 flex-shrink-0"
-          />
-          <div className="overflow-hidden flex-1 min-w-0">
-            <div className="flex items-center gap-1.5">
-              <p className="font-bold text-sm text-gray-900 dark:text-white truncate">
-                {isAdmin ? "Administrator" : "Sarah Jenkins"}
-              </p>
-              {!isAdmin && (
-                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full flex-shrink-0" />
-              )}
+      {/* Bottom Agency Section */}
+      <div className="pt-3 border-t border-gray-100 dark:border-white/10 mt-3 space-y-5 flex-shrink-0">
+        <div className="border border-blue-500/50 rounded-2xl p-3 transition-colors">
+          <a href="https://neosparkx.com" target="_blank" rel="noopener noreferrer">
+            <div className="flex items-center gap-3">
+              <ImageWithFallback
+                src="/agency/neosparkx.jpeg"
+                alt="NeoSparkX"
+                className="w-14 h-14 rounded-xl object-cover bg-gray-900"
+              />
+              <div>
+                <p className="text-gray-300 dark:text-gray-500 font-bold mb-1 mx-auto text-[10px] text-center">Design & Developed By</p>
+                <h5 className="text-white font-bold tracking-wide text-lg -mt-0.5">NEOSPARKX</h5>
+                <p className="text-[#3B82F6] text-[12px] font-medium -mt-0.5">A Software Agency</p>
+              </div>
             </div>
-            <p className="text-[11px] font-medium text-gray-500 truncate">
-              {isAdmin ? "admin@jilanihome.com" : "Premium Member"}
-            </p>
-          </div>
+          </a>
         </div>
-        <Link
-          href="/"
-          className="flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors text-sm font-bold"
-        >
-          <LogOut className="w-4.5 h-4.5" />
-          Sign Out
-        </Link>
       </div>
-    </div>
+      <Link
+        href="/logout"
+        className="flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors text-sm font-bold"
+      >
+        <LogOut className="w-4.5 h-4.5" />
+        Sign Out
+      </Link>
+    </div >
   );
 
   return (
     <div className="h-screen bg-[#F8FAFC] dark:bg-[#0F172A] text-gray-900 dark:text-slate-100 flex font-sans overflow-hidden">
-      
+
       {/* Sidebar Overlay */}
       <AnimatePresence>
         {mobileOpen && (
@@ -182,26 +196,33 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </button>
             <div className="hidden sm:flex items-center gap-3 px-5 py-2.5 rounded-full bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-500 text-sm w-80 group focus-within:border-blue-500/50 transition-all">
               <Search className="w-4.5 h-4.5 flex-shrink-0 group-focus-within:text-blue-500" />
-              <input 
-                type="text" 
-                placeholder="Search properties, users, etc..." 
+              <input
+                type="text"
+                placeholder="Search properties, users, etc..."
                 className="bg-transparent border-none outline-none w-full placeholder:text-gray-400 font-medium"
               />
             </div>
           </div>
 
           <div className="flex items-center gap-5">
+            <button
+              onClick={toggle}
+              className="relative p-2.5 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
+            >
+              {theme === 'dark' ? <Sun className="w-5 h-5 text-gray-300" /> : <Moon className="w-5 h-5 text-gray-600" />}
+            </button>
             <button className="relative p-2.5 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors">
               <Bell className="w-5 h-5 text-gray-600 dark:text-gray-300" />
               <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-blue-500 border-2 border-white dark:border-[#1E293B] rounded-full" />
             </button>
             <div className="flex items-center gap-3 pl-2 border-l border-gray-200 dark:border-white/10">
               <div className="text-right hidden sm:block">
-                <p className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">{isAdmin ? "Admin" : "Sarah Jenkins"}</p>
-                <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-tighter">{isAdmin ? "System Superuser" : "Premium Member"}</p>
+                <p className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">{user?.name}</p>
+                <p className="text-[10px] font-medium text-gray-500 dark:text-gray-300">{user?.email}</p>
+                <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-tighter">{user?.role === 'user' ? 'Member' : 'Admin'}</p>
               </div>
               <img
-                src={USER_AVATAR}
+                src={user?.image || '/avatar-default.png'}
                 alt="User"
                 className="w-10 h-10 rounded-full object-cover border-2 border-blue-500/20 p-0.5"
               />

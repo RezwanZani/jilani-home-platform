@@ -19,7 +19,7 @@ export default function BottomCTA() {
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
         >
-          <h2 className="font-['Space_Grotesk'] text-5xl md:text-6xl lg:text-7xl font-bold leading-tight text-white mb-6 tracking-tight">
+          <h2 className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold leading-tight text-white mb-6 tracking-tight">
             আপনার নিখুঁত জায়গাটি <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3B82F6] to-[#60A5FA]">
               খুঁজতে প্রস্তুত? 

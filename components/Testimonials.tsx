@@ -83,7 +83,7 @@ export default function Testimonials() {
             </div>
             <span className="text-[#3B82F6] text-xs font-semibold tracking-widest uppercase">4.9 / 5 from 500+ members</span>
           </div>
-          <h2 className="font-['Space_Grotesk'] text-4xl md:text-5xl font-bold text-white leading-tight">
+          <h2 className="font-heading text-4xl md:text-5xl font-bold text-white leading-tight">
             Trusted by professionals<br className="hidden md:block" /> worldwide.
           </h2>
         </motion.div>
@@ -104,7 +104,7 @@ export default function Testimonials() {
 
           <div className="flex flex-col md:flex-row md:items-end gap-8 md:gap-16">
             <blockquote className="flex-1">
-              <p className="font-['Space_Grotesk'] text-white text-2xl md:text-3xl leading-relaxed font-medium">
+              <p className="font-heading text-white text-2xl md:text-3xl leading-relaxed font-medium">
                 "{featured.quote}"
               </p>
             </blockquote>
@@ -116,7 +116,7 @@ export default function Testimonials() {
                 className="w-14 h-14 rounded-full object-cover border border-white/10"
               />
               <div>
-                <p className="text-white font-semibold font-['Space_Grotesk']">{featured.name}</p>
+                <p className="text-white font-semibold font-heading">{featured.name}</p>
                 <p className="text-[#3B82F6] text-sm">{featured.role}</p>
                 <p className="text-gray-500 text-xs mt-0.5">{featured.company}</p>
               </div>
@@ -161,7 +161,7 @@ export default function Testimonials() {
                       className="w-9 h-9 rounded-full object-cover border border-white/10"
                     />
                     <div>
-                      <p className="text-white text-sm font-semibold font-['Space_Grotesk']">{t.name}</p>
+                      <p className="text-white text-sm font-semibold font-heading">{t.name}</p>
                       <p className="text-gray-500 text-xs">{t.role} · {t.company}</p>
                     </div>
                   </div>

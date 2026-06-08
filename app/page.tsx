@@ -1,5 +1,3 @@
-'use client';
-
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import TrustStrip from '@/components/TrustStrip';
@@ -9,14 +7,21 @@ import Testimonials from '@/components/Testimonials';
 import BottomCTA from '@/components/BottomCTA';
 import Footer from '@/components/Footer';
 
-export default function HomePage() {
+import { auth } from '@/lib/auth';
+import { getUserBalance } from '@/lib/actions/unlock-actions'
+
+export default async function HomePage() {
+  const session = await auth();
+  const isLoggedIn = !!session?.user;
+  const userBalance = await getUserBalance() as number || 0;
+
   return (
-    <div className="min-h-screen bg-[#0D0D0D] text-white font-['Inter'] selection:bg-[#3B82F6]/30 overflow-x-hidden" style={{ scrollBehavior: 'smooth' }}>
+    <div className="min-h-screen bg-[#0D0D0D] text-white font-sans selection:bg-[#3B82F6]/30 overflow-x-hidden" style={{ scrollBehavior: 'smooth' }}>
       <Navbar />
       <main>
         <Hero />
         <TrustStrip />
-        <FeaturedListings />
+        <FeaturedListings isLoggedIn={isLoggedIn} userBalance={userBalance} />
         <HowItWorks />
         {/* <Testimonials /> */}
         <BottomCTA />

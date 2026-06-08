@@ -1,24 +1,24 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { Search, Shield, Phone } from 'lucide-react';
+import { Search, Unlock, Phone } from 'lucide-react';
 import clsx from 'clsx';
 
 const steps = [
   {
     icon: Search,
-    title: "তালিকা দেখুন",
-    desc: "আপনার প্রয়োজন অনুযায়ী বাছাই করা ভালো জায়গাগুলো দেখে নিন।"
+    title: "সেরা প্রপার্টি খুঁজুন",
+    desc: "আমাদের প্ল্যাটফর্ম থেকে আপনার প্রয়োজন অনুযায়ী সবচেয়ে ভালো প্রপার্টিগুলো খুঁজে বের করুন।"
   },
   {
-    icon: Shield,
-    title: "অ্যাকাউন্ট খুলুন",
-    desc: "অ্যাকাউন্ট তৈরি করলে জায়গার বিস্তারিত তথ্য ও মালিকের যোগাযোগ নম্বর দেখতে পারবেন।"
+    icon: Unlock,
+    title: "পয়েন্ট দিয়ে আনলক করুন",
+    desc: "অ্যাকাউন্ট খুলে পয়েন্ট রিচার্জ করুন এবং পয়েন্ট ব্যবহার করে প্রপার্টির মালিকের নম্বর ও বিস্তারিত তথ্য আনলক করুন।"
   },
   {
     icon: Phone,
-    title: "সরাসরি কথা বলুন",
-    desc: "প্রতিটি লিস্টিংয়ের জন্য এককালীন ফি পরিশোধ করার পর, বুকিং এবং আলোচনার জন্য জায়গার মালিকদের সাথে সরাসরি কথা বলুন।"
+    title: "সরাসরি যোগাযোগ করুন",
+    desc: "কোনো প্রকার ব্রোকার বা মাধ্যম ছাড়াই সরাসরি মালিকের সাথে কথা বলে আপনার ডিল ফাইনাল করুন।"
   }
 ];
 
@@ -29,7 +29,7 @@ export default function HowItWorks() {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-20 space-y-4">
-          <h2 className="font-['Space_Grotesk'] text-3xl md:text-5xl font-bold text-white">
+          <h2 className="font-heading text-3xl md:text-5xl font-bold text-white">
             কীভাবে <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3B82F6] to-[#60A5FA]">কাজ করে</span>
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
@@ -60,7 +60,7 @@ export default function HowItWorks() {
                   <div className="space-y-3 relative z-10">
                     <div className="flex items-center justify-center gap-2">
                       <span className="text-[#3B82F6] text-sm font-bold opacity-50">0{index + 1}</span>
-                      <h3 className="font-['Space_Grotesk'] text-xl font-bold text-white tracking-wide">
+                      <h3 className="font-heading text-xl font-bold text-white tracking-wide">
                         {step.title}
                       </h3>
                     </div>

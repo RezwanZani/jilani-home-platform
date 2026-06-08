@@ -30,7 +30,7 @@ export default function Hero() {
           className="space-y-6 md:space-y-8 max-w-4xl"
         >
           <div className="space-y-6">
-            <h1 className="font-['Space_Grotesk'] text-5xl md:text-6xl lg:text-[5rem] font-bold leading-[1.1] text-gray-900 dark:text-white tracking-tight">
+            <h1 className="font-heading text-5xl md:text-6xl lg:text-[5rem] font-bold leading-[1.1] text-gray-900 dark:text-white tracking-tight">
               আপনার সঠিক <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3B82F6] to-[#93C5FD]">
                 ঠিকানা
