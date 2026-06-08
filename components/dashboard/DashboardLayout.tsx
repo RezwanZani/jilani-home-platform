@@ -80,12 +80,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     <div className="flex flex-col h-full p-6 overflow-hidden">
       {/* Brand */}
       <div className="flex items-center gap-3 mb-10 flex-shrink-0">
-        <div className={cn(
-          "w-10 h-10 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-lg shadow-blue-500/20",
-          brandGradient
-        )}>
-          <Building2 className="w-5 h-5 text-white" />
-        </div>
+        <ImageWithFallback
+          src="/imports/jilanihome_logo.png"
+          alt="Jilani Home"
+          className="w-14 h-14 rounded-xl object-cover bg-gray-900"
+        />
         <div>
           <h1 className="font-heading font-bold text-lg leading-tight text-gray-900 dark:text-white tracking-tight">
             Jilani Home
@@ -131,19 +130,21 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* Bottom Agency Section */}
       <div className="pt-3 border-t border-gray-100 dark:border-white/10 mt-3 space-y-5 flex-shrink-0">
-        <p className="text-gray-300 dark:text-gray-500 font-bold mb-1 mx-auto text-sm text-center">Developed By</p>
         <div className="border border-blue-500/50 rounded-2xl p-3 transition-colors">
-          <div className="flex items-center gap-3">
-            <ImageWithFallback
-              src="/agency/neosparkx.jpeg"
-              alt="NeoSparkX"
-              className="w-12 h-12 rounded-xl object-cover bg-gray-900"
-            />
-            <div>
-              <h5 className="text-white font-bold tracking-wide text-sm">NEOSPARKX</h5>
-              <p className="text-[#3B82F6] text-xs font-medium mt-0.5">A Software Agency</p>
+          <a href="https://neosparkx.com" target="_blank" rel="noopener noreferrer">
+            <div className="flex items-center gap-3">
+              <ImageWithFallback
+                src="/agency/neosparkx.jpeg"
+                alt="NeoSparkX"
+                className="w-14 h-14 rounded-xl object-cover bg-gray-900"
+              />
+              <div>
+                <p className="text-gray-300 dark:text-gray-500 font-bold mb-1 mx-auto text-[10px] text-center">Design & Developed By</p>
+                <h5 className="text-white font-bold tracking-wide text-lg -mt-0.5">NEOSPARKX</h5>
+                <p className="text-[#3B82F6] text-[12px] font-medium -mt-0.5">A Software Agency</p>
+              </div>
             </div>
-          </div>
+          </a>
         </div>
       </div>
       <Link
@@ -153,7 +154,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <LogOut className="w-4.5 h-4.5" />
         Sign Out
       </Link>
-    </div>
+    </div >
   );
 
   return (
