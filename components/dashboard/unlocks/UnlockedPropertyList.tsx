@@ -100,7 +100,7 @@ export function UnlockedPropertyList({ initialItems, initialHasMore }: UnlockedP
             <button
               onClick={loadMore}
               disabled={isLoading}
-              className="bg-[#1E293B] text-white hover:bg-blue-600 disabled:opacity-50 border border-white/10 px-8 py-3 rounded-full font-semibold transition-all shadow-lg"
+              className="bg-gray-900 dark:bg-[#1E293B] text-white hover:bg-blue-600 disabled:opacity-50 border border-transparent dark:border-white/10 px-8 py-3 rounded-full font-semibold transition-all shadow-lg"
             >
               {isLoading ? "Loading..." : "Load More"}
             </button>
