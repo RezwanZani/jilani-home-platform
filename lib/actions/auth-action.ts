@@ -5,6 +5,8 @@ import { auth } from "@/lib/auth";
 import { users, verificationTokens } from "@/lib/db/schema";
 import { sendSMS } from "@/lib/sms";
 import { eq, and, gte } from "drizzle-orm";
+import { sendEmail } from "@/lib/email";
+import { getJilaniEmailTemplate } from "@/lib/email-template";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
@@ -184,6 +186,8 @@ export async function verifyAndUpdatePhone(newPhone: string, otp: string) {
 }
 
 export async function sendEmailOTP(email: string) {
+    const fromEmail = `JILANI HOME <noreply@${process.env.RESEND_DOMAIN}>`;
+
     try {
         const session = await auth();
         if (!session?.user?.id) {
@@ -220,26 +224,44 @@ export async function sendEmailOTP(email: string) {
             console.log(`📱 To: ${email}`);
             console.log(`🔑 Code: ${otpCode}`);
             console.log(`=============================\n`);
-        } else {
-            const EMAIL_API_URL = "https://api.emailnoc.com/v3/sms/send";
-            const EMAIL_API_TOKEN = process.env.EMAIL_API_TOKEN;
+        }
 
-            const response = await fetch(EMAIL_API_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${EMAIL_API_TOKEN}`,
-                },
-                body: JSON.stringify({
-                    to: email,
-                    subject: "Jilani Home",
-                    body: `Your Jilani Home verification code is ${otpCode}. It expires in 5 minutes.`,
-                }),
-            });
+        // 1. Write the inner content focused purely on the OTP
+        const innerHtml = `
+            <h2 style="margin-top: 0; color: #0f172a; text-align: center; font-size: 22px;">Secure Verification</h2>
+            <p style="color: #475569; text-align: center; font-size: 15px; margin-bottom: 30px;">
+            Please use the verification code below to securely sign in to your Jilani Home account.
+            </p>
+            
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 300px; margin: 0 auto; background-color: #f8fafc; border-radius: 12px; border: 1px dashed #cbd5e1;">
+            <tr>
+                <td style="padding: 24px; text-align: center;">
+                <span style="font-family: monospace; font-size: 36px; font-weight: 800; letter-spacing: 8px; color: #2563eb; display: block;">
+                    ${otpCode}
+                </span>
+                </td>
+            </tr>
+            </table>
+            
+            <div style="margin-top: 30px; text-align: center;">
+            <p style="color: #ef4444; font-size: 14px; font-weight: 600; margin-bottom: 8px;">
+                ⚠️ Never share this code with anyone.
+            </p>
+            <p style="color: #64748b; font-size: 13px; margin-top: 0;">
+                This code is valid for <strong>5 minutes</strong>. If you did not request this verification, please safely ignore this email.
+            </p>
+            </div>
+        `;
 
-            if (!response.ok) {
-                throw new Error("Failed to send SMS via gateway.");
-            }
+        // 2. Wrap it in your beautiful branded template
+        const finalHtml = getJilaniEmailTemplate("Your Jilani Home Verification Code", innerHtml);
+
+        // 3. Send via your Resend gateway
+        const response = await sendEmail(fromEmail, email, `Verification Code to Confirm Your Email Address`, finalHtml);
+
+
+        if (!response.success) {
+            throw new Error("Failed to send email via gateway.");
         }
 
         return { success: true, message: "OTP sent successfully." };
@@ -359,48 +381,77 @@ export async function sendForgotPasswordOTP(identifier: string) {
         });
 
         // 6. The Delivery
-        if (process.env.NODE_ENV === "development") {
-            console.log(`\n=============================`);
-            console.log(`🚀 MOCK OTP SENT FOR PASSWORD RESET!`);
-            console.log(`📱 To: ${normalizedIdentifier}`);
-            console.log(`🔑 Code: ${otpCode}`);
-            console.log(`=============================\n`);
+        if (isEmail) {
+            const fromEmail = `JILANI HOME <noreply@${process.env.RESEND_DOMAIN}>`;
+            // 1. Write the inner content focused purely on the OTP
+            const innerHtml = `
+            <h2 style="margin-top: 0; color: #0f172a; text-align: center; font-size: 22px;">Secure Verification</h2>
+            <p style="color: #475569; text-align: center; font-size: 15px; margin-bottom: 30px;">
+            Please use the verification code below to securely sign in to your Jilani Home account.
+            </p>
+            
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 300px; margin: 0 auto; background-color: #f8fafc; border-radius: 12px; border: 1px dashed #cbd5e1;">
+            <tr>
+                <td style="padding: 24px; text-align: center;">
+                <span style="font-family: monospace; font-size: 36px; font-weight: 800; letter-spacing: 8px; color: #2563eb; display: block;">
+                    ${otpCode}
+                </span>
+                </td>
+            </tr>
+            </table>
+            
+            <div style="margin-top: 30px; text-align: center;">
+            <p style="color: #ef4444; font-size: 14px; font-weight: 600; margin-bottom: 8px;">
+                ⚠️ Never share this code with anyone.
+            </p>
+            <p style="color: #64748b; font-size: 13px; margin-top: 0;">
+                This code is valid for <strong>5 minutes</strong>. If you did not request this verification, please safely ignore this email.
+            </p>
+            </div>
+        `;
+
+            // 2. Wrap it in your beautiful branded template
+            const finalHtml = getJilaniEmailTemplate("Your Jilani Home Verification Code", innerHtml);
+
+            // 3. Send via your Resend gateway
+            const response = await sendEmail(fromEmail, normalizedIdentifier, `Verification Code for Password Reset`, finalHtml);
+
+
+            if (!response.success) {
+                // If Email failed, we should probably delete the token we just created
+                // so the user doesn't try to log in with a non-existent code.
+                await db
+                    .delete(verificationTokens)
+                    .where(eq(verificationTokens.identifier, normalizedIdentifier));
+
+                // Return a user-friendly error. 
+                return {
+                    success: false,
+                    message: response.error || "Failed to send verification code. Please try again or contact support."
+                };
+            }
+
         } else {
-            if (isEmail) {
-                const EMAIL_API_URL = "https://api.emailnoc.com/v3/sms/send";
-                const EMAIL_API_TOKEN = process.env.EMAIL_API_TOKEN;
+            const message = `Your Jilani Home verification code is: ${otpCode}. It will expire in 5 minutes.`;
 
-                await fetch(EMAIL_API_URL, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${EMAIL_API_TOKEN}`,
-                    },
-                    body: JSON.stringify({
-                        to: normalizedIdentifier,
-                        subject: "Jilani Home Password Reset",
-                        body: `Your Jilani Home password reset code is ${otpCode}. It expires in 5 minutes.`,
-                    }),
-                });
-            } else {
-                const SMSNOC_API_URL = "https://api.smsnoc.com/v3/sms/send";
-                const SMSNOC_API_TOKEN = process.env.SMSNOC_API_TOKEN;
+            const smsResult = await sendSMS(normalizedIdentifier, message);
 
-                await fetch(SMSNOC_API_URL, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${SMSNOC_API_TOKEN}`,
-                    },
-                    body: JSON.stringify({
-                        recipient: normalizedIdentifier,
-                        message: `Your Jilani Home password reset code is ${otpCode}. It expires in 5 minutes.`,
-                    }),
-                });
+            if (!smsResult.success) {
+                // If SMS failed, we should probably delete the token we just created
+                // so the user doesn't try to log in with a non-existent code.
+                await db
+                    .delete(verificationTokens)
+                    .where(eq(verificationTokens.identifier, normalizedIdentifier));
+
+                // Return a user-friendly error. 
+                return {
+                    success: false,
+                    message: smsResult.error || "Failed to send verification code. Please try again or contact support."
+                };
             }
         }
 
-        return { success: true, message: "Reset code sent successfully." };
+        return { success: true, message: `Reset code sent to ${normalizedIdentifier} successfully.` };
     } catch (error) {
         console.error("Error sending forgot password OTP:", error);
         return { success: false, message: "Failed to send reset code. Please try again." };
