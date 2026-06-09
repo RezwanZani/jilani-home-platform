@@ -13,7 +13,7 @@ export default async function AdminDashboardPage() {
   const today = new Date();
   const weekAgo = new Date();
   weekAgo.setDate(today.getDate() - 7);
-  const dateRangeStr = `${weekAgo.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} — ${today.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+  const dateRangeStr = `${weekAgo.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${today.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
 
   return (
     <div className="space-y-10 pb-20 max-w-[1600px] mx-auto">

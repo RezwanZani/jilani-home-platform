@@ -123,7 +123,7 @@ export default function ContactInfoReveal({ propertyId, hasUnlockedInitially, zo
                                         <button className="w-full bg-[#3B82F6] hover:bg-[#2563EB] text-white font-semibold py-2.5 rounded-xl transition-colors">Log In</button>
                                     </Link>
                                     <Link href="/signup" onClick={() => setShowModal(false)}>
-                                        <button className="w-full bg-white/[0.05] hover:bg-white/[0.1] text-white border border-white/10 font-semibold py-2.5 rounded-xl transition-colors">Sign Up</button>
+                                        <button className="w-full bg-black/5 hover:bg-black/10 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-black dark:text-white border border-black/10 dark:border-white/10 font-semibold py-2.5 rounded-xl transition-colors">Sign Up</button>
                                     </Link>
                                 </div>
                             </div>

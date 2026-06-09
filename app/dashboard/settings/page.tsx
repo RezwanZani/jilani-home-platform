@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Section, SettingsSidebar } from "@/components/dashboard/settings/SettingsSidebar";
 import { ProfileTab } from "@/components/dashboard/settings/ProfileTab";
 import { SecurityTab } from "@/components/dashboard/settings/SecurityTab";
-import { NotificationsTab } from "@/components/dashboard/settings/NotificationsTab";
 import { BillingTab } from "@/components/dashboard/settings/BillingTab";
 
 export default function UserSettingsPage() {
@@ -29,7 +28,6 @@ export default function UserSettingsPage() {
           <AnimatePresence mode="wait">
             {active === "profile" && <ProfileTab user={user} />}
             {active === "security" && <SecurityTab />}
-            {active === "notifications" && <NotificationsTab />}
             {active === "billing" && <BillingTab />}
           </AnimatePresence>
         </div>

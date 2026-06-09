@@ -14,8 +14,8 @@ export function BillingTab() {
           <h3 className="text-4xl font-bold mt-2">Premium Plan</h3>
           <p className="text-slate-400 mt-4 text-base font-medium max-w-md">Your account is fully verified. You have unlimited access to direct owner contacts, priority support, and verified property insights.</p>
           <div className="mt-10 flex flex-wrap gap-4">
-            <button className="px-8 py-4 rounded-2xl bg-white/10 backdrop-blur-md text-white font-bold text-sm border border-white/10 hover:bg-white/20 transition-all">Manage Billing</button>
-            <button className="px-8 py-4 rounded-2xl bg-white/10 backdrop-blur-md text-white font-bold text-sm border border-white/10 hover:bg-white/20 transition-all">Download Invoices</button>
+            <button className="px-8 py-4 rounded-2xl bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm shadow-lg shadow-blue-500/25 transition-all">Manage Billing</button>
+            <button className="px-8 py-4 rounded-2xl bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.15)] backdrop-blur-md text-white font-bold text-sm border border-[rgba(255,255,255,0.1)] transition-all">Download Invoices</button>
           </div>
         </div>
       </GlassCard>

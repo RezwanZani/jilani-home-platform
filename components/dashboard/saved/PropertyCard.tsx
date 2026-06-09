@@ -15,7 +15,8 @@ import {
     RulerIcon,
     Banknote
 } from "lucide-react";
-import { SavedProperty } from "./SavedPropertyList"; // Import the type
+import { SavedProperty } from "./SavedPropertyList";
+import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 
 // Define the expected props for the Card component
 interface PropertyCardProps {
@@ -25,8 +26,8 @@ interface PropertyCardProps {
 }
 
 export function PropertyCard({ property, index, remove }: PropertyCardProps) {
-    // TypeScript will infer activeImage as a string based on property.image
-    const [activeImage, setActiveImage] = useState<string>(property.data.images[0] || property.data.coverImage || "");
+    const defaultPlaceholder = "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80";
+    const [activeImage, setActiveImage] = useState<string>(property.data.images[0] || property.data.coverImage || defaultPlaceholder);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     return (
@@ -44,8 +45,8 @@ export function PropertyCard({ property, index, remove }: PropertyCardProps) {
                     {/* Left: Gallery Section */}
                     <div className="w-full xl:w-[360px] 2xl:w-[400px] flex-shrink-0 space-y-2">
                         <div className="relative aspect-[16/10] rounded-xl overflow-hidden shadow-lg border border-gray-200 dark:border-white/5">
-                            <img
-                                src={activeImage}
+                            <ImageWithFallback
+                                src={activeImage || defaultPlaceholder}
                                 alt={property.data.title}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                             />
@@ -72,7 +73,7 @@ export function PropertyCard({ property, index, remove }: PropertyCardProps) {
                                         activeImage === image ? "border-blue-500 ring-2 ring-blue-500/50" : "border-transparent opacity-60 hover:opacity-100"
                                     )}
                                 >
-                                    <img src={image} alt="" className="w-full h-full object-cover" />
+                                    <ImageWithFallback src={image || defaultPlaceholder} alt="" className="w-full h-full object-cover" />
                                 </button>
                             ))}
                         </div>

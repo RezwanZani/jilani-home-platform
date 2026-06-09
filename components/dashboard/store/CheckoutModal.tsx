@@ -108,8 +108,8 @@ export function CheckoutModal({ isOpen, onClose, selectedPackage, user }: Checko
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="w-[95vw] max-w-[1400px] bg-white dark:bg-[#0B1121] border-gray-200 dark:border-white/10 text-gray-900 dark:text-white p-0 overflow-y-auto md:overflow-hidden max-h-[95vh] md:max-h-[90vh] custom-scrollbar">
-        <div className="flex flex-col md:flex-row h-auto md:h-full md:max-h-[90vh]">
+      <DialogContent className="w-[95vw] max-w-[1400px] bg-white dark:bg-[#0B1121] border-gray-200 dark:border-white/10 text-gray-900 dark:text-white p-0 overflow-y-auto max-h-[85vh] custom-scrollbar">
+        <div className="flex flex-col md:flex-row h-auto min-h-0">
           {/* Left Side - Summary */}
           <div className="w-full md:w-1/3 bg-gray-50 dark:bg-white/5 p-6 md:p-8 flex flex-col justify-between border-b md:border-b-0 md:border-r border-gray-200 dark:border-white/10">
             <div>
@@ -177,7 +177,7 @@ export function CheckoutModal({ isOpen, onClose, selectedPackage, user }: Checko
           </div>
 
           {/* Right Side - Payment Form */}
-          <div className="w-full md:w-2/3 p-6 md:p-8 overflow-y-auto custom-scrollbar">
+          <div className="w-full md:w-2/3 p-6 md:p-8 overflow-y-auto custom-scrollbar md:max-h-[85vh]">
             <DialogHeader className="mb-6">
               <DialogTitle className="text-xl font-bold">Manual Payment</DialogTitle>
               <DialogDescription className="text-gray-500 dark:text-gray-400">
@@ -224,24 +224,37 @@ export function CheckoutModal({ isOpen, onClose, selectedPackage, user }: Checko
                   >
                     <div className="bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 p-4 rounded-xl space-y-3 text-sm text-blue-900 dark:text-blue-100 font-bengali">
                       <p className="font-bold flex items-center gap-2 font-sans">
-                        <Shield className="w-4 h-4" /> {gateway.toUpperCase()} এর জন্য নির্দেশনাবলী
+                        <Shield className="w-4 h-4" /> {gateway.toUpperCase()} Payment Instructions
                       </p>
-                      <ol className="list-decimal list-inside space-y-1.5 ml-1 leading-relaxed">
-                        <li>আপনার <span className="font-sans font-bold">{gateway.toUpperCase()}</span> অ্যাপে যান অথবা USSD ডায়াল করুন।</li>
-                        <li><strong className="font-sans">Send Money</strong> অথবা <strong className="font-sans">Make Payment</strong> নির্বাচন করুন।</li>
-                        <li>এই নম্বরটি দিন: <strong className="font-sans text-lg tracking-wider ml-1">01560034744</strong></li>
-                        <li>পরিমাণ দিন: <strong className="font-sans">৳{getFinalPrice().toFixed(2)}</strong></li>
-                        <li>রেফারেন্স দিন: <strong className="font-sans">Jilani Home</strong></li>
-                        <li>লেনদেন সম্পন্ন করুন এবং <strong className="font-sans">TrxID</strong> সংরক্ষণ করুন।</li>
-                      </ol>
-                      {gateway === 'bkash' && (
-                        <div className="mt-3 pt-3 border-t border-blue-200 dark:border-blue-500/30">
-                          <p className="text-xs mb-2 text-gray-700 dark:text-gray-300">অথবা আমাদের ডিরেক্ট পেমেন্ট লিঙ্ক ব্যবহার করুন:</p>
-                          <a href="https://shop.bkash.com/jilani-home-a-rental-platform0/paymentlink" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#E2136E] text-white font-bold rounded-lg hover:bg-[#c40e5d] transition-colors text-xs">
-                            বিকাশ পেমেন্ট লিঙ্ক <ArrowRight className="w-3 h-3" />
+                      <div className="space-y-3">
+                        <div className="bg-white/50 dark:bg-black/20 p-3 rounded-lg border border-blue-200 dark:border-blue-500/20">
+                          <p className="font-bold font-sans text-base text-gray-900 dark:text-white">Jilani Home Bkash Account: <span className="tracking-widest text-[#E2136E]">01560-034744</span></p>
+                          <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">এটি একটি মার্চেন্ট একাউন্ট।</p>
+                        </div>
+
+                        <ol className="list-decimal list-outside pl-4 space-y-2 text-sm leading-relaxed text-gray-800 dark:text-gray-200">
+                          <li>আপনার বিকাশ অ্যাপে লগইন করুন অথবা <strong className="font-sans">*247#</strong> ডায়াল করুন।</li>
+                          <li><strong className="font-sans text-[#E2136E]">Make Payment</strong> (পেমেন্ট) অপশনটি নির্বাচন করুন।</li>
+                          <li>আমাদের মার্চেন্ট নম্বরটি দিন: <strong className="font-sans tracking-wider">01560-034744</strong></li>
+                          <li>পেমেন্টের পরিমাণ দিন: <strong className="font-sans">৳{getFinalPrice().toFixed(2)}</strong></li>
+                          <li>রেফারেন্স হিসেবে আপনার নাম অথবা <strong className="font-sans">Jilani Home</strong> লিখতে পারেন।</li>
+                          <li>পিন নম্বর দিয়ে পেমেন্ট সম্পন্ন করুন এবং ট্রানজ্যাকশন আইডি (<strong className="font-sans">TrxID</strong>) সংরক্ষণ করুন।</li>
+                        </ol>
+
+                        <div className="mt-4 pt-3 border-t border-blue-200 dark:border-blue-500/30">
+                          <p className="text-sm mb-2 font-medium">অথবা, সরাসরি লিংকের মাধ্যমে পেমেন্ট করতে ক্লিক করুন:</p>
+                          <a href="https://shop.bkash.com/jilani-home-a-rental-platform0/paymentlink" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#E2136E] text-white font-bold rounded-lg hover:bg-[#c40e5d] transition-colors font-sans text-sm shadow-sm">
+                            Payment Link <ArrowRight className="w-4 h-4" />
                           </a>
                         </div>
-                      )}
+
+                        <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 p-3 rounded-lg mt-3">
+                          <p className="text-red-700 dark:text-red-400 font-bold text-xs flex items-start gap-1.5">
+                            <span className="text-lg leading-none mt-0.5">*</span>
+                            <span>পেমেন্ট করার পর অবশ্যই পেমেন্টের একটি স্ক্রিনশট নিচের ফর্মটিতে আপলোড করবেন অথবা <strong className="font-sans">WhatsApp</strong> বাটনে ক্লিক করে পাঠাবেন। Jilani Home.</span>
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </motion.div>
                 )}
@@ -273,7 +286,7 @@ export function CheckoutModal({ isOpen, onClose, selectedPackage, user }: Checko
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="screenshot">Payment Screenshot (Optional)</Label>
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-col gap-3">
                     <Input
                       id="screenshot"
                       type="file"
@@ -285,8 +298,20 @@ export function CheckoutModal({ isOpen, onClose, selectedPackage, user }: Checko
                           setScreenshotFile(null);
                         }
                       }}
-                      className="bg-white dark:bg-black/20 flex-1 file:bg-blue-50 file:text-blue-700 file:border-0 file:rounded-md file:mr-3 file:px-3 file:py-1 dark:file:bg-blue-500/20 dark:file:text-blue-300"
+                      className="bg-white dark:bg-black/20 file:bg-blue-50 file:text-blue-700 file:border-0 file:rounded-md file:mr-3 file:px-3 file:py-1 dark:file:bg-blue-500/20 dark:file:text-blue-300"
                     />
+
+                    <div className="mt-3 p-4 border border-green-200 dark:border-green-900/50 rounded-xl bg-green-50/50 dark:bg-green-500/10 flex flex-col gap-3">
+                      <p className="text-sm font-bold text-green-800 dark:text-green-400 font-bengali">অথবা, আপনি WhatsApp-এর মাধ্যমে পেমেন্ট স্ক্রিনশট পাঠাতে পারেন:</p>
+                      <a
+                        href={`https://wa.me/8801400536002?text=${encodeURIComponent(`Payment Submission\nName: ${user?.name || ""}\nEmail: ${user?.email || ""}\nPackage: ${selectedPackage.name}\nAmount: ৳${getFinalPrice().toFixed(2)}\nSender Number: ${senderNumber || "[Enter your number]"}\nTrxID: ${gatewayTrxId || "[Enter TrxID]"}`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#25D366] text-white font-bold rounded-lg hover:bg-[#128C7E] transition-colors text-sm w-full sm:w-auto font-bengali"
+                      >
+                        WhatsApp-এ স্ক্রিনশট পাঠান
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>

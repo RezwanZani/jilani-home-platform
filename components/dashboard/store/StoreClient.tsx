@@ -49,7 +49,7 @@ export default function StoreClient({ packages, user }: StoreClientProps) {
               }`}
           >
             {pkg.isPopular && (
-              <div className="absolute top-0 left-0 w-full bg-blue-500 text-white text-[10px] uppercase tracking-widest font-bold py-1.5 text-center">
+              <div className="absolute top-0 left-0 w-full bg-blue-500 text-white keep-white text-[10px] uppercase tracking-widest font-bold py-1.5 text-center">
                 Most Popular
               </div>
             )}

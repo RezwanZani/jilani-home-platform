@@ -17,11 +17,10 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type Section = "general" | "notifications" | "security" | "appearance";
+type Section = "general" | "security" | "appearance";
 
 const SECTIONS: { id: Section; label: string; icon: React.ElementType }[] = [
   { id: "general", label: "Platform Info", icon: Globe },
-  { id: "notifications", label: "Alert Config", icon: Bell },
   { id: "security", label: "System Security", icon: Shield },
   { id: "appearance", label: "Design System", icon: Palette },
 ];
@@ -168,43 +167,7 @@ export default function AdminSettingsPage() {
                 </motion.div>
               )}
 
-              {active === "notifications" && (
-                <motion.div 
-                  key="notifications" 
-                  initial={{ opacity: 0, x: 20 }} 
-                  animate={{ opacity: 1, x: 0 }} 
-                  exit={{ opacity: 0, x: -20 }}
-                  className="space-y-10"
-                >
-                   <div className="flex items-center justify-between">
-                      <div>
-                         <h3 className="font-bold text-gray-900 dark:text-white text-2xl flex items-center gap-4">
-                            <Bell className="w-8 h-8 text-blue-600" />
-                            Admin Alerts Config
-                         </h3>
-                         <p className="text-sm text-gray-500 font-medium mt-1">Configure system notifications for platform events.</p>
-                      </div>
-                      <button className="text-[10px] font-bold text-blue-600 uppercase tracking-widest bg-blue-500/10 px-4 py-2 rounded-xl border border-blue-500/20 hover:bg-blue-600 hover:text-white transition-all">Test Alarms</button>
-                   </div>
-                   <div className="bg-gray-50/50 dark:bg-white/[0.02] rounded-3xl border border-gray-100 dark:border-white/5 divide-y divide-gray-100 dark:divide-white/5 overflow-hidden">
-                    {[
-                      { label: "New Host Registrations", desc: "Send immediate email alert when a new host submits their profile for review", defaultChecked: true },
-                      { label: "Platform Downtime", desc: "Critical alerts if server response times exceed 2000ms for more than 5 minutes", defaultChecked: true },
-                      { label: "Failed Payment Transactions", desc: "Notify billing team when a user payment fails after 3 attempts", defaultChecked: true },
-                      { label: "Weekly Growth Digest", desc: "Consolidated report of platform metrics sent every Monday at 8:00 AM", defaultChecked: true },
-                      { label: "Listing Violation Reports", desc: "Alert when a listing receives more than 5 reports in 24 hours", defaultChecked: false },
-                    ].map((item) => (
-                      <div key={item.label} className="flex items-center justify-between p-8 hover:bg-white dark:hover:bg-white/[0.03] transition-colors">
-                        <div className="space-y-1">
-                          <p className="text-base font-bold text-gray-900 dark:text-white">{item.label}</p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400 font-medium max-w-lg leading-relaxed">{item.desc}</p>
-                        </div>
-                        <Toggle defaultChecked={item.defaultChecked} />
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
+
 
               {active === "security" && (
                 <motion.div 

@@ -7,6 +7,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { GlassCard } from "@/components/ui/GlassCard";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Home,
@@ -111,7 +120,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-sm font-semibold group relative overflow-hidden",
                 isActive
-                  ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
+                  ? "bg-blue-600 text-white keep-white shadow-lg shadow-blue-600/20"
                   : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5"
               )}
             >
@@ -121,7 +130,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                   className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-white rounded-full"
                 />
               )}
-              <Icon className={cn("w-4.5 h-4.5 flex-shrink-0 transition-transform group-hover:scale-110", isActive ? "text-white" : "text-gray-400 group-hover:text-blue-500")} />
+              <Icon className={cn("w-4.5 h-4.5 flex-shrink-0 transition-transform group-hover:scale-110", isActive ? "text-white keep-white" : "text-gray-400 group-hover:text-blue-500")} />
               {link.name}
             </Link>
           );
@@ -211,22 +220,49 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             >
               {theme === 'dark' ? <Sun className="w-5 h-5 text-gray-300" /> : <Moon className="w-5 h-5 text-gray-600" />}
             </button>
-            <button className="relative p-2.5 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors">
-              <Bell className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-              <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-blue-500 border-2 border-white dark:border-[#1E293B] rounded-full" />
-            </button>
-            <div className="flex items-center gap-3 pl-2 border-l border-gray-200 dark:border-white/10">
-              <div className="text-right hidden sm:block">
-                <p className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">{user?.name}</p>
-                <p className="text-[10px] font-medium text-gray-500 dark:text-gray-300">{user?.email}</p>
-                <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-tighter">{user?.role === 'user' ? 'Member' : 'Admin'}</p>
-              </div>
-              <img
-                src={user?.image || '/avatar-default.png'}
-                alt="User"
-                className="w-10 h-10 rounded-full object-cover border-2 border-blue-500/20 p-0.5"
-              />
-            </div>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-3 pl-2 border-l border-gray-200 dark:border-white/10 outline-none cursor-pointer hover:opacity-80 transition-opacity">
+                  <div className="text-right hidden sm:block">
+                    <p className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">{user?.name}</p>
+                    <p className="text-[10px] font-medium text-gray-500 dark:text-gray-300">{user?.email}</p>
+                    <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-tighter">{user?.role === 'user' ? 'Member' : 'Admin'}</p>
+                  </div>
+                  <img
+                    src={user?.image || '/avatar-default.png'}
+                    alt="User"
+                    className="w-10 h-10 rounded-full object-cover border-2 border-blue-500/20 p-0.5"
+                  />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56 mt-2">
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{user?.name}</p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {user?.email}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem asChild>
+                    <Link href={isAdmin ? "/admin/settings" : "/dashboard/settings"} className="cursor-pointer flex w-full items-center">
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span>Account Settings</span>
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild className="text-red-500 focus:text-red-500 focus:bg-red-50 dark:focus:bg-red-500/10">
+                  <Link href="/logout" className="cursor-pointer flex w-full items-center">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Sign Out</span>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </header>
 

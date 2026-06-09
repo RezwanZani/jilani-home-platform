@@ -76,7 +76,7 @@ export default function LocationAndContact({ propertyId, zone, hasUnlockedInitia
                                 <p className="text-gray-400 text-sm mb-6">Log in or create an account to securely unlock private property details.</p>
                                 <div className="flex flex-col gap-3">
                                     <Link href="/login" onClick={() => setShowModal(false)}><button className="w-full bg-[#3B82F6] hover:bg-[#2563EB] text-white font-semibold py-2.5 rounded-xl transition-colors">Log In</button></Link>
-                                    <Link href="/signup" onClick={() => setShowModal(false)}><button className="w-full bg-white/[0.05] hover:bg-white/[0.1] text-white border border-white/10 font-semibold py-2.5 rounded-xl transition-colors">Sign Up</button></Link>
+                                    <Link href="/signup" onClick={() => setShowModal(false)}><button className="w-full bg-black/5 hover:bg-black/10 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-black dark:text-white border border-black/10 dark:border-white/10 font-semibold py-2.5 rounded-xl transition-colors">Sign Up</button></Link>
                                 </div>
                             </div>
                         ) : (

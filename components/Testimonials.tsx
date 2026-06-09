@@ -17,7 +17,7 @@ const testimonials = [
     role: "Startup Founder",
     company: "Nexus Labs",
     image: "https://images.unsplash.com/photo-1610387694365-19fafcc86d86?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMHBvcnRyYWl0JTIwd29tYW58ZW58MXx8fHwxNzc2NjY3NDUxfDA&ixlib=rb-4.1.0&q=80&w=200",
-    quote: "Found the perfect coworking space in Dhanmondi. Verified contacts meant I could negotiate directly — no middleman.",
+    quote: "Found the perfect coworking space in Dhanmondi. Verified contacts meant I could negotiate directly - no middleman.",
     stars: 5,
   },
   {
@@ -33,7 +33,7 @@ const testimonials = [
     role: "Corporate Trainer",
     company: "Elevate HR",
     image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200",
-    quote: "Every listing I explored was exactly as described. The curation is exceptional — no wasted viewings.",
+    quote: "Every listing I explored was exactly as described. The curation is exceptional - no wasted viewings.",
     stars: 5,
   },
   {

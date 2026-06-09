@@ -2,14 +2,13 @@
 import React from "react";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { cn } from "@/lib/utils";
-import { Bell, CreditCard, Lock, User, ChevronRight } from "lucide-react";
+import { CreditCard, Lock, User, ChevronRight } from "lucide-react";
 
-export type Section = "profile" | "security" | "notifications" | "billing";
+export type Section = "profile" | "security" | "billing";
 
 const SECTIONS: { id: Section; label: string; icon: React.ElementType }[] = [
   { id: "profile", label: "Profile Info", icon: User },
   { id: "security", label: "Password & Security", icon: Lock },
-  { id: "notifications", label: "Notifications", icon: Bell },
   { id: "billing", label: "Billing & Plans", icon: CreditCard },
 ];
 

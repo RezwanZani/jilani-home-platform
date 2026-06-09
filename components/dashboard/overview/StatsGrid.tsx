@@ -49,7 +49,7 @@ export function StatsGrid({ stats }: { stats: any }) {
               {isLowBalance ? (
                 <p className="text-xs font-bold text-amber-600 dark:text-amber-500/80 flex items-center gap-1.5 mt-2">
                   <AlertTriangle className="w-3.5 h-3.5" />
-                  Balance low — cannot unlock
+                  Balance low - cannot unlock
                 </p>
               ) : (
                 <button className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 flex items-center gap-1.5 mt-2 transition-colors group-hover:gap-2">
