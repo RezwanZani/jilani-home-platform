@@ -88,21 +88,23 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const SidebarContent = () => (
     <div className="flex flex-col h-full p-6 overflow-hidden">
       {/* Brand */}
-      <div className="flex items-center gap-3 mb-10 flex-shrink-0">
-        <ImageWithFallback
-          src="/imports/jilanihome_logo.jpg"
-          alt="Jilani Home"
-          className="w-14 h-14 rounded-xl object-cover bg-gray-900"
-        />
-        <div>
-          <h1 className="font-heading font-bold text-lg leading-tight text-gray-900 dark:text-white tracking-tight">
-            Jilani Home
-          </h1>
-          <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full border border-primary/20 text-primary tracking-widest bg-primary/5">
-            {isAdmin ? "Admin Portal" : "User Portal"}
-          </span>
+      <Link href="/">
+        <div className="flex items-center gap-3 mb-10 flex-shrink-0">
+          <ImageWithFallback
+            src="/imports/jilanihome_logo.jpg"
+            alt="Jilani Home"
+            className="w-14 h-14 rounded-xl object-cover bg-gray-900"
+          />
+          <div>
+            <h1 className="font-heading font-bold text-lg leading-tight text-gray-900 dark:text-white tracking-tight">
+              Jilani Home
+            </h1>
+            <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full border border-primary/20 text-primary tracking-widest bg-primary/5">
+              {isAdmin ? "Admin Portal" : "User Portal"}
+            </span>
+          </div>
         </div>
-      </div>
+      </Link>
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto space-y-1.5 pr-2 pb-4 scrollbar-thin">

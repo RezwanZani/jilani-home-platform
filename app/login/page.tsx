@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Eye, EyeOff } from 'lucide-react';
 import { ImageWithFallback } from '@/components/figma/ImageWithFallback';
 import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react';
+import { signIn, getSession } from 'next-auth/react';
 
 const LOGIN_IMAGE = "https://images.unsplash.com/photo-1770992161088-7ad66282c9af?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcmVtaXVtJTIwZGFyayUyMG9mZmljZSUyMGludGVyaW9yJTIwYXJjaGl0ZWN0dXJhbHxlbnwxfHx8fDE3NzY3NTYxNTJ8MA&ixlib=rb-4.1.0&q=80&w=1080";
 
@@ -40,9 +40,10 @@ export default function Login() {
       }
       setLoading(false);
     } else {
-      // Success! Send them to the dashboard.
-      // Next.js will re-evaluate the layout and pass them through our route protection.
-      router.push("/dashboard");
+      // Success! Fetch the fresh session to determine the user's role.
+      const session = await getSession();
+      const landingPage = session?.user?.role === "admin" ? "/admin" : "/dashboard";
+      router.push(landingPage);
       router.refresh();
     }
   };
@@ -160,7 +161,7 @@ export default function Login() {
           <button
             type="button"
             className="w-full bg-[#1A1A1A] cursor-pointer hover:bg-[#222222] border border-white/[0.08] text-[#D1D5DB] text-sm font-medium py-3 rounded-xl transition-all flex items-center justify-center gap-2.5"
-            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+            onClick={() => signIn("google", { callbackUrl: "/login" })}
           >
             <GoogleIcon />
             Sign in with Google

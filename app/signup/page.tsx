@@ -8,7 +8,7 @@ import { ImageWithFallback } from '@/components/figma/ImageWithFallback';
 import { verifyAndRegisterUser } from '@/lib/actions/register';
 import { sendPhoneOTP } from '@/lib/actions/auth-action'; // MAKE SURE THIS IMPORT MATCHES YOUR PATH
 import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react';
+import { signIn, getSession } from 'next-auth/react';
 
 const SIGNUP_IMAGE = "https://images.unsplash.com/photo-1657816925116-9bbb2a45fb6d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBjb252ZW50aW9uJTIwaGFsbCUyMGRhcmslMjBtb2Rlcm4lMjBpbnRlcmlvcnxlbnwxfHx8fDE3NzY3NTYxNTN8MA&ixlib=rb-4.1.0&q=80&w=1080";
 
@@ -80,7 +80,10 @@ export default function SignUp() {
       setError("Account created, but auto-login failed. Please go to login page.");
       console.log("Login Error:", loginResult.error);
     } else {
-      router.push("/dashboard");
+      // Fetch the fresh session to determine the user's role
+      const session = await getSession();
+      const landingPage = session?.user?.role === "admin" ? "/admin" : "/dashboard";
+      router.push(landingPage);
     }
     setLoading(false);
   };
@@ -243,7 +246,7 @@ export default function SignUp() {
               <button
                 type="button"
                 className="w-full bg-[#1A1A1A] cursor-pointer hover:bg-[#222222] border border-white/[0.08] text-[#D1D5DB] text-sm font-medium py-3 rounded-xl transition-all flex items-center justify-center gap-2.5"
-                onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+                onClick={() => signIn("google", { callbackUrl: "/login" })}
               >
                 <GoogleIcon />
                 Sign up with Google

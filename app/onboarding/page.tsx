@@ -4,7 +4,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { sendPhoneOTP, verifyAndSavePhoneOTP } from "@/lib/actions/auth-action";
-import { signOut, useSession } from "next-auth/react";
+import { signOut, useSession, getSession } from "next-auth/react";
 
 export default function OnboardingPage() {
     const router = useRouter();
@@ -56,7 +56,10 @@ export default function OnboardingPage() {
             // so the middleware sees it immediately and doesn't redirect back here
             await update({ phoneNumber });
             // 3. Force a hard browser redirect to break out of the loading state
-            window.location.href = "/dashboard";
+            // Fetch the fresh session to determine the user's role
+            const freshSession = await getSession();
+            const landingPage = freshSession?.user?.role === "admin" ? "/admin" : "/dashboard";
+            window.location.href = landingPage;
         } else {
             // If there's an error (like a wrong OTP), show it and turn off loading
             setError(result?.message || "Failed to verify. Try again.");
