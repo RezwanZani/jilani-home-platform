@@ -70,9 +70,9 @@ jilanihome-next/
 │   └── globals.css               ← Merged from index.css + theme.css + tailwind.css + fonts.css
 │
 ├── public/
-│   ├── bg-image.png              ← Already here ✓
+│   ├── bg-image.jpg              ← Already here ✓
 │   └── imports/                  ← Move all src/imports/* here
-│       ├── jilanihome_logo.png
+│       ├── jilanihome_logo.jpg
 │       └── image-*.png
 │
 ├── next.config.ts
@@ -255,16 +255,16 @@ router.push('/signup');
 
 **Logo image fix** — `Navbar.tsx` currently references:
 ```
-src="/src/imports/jilanihome_logo.png"
+src="/src/imports/jilanihome_logo.jpg"
 ```
 This won't work in Next.js. Move all files from `src/imports/` to `public/imports/` and update to:
 ```
-src="/imports/jilanihome_logo.png"
+src="/imports/jilanihome_logo.jpg"
 ```
 
 **`figmaAssetResolver` Vite plugin** — this plugin resolved `figma:asset/filename` imports. Check if any component actually uses `figma:asset/` imports. If none do (none visible in the codebase), simply **remove** the plugin. If any do, replace with a static `/imports/filename` path.
 
-**`bg-image.png`** — already in `public/`, no changes needed.
+**`bg-image.jpg`** — already in `public/`, no changes needed.
 
 **Optional upgrade:** Replace `<img>` tags in `FeaturedListings`, similar listings cards, and `PhotoGallery` with Next.js `<Image>` from `next/image` for automatic optimization. This is not required but a recommended enhancement — do it after core migration is working.
 

@@ -1,3 +1,4 @@
+
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import TrustStrip from '@/components/TrustStrip';
@@ -16,7 +17,7 @@ export default async function HomePage() {
   const userBalance = await getUserBalance() as number || 0;
 
   return (
-    <div className="min-h-screen bg-[#0D0D0D] text-white font-sans selection:bg-[#3B82F6]/30 overflow-x-hidden" style={{ scrollBehavior: 'smooth' }}>
+    <div className="min-h-screen landing-bg text-white font-sans selection:bg-[#3B82F6]/30 overflow-x-hidden" style={{ scrollBehavior: 'smooth' }}>
       <Navbar />
       <main>
         <Hero />

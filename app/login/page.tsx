@@ -67,7 +67,7 @@ export default function Login() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 mb-10 group w-fit">
             <ImageWithFallback
-              src="/imports/FB_IMG_1776752325972.jpg"
+              src="/imports/jilanihome_logo.jpg"
               alt="Jilani Home"
               className="w-9 h-9 rounded-lg object-cover"
             />

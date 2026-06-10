@@ -8,7 +8,7 @@ export default function BottomCTA() {
   return (
     <section className="py-32 relative overflow-hidden">
       {/* Background Glow */}
-      <div className="absolute inset-0 bg-[#0D0D0D]">
+      <div className="absolute inset-0">
         <div className="absolute top-1/2 left-1/2 w-[60vw] h-[60vw] max-w-[800px] max-h-[800px] bg-[#3B82F6] rounded-full blur-[200px] opacity-15 -translate-x-1/2 -translate-y-1/2 pointer-events-none mix-blend-screen" />
       </div>
 

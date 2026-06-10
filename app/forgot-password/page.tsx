@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 export default function ForgotPassword() {
   const [step, setStep] = useState<'request' | 'verify' | 'success'>('request');
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const [identifier, setIdentifier] = useState('');
   const [otp, setOtp] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -22,7 +22,7 @@ export default function ForgotPassword() {
       toast.error('Please enter your email or phone number');
       return;
     }
-    
+
     setIsLoading(true);
     try {
       const res = await sendForgotPasswordOTP(identifier);
@@ -84,7 +84,7 @@ export default function ForgotPassword() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 mb-10 group w-fit">
             <ImageWithFallback
-              src="/imports/FB_IMG_1776752325972.jpg"
+              src="/imports/jilanihome_logo.jpg"
               alt="Jilani Home"
               className="w-9 h-9 rounded-lg object-cover"
             />
@@ -198,7 +198,7 @@ export default function ForgotPassword() {
               <p className="text-[#6B7280] text-sm leading-relaxed mb-8">
                 Your password has been successfully reset. You can now use your new password to log in.
               </p>
-              
+
               <Link href="/login"
                 className="w-full bg-white hover:bg-gray-100 text-black font-semibold py-3 rounded-xl transition-all text-sm flex items-center justify-center gap-2 shadow-lg"
               >

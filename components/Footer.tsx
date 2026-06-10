@@ -4,7 +4,7 @@ import { ImageWithFallback } from '@/components/figma/ImageWithFallback';
 const footerLinks = [
   {
     title: "Platform",
-    links: ["How it Works", "Buy Points", "Browse Spaces"]
+    links: ["How to Find Property", "Buy Points", "Browse Properties"]
   },
   {
     title: "Support",
@@ -18,7 +18,7 @@ const footerLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-[#050505] border-t border-white/5 pt-20 pb-10 mt-auto">
+    <footer className="border-t border-white/5 pt-20 pb-10 mt-auto">
       <div className="max-w-7xl mx-auto px-6">
         {/* Changed to a 12-column grid for perfect proportional spacing */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-16">
@@ -27,7 +27,7 @@ export default function Footer() {
           <div className="lg:col-span-3 space-y-6">
             <div className="flex items-center gap-3">
               <ImageWithFallback
-                src="/imports/jilanihome_logo.png"
+                src="/imports/jilanihome_logo.jpg"
                 alt="Logo"
                 className="w-10 h-10 rounded-lg object-cover"
               />

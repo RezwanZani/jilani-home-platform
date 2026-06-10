@@ -27,7 +27,7 @@ export default function Navbar() {
         <div className="flex-1 flex justify-start">
           <Link href="/" className="flex items-center gap-2 bg-black/40 dark:bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl sm:rounded-2xl p-1.5 sm:p-2 shadow-lg shrink-0 h-[44px] sm:h-[52px] keep-white">
             <ImageWithFallback
-              src="/imports/jilanihome_logo.png"
+              src="/imports/jilanihome_logo.jpg"
               alt="Jilani Home"
               className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg object-contain"
             />
@@ -38,8 +38,9 @@ export default function Navbar() {
         {/* Middle: Nav Links Box (Bento) */}
         <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
           <nav className="flex items-center gap-1 bg-black/40 dark:bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-1.5 shadow-lg h-[52px]">
-            <Link href="/listings" className="text-white/80 hover:text-white hover:bg-white/10 px-5 py-2 rounded-xl transition-all text-sm font-medium h-10 flex items-center keep-white">Browse Spaces</Link>
-            <a href="/#how-it-works" className="text-white/80 hover:text-white hover:bg-white/10 px-5 py-2 rounded-xl transition-all text-sm font-medium h-10 flex items-center keep-white">How It Works</a>
+            <Link href="/" className="text-white/80 hover:text-white hover:bg-white/10 px-5 py-2 rounded-xl transition-all text-sm font-medium h-10 flex items-center keep-white">Home</Link>
+            <Link href="/listings" className="text-white/80 hover:text-white hover:bg-white/10 px-5 py-2 rounded-xl transition-all text-sm font-medium h-10 flex items-center keep-white">Browse Properties</Link>
+            <a href="/#how-it-works" className="text-white/80 hover:text-white hover:bg-white/10 px-5 py-2 rounded-xl transition-all text-sm font-medium h-10 flex items-center keep-white">How to Find Property</a>
             <Link href="/pricing" className="text-white/80 hover:text-white hover:bg-white/10 px-5 py-2 rounded-xl transition-all text-sm font-medium h-10 flex items-center keep-white">Pricing</Link>
           </nav>
         </div>
@@ -91,8 +92,9 @@ export default function Navbar() {
             {/* Glossy Reflection Overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-white/20 dark:from-white/10 to-transparent pointer-events-none" />
 
-            <Link href="/listings" onClick={() => setIsOpen(false)} className="relative text-white hover:bg-white/10 px-6 py-4 rounded-2xl transition-all text-lg font-bold keep-white">Browse Spaces</Link>
-            <a href="/#how-it-works" onClick={() => setIsOpen(false)} className="relative text-white bg-white/10 px-6 py-4 rounded-2xl transition-all text-lg font-bold keep-white">How It Works</a>
+            <Link href="/" onClick={() => setIsOpen(false)} className="relative text-white hover:bg-white/10 px-6 py-4 rounded-2xl transition-all text-lg font-bold keep-white">Home</Link>
+            <Link href="/listings" onClick={() => setIsOpen(false)} className="relative text-white hover:bg-white/10 px-6 py-4 rounded-2xl transition-all text-lg font-bold keep-white">Browse Properties</Link>
+            <a href="/#how-it-works" onClick={() => setIsOpen(false)} className="relative text-white hover:bg-white/10 px-6 py-4 rounded-2xl transition-all text-lg font-bold keep-white">How to Find Property</a>
             <Link href="/pricing" onClick={() => setIsOpen(false)} className="relative text-white hover:bg-white/10 px-6 py-4 rounded-2xl transition-all text-lg font-bold keep-white">Pricing</Link>
             <div className="relative h-px w-full bg-white/10 dark:bg-white/5 my-2 mx-2" />
             {!session?.data?.user && (<Link href="/login" onClick={() => setIsOpen(false)} className="relative text-left text-white hover:bg-white/10 px-6 py-4 rounded-2xl transition-all text-lg font-bold keep-white">Login</Link>)}

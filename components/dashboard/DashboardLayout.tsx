@@ -90,7 +90,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Brand */}
       <div className="flex items-center gap-3 mb-10 flex-shrink-0">
         <ImageWithFallback
-          src="/imports/jilanihome_logo.png"
+          src="/imports/jilanihome_logo.jpg"
           alt="Jilani Home"
           className="w-14 h-14 rounded-xl object-cover bg-gray-900"
         />

@@ -313,4 +313,13 @@ html.light .text-gray-800 { color: #1F2937 !important; }
 /* Placeholder text */
 html.light input::placeholder { color: #9CA3AF !important; }
 
+/* Landing page background custom gradient */
+.landing-bg {
+  background-color: #0D0D0D;
+}
+html.light .landing-bg {
+  background: linear-gradient(180deg, #E5EEFF 0%, #F0F4FF 60%, #F5F8FF 100%) !important;
+}
+
 /* trigger reload */
+

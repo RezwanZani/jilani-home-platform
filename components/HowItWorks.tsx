@@ -24,9 +24,9 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-24 relative bg-[#0a0a0a] border-y border-white/5">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#3B82F6]/5 via-[#0D0D0D] to-[#0D0D0D] pointer-events-none" />
-
+    <section id="how-it-works" className="py-24 relative border-y border-white/5">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#3B82F6]/5 to-transparent pointer-events-none" />
+      
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-20 space-y-4">
           <h2 className="font-heading text-3xl md:text-5xl font-bold text-white">

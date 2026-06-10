@@ -127,7 +127,7 @@ export default function SignUp() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 mb-10 group w-fit">
             <ImageWithFallback
-              src="/imports/FB_IMG_1776752325972.jpg"
+              src="/imports/jilanihome_logo.jpg"
               alt="Jilani Home"
               className="w-9 h-9 rounded-lg object-cover"
             />
@@ -254,6 +254,11 @@ export default function SignUp() {
             // STEP 2: OTP VERIFICATION FORM
             // ==========================================
             <form className="space-y-6" onSubmit={handleVerifyAndRegister}>
+              <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-sm text-[#9CA3AF] leading-relaxed backdrop-blur-sm">
+                Please check your SMS. We have sent a 6-digit verification code to{' '}
+                <span className="text-white font-semibold">{pendingFormData?.get("phoneNumber") as string}</span>.
+              </div>
+
               <div className="space-y-1.5">
                 <label className="text-sm font-medium text-[#9CA3AF]">Enter 6-Digit Verification Code</label>
                 <input

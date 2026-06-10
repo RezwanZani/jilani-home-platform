@@ -13,7 +13,9 @@ import {
   Microwave,
   Tv,
   Flower,
-  Eye
+  Eye,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 
 import Link from 'next/link';
@@ -269,7 +271,7 @@ function DotPager({ total, current, onChange }: { total: number; current: number
             aria-label={`Go to slide ${i + 1}`}
             className={`rounded-full transition-all duration-300 ${i === current
               ? 'w-6 h-1.5 bg-[#3B82F6] shadow-[0_0_8px_rgba(59,130,246,0.6)]'
-              : 'w-1.5 h-1.5 bg-white/25 hover:bg-white/50'
+              : 'w-1.5 h-1.5 bg-[#9CA3AF]/40 hover:bg-[#9CA3AF]/60'
               }`}
           />
         ))}
@@ -282,7 +284,7 @@ function DotPager({ total, current, onChange }: { total: number; current: number
 
   return (
     <div className="flex items-center gap-2">
-      {start > 0 && <span className="text-gray-600 text-xs">…</span>}
+      {start > 0 && <div className="w-1 h-1 rounded-full bg-[#9CA3AF]/40 transition-all" />}
       {dots.map(i => (
         <button
           key={i}
@@ -290,11 +292,11 @@ function DotPager({ total, current, onChange }: { total: number; current: number
           aria-label={`Go to slide ${i + 1}`}
           className={`rounded-full transition-all duration-300 ${i === current
             ? 'w-6 h-1.5 bg-[#3B82F6] shadow-[0_0_8px_rgba(59,130,246,0.6)]'
-            : 'w-1.5 h-1.5 bg-white/25 hover:bg-white/50'
+            : 'w-1.5 h-1.5 bg-[#9CA3AF]/40 hover:bg-[#9CA3AF]/60'
             }`}
         />
       ))}
-      {start + MAX < total && <span className="text-gray-600 text-xs">…</span>}
+      {start + MAX < total && <div className="w-1 h-1 rounded-full bg-[#9CA3AF]/40 transition-all" />}
     </div>
   );
 }
@@ -341,10 +343,19 @@ export default function FeaturedListings({ isLoggedIn, userBalance }: { isLogged
   const PEEK = 40;
 
   const [containerWidth, setContainerWidth] = useState(1200);
+  const [padX, setPadX] = useState(24);
 
   useEffect(() => {
     const update = () => {
-      if (containerRef.current) setContainerWidth(containerRef.current.offsetWidth);
+      if (containerRef.current) {
+        const cw = containerRef.current.offsetWidth;
+        setContainerWidth(cw);
+        if (cw > 1280) {
+          setPadX((cw - 1280) / 2 + 24);
+        } else {
+          setPadX(cw < 640 ? 16 : 24);
+        }
+      }
     };
     update();
     const ro = new ResizeObserver(update);
@@ -352,12 +363,13 @@ export default function FeaturedListings({ isLoggedIn, userBalance }: { isLogged
     return () => ro.disconnect();
   }, []);
 
-  const cols = containerWidth >= 1024 ? 3 : containerWidth >= 640 ? 2 : 1;
+  const availableW = Math.max(280, containerWidth - padX * 2);
+  const cols = availableW >= 960 ? 3 : availableW >= 600 ? 2 : 1;
 
   const cardW =
     cols === 1
-      ? Math.max(180, containerWidth - 2 * PEEK - GAP)
-      : Math.floor((containerWidth - GAP * (cols - 1)) / cols);
+      ? Math.max(260, availableW)
+      : Math.floor((availableW - GAP * (cols - 1)) / cols);
 
   const step = cardW + GAP;
   const maxIdx = Math.max(0, total - cols);
@@ -380,9 +392,8 @@ export default function FeaturedListings({ isLoggedIn, userBalance }: { isLogged
   const dotCount = maxIdx + 1;
 
   const cardState = (i: number): CardState => {
-    if (i === current) return 'active';
-    if (i > current && i < current + cols) return 'visible';
-    return 'hidden';
+    if (i >= current && i < current + cols) return 'active';
+    return 'visible';
   };
 
   // ADDED: Simple loading state while data fetches
@@ -406,7 +417,6 @@ export default function FeaturedListings({ isLoggedIn, userBalance }: { isLogged
   return (
     <section id="browse" className="py-16 sm:py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-
         <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16 space-y-3 sm:space-y-4">
           <h2 className="font-heading text-3xl md:text-5xl font-bold text-white">
             প্রিমিয়াম স্পেস,{' '}
@@ -418,23 +428,22 @@ export default function FeaturedListings({ isLoggedIn, userBalance }: { isLogged
             আপনার প্রয়োজন অনুযায়ী বাছাই করা ভালো জায়গাগুলো দেখে নিন।
           </p>
         </div>
+      </div>
 
-        <div>
+      <div className="w-full">
+        <div className="relative group">
           <div
             ref={containerRef}
             className="relative overflow-hidden py-6"
             style={{ touchAction: 'pan-y', cursor: 'grab' }}
           >
-            <div className="pointer-events-none absolute left-0 inset-y-0 w-8 sm:w-12 z-10 bg-gradient-to-r from-[#0D0D0D] to-transparent" />
-            <div className="pointer-events-none absolute right-0 inset-y-0 w-8 sm:w-12 z-10 bg-gradient-to-l from-[#0D0D0D] to-transparent" />
-
             <motion.div
               className="flex"
               style={{
                 gap: GAP,
                 willChange: 'transform',
-                paddingLeft: cols === 1 ? PEEK : 0,
-                paddingRight: cols === 1 ? PEEK : 0,
+                paddingLeft: padX,
+                paddingRight: padX,
               }}
               animate={{ x: trackX }}
               transition={{ type: 'spring', stiffness: 300, damping: 34, mass: 0.8 }}
@@ -461,21 +470,45 @@ export default function FeaturedListings({ isLoggedIn, userBalance }: { isLogged
             </motion.div>
           </div>
 
-          <div className="flex flex-col items-center gap-2.5 mt-4">
-            <DotPager total={dotCount} current={current} onChange={snapTo} />
-            <p className="text-gray-600 text-[10px] sm:text-xs tracking-widest uppercase">
-              swipe to explore
-            </p>
-          </div>
+          {/* Left Navigation Arrow */}
+          {current > 0 && (
+            <button
+              onClick={() => snapTo(current - 1)}
+              className="absolute flex top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 items-center justify-center bg-[#3B82F6]/90 hover:bg-[#3B82F6] backdrop-blur-md rounded-full border border-white/20 shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all text-white hover:scale-110 keep-white"
+              style={{ left: Math.max(8, padX - 24) }}
+              aria-label="Previous listings"
+            >
+              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+            </button>
+          )}
+
+          {/* Right Navigation Arrow */}
+          {current < maxIdx && (
+            <button
+              onClick={() => snapTo(current + 1)}
+              className="absolute flex top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 items-center justify-center bg-[#3B82F6]/90 hover:bg-[#3B82F6] backdrop-blur-md rounded-full border border-white/20 shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all text-white hover:scale-110 keep-white"
+              style={{ right: Math.max(8, padX - 24) }}
+              aria-label="Next listings"
+            >
+              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+            </button>
+          )}
         </div>
 
-        <div className="mt-10 sm:mt-12 flex justify-center">
-          <Link href="/listings"
-            className="text-white bg-[#3B82F6] hover:bg-[#2563EB] px-10 py-3.5 rounded-full text-sm font-bold transition-all shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] hover:-translate-y-0.5 keep-white"
-          >
-            View All Listings
-          </Link>
+        <div className="flex flex-col items-center gap-2.5 mt-4">
+          <DotPager total={dotCount} current={current} onChange={snapTo} />
+          <p className="text-gray-600 text-[10px] sm:text-xs tracking-widest uppercase">
+            swipe to explore
+          </p>
         </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 mt-10 sm:mt-12 flex justify-center">
+        <Link href="/listings"
+          className="text-white bg-[#3B82F6] hover:bg-[#2563EB] px-10 py-3.5 rounded-full text-sm font-bold transition-all shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] hover:-translate-y-0.5 keep-white"
+        >
+          View All Listings
+        </Link>
       </div>
     </section>
   );

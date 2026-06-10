@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight, Play, Truck, Home, Search, Clock } from 'lucide-react';
+import { ArrowRight, Play, Home, Store, Briefcase, Landmark } from 'lucide-react';
 
 export default function Hero() {
   return (
@@ -10,7 +10,7 @@ export default function Hero() {
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/bg-image.png"
+          src="/bg-image.jpg"
           alt="City Background"
           className="w-full h-full object-cover scale-105 animate-[pulse_20s_ease-in-out_infinite] origin-center"
           style={{ animationDirection: 'alternate' }}
@@ -67,45 +67,45 @@ export default function Hero() {
       >
         <div className="bg-black/40 dark:bg-white/10 backdrop-blur-xl border border-white/10 dark:border-white/20 rounded-2xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.2)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
           
-          <div className="grid grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-4">
             
             {/* Item 1 */}
-            <div className="flex flex-col items-center justify-center gap-2 sm:gap-3 p-3 sm:p-5 md:p-6 lg:p-8 border-b border-r border-white/10 dark:border-white/10 lg:border-b-0">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-                <Truck className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+            <div className="flex flex-col items-center justify-center gap-1.5 p-2 sm:p-3 lg:p-4 border-r border-white/10 dark:border-white/10">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+                <Home className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
               </div>
-              <div className="text-center mt-1">
-                <span className="text-white font-medium text-[13px] sm:text-sm md:text-base whitespace-nowrap keep-white">শিফট করুন।</span>
+              <div className="text-center mt-0.5">
+                <span className="text-white font-medium text-[10px] sm:text-xs md:text-sm lg:text-base whitespace-nowrap keep-white">ফ্ল্যাট</span>
               </div>
             </div>
 
             {/* Item 2 */}
-            <div className="flex flex-col items-center justify-center gap-2 sm:gap-3 p-3 sm:p-5 md:p-6 lg:p-8 border-b border-white/10 dark:border-white/10 lg:border-b-0 lg:border-r">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-orange-100 flex items-center justify-center shrink-0">
-                <Home className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500" />
+            <div className="flex flex-col items-center justify-center gap-1.5 p-2 sm:p-3 lg:p-4 border-r border-white/10 dark:border-white/10">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-orange-100 flex items-center justify-center shrink-0">
+                <Store className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500" />
               </div>
-              <div className="text-center mt-1">
-                <span className="text-white font-medium text-[13px] sm:text-sm md:text-base whitespace-nowrap keep-white">ভাড়া দিন।</span>
+              <div className="text-center mt-0.5">
+                <span className="text-white font-medium text-[10px] sm:text-xs md:text-sm lg:text-base whitespace-nowrap keep-white">দোকান</span>
               </div>
             </div>
 
             {/* Item 3 */}
-            <div className="flex flex-col items-center justify-center gap-2 sm:gap-3 p-3 sm:p-5 md:p-6 lg:p-8 border-r border-white/10 dark:border-white/10 lg:border-r-0">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-purple-100 flex items-center justify-center shrink-0">
-                <Search className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
+            <div className="flex flex-col items-center justify-center gap-1.5 p-2 sm:p-3 lg:p-4 border-r border-white/10 dark:border-white/10">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-purple-100 flex items-center justify-center shrink-0">
+                <Briefcase className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
               </div>
-              <div className="text-center mt-1">
-                <span className="text-white font-medium text-[13px] sm:text-sm md:text-base whitespace-nowrap keep-white">প্রপার্টি খুঁজুন।</span>
+              <div className="text-center mt-0.5">
+                <span className="text-white font-medium text-[10px] sm:text-xs md:text-sm lg:text-base whitespace-nowrap keep-white">অফিস</span>
               </div>
             </div>
 
             {/* Item 4 */}
-            <div className="flex flex-col items-center justify-center gap-2 sm:gap-3 p-3 sm:p-5 md:p-6 lg:p-8">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
-                <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-500" />
+            <div className="flex flex-col items-center justify-center gap-1.5 p-2 sm:p-3 lg:p-4">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                <Landmark className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
               </div>
-              <div className="text-center mt-1">
-                <span className="text-white font-medium text-[13px] sm:text-sm md:text-base whitespace-nowrap keep-white">২৪ ঘন্টায় প্রপার্টি নিন।</span>
+              <div className="text-center mt-0.5">
+                <span className="text-white font-medium text-[10px] sm:text-xs md:text-sm lg:text-base leading-tight keep-white">কনভেনশন হল</span>
               </div>
             </div>
 
