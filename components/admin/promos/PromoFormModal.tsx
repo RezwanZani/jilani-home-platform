@@ -90,58 +90,93 @@ export default function PromoFormModal({ isOpen, onClose, initialData }: PromoFo
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[600px] bg-[#0B1121] border-white/10 text-white max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[600px] bg-white dark:bg-slate-900 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white max-h-[90vh] overflow-y-auto rounded-2xl p-6">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold">{initialData ? "Edit Promo Code" : "Add Promo Code"}</DialogTitle>
+          <DialogTitle className="text-xl font-bold text-gray-900 dark:text-white">{initialData ? "Edit Promo Code" : "Add Promo Code"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4 py-4">
             <div className="space-y-2 col-span-2">
-              <Label htmlFor="code" className="text-gray-400">Promo Code *</Label>
-              <Input id="code" placeholder="e.g. WINTER20" value={formData.code} onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })} className="bg-white/5 border-white/10 text-white placeholder:text-gray-600 uppercase" />
+              <Label htmlFor="code" className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase">Promo Code *</Label>
+              <Input
+                id="code"
+                placeholder="e.g. WINTER20"
+                value={formData.code}
+                onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
+                className="h-11 rounded-xl bg-white dark:bg-slate-950 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 uppercase shadow-sm"
+              />
             </div>
 
             <div className="space-y-2 col-span-2 sm:col-span-1">
-              <Label htmlFor="discountType" className="text-gray-400">Discount Type *</Label>
+              <Label htmlFor="discountType" className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase">Discount Type *</Label>
               <select
                 id="discountType"
                 value={formData.discountType}
                 onChange={(e) => setFormData({ ...formData, discountType: e.target.value })}
-                className="flex h-10 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-11 w-full rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-slate-950 px-3 py-2 text-sm text-gray-900 dark:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 shadow-sm"
               >
-                <option value="percentage" className="bg-[#0B1121] text-white">Percentage (%)</option>
-                <option value="fixed_amount" className="bg-[#0B1121] text-white">Fixed Amount (৳)</option>
+                <option value="percentage" className="bg-white dark:bg-slate-950 text-gray-900 dark:text-white">Percentage (%)</option>
+                <option value="fixed_amount" className="bg-white dark:bg-slate-950 text-gray-900 dark:text-white">Fixed Amount (৳)</option>
               </select>
             </div>
 
             <div className="space-y-2 col-span-2 sm:col-span-1">
-              <Label htmlFor="discountValue" className="text-gray-400">Discount Value *</Label>
-              <Input id="discountValue" type="number" step="0.01" placeholder={formData.discountType === 'percentage' ? "20" : "500"} value={formData.discountValue} onChange={(e) => setFormData({ ...formData, discountValue: e.target.value })} className="bg-white/5 border-white/10 text-white placeholder:text-gray-600" />
+              <Label htmlFor="discountValue" className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase">Discount Value *</Label>
+              <Input
+                id="discountValue"
+                type="number"
+                step="0.01"
+                placeholder={formData.discountType === 'percentage' ? "20" : "500"}
+                value={formData.discountValue}
+                onChange={(e) => setFormData({ ...formData, discountValue: e.target.value })}
+                className="h-11 rounded-xl bg-white dark:bg-slate-950 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-sm"
+              />
             </div>
 
             <div className="space-y-2 col-span-2 sm:col-span-1">
-              <Label htmlFor="maxUses" className="text-gray-400">Max Uses (Global)</Label>
-              <Input id="maxUses" type="number" placeholder="e.g. 100" value={formData.maxUses} onChange={(e) => setFormData({ ...formData, maxUses: e.target.value })} className="bg-white/5 border-white/10 text-white placeholder:text-gray-600" />
+              <Label htmlFor="maxUses" className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase">Max Uses (Global)</Label>
+              <Input
+                id="maxUses"
+                type="number"
+                placeholder="e.g. 100"
+                value={formData.maxUses}
+                onChange={(e) => setFormData({ ...formData, maxUses: e.target.value })}
+                className="h-11 rounded-xl bg-white dark:bg-slate-950 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-sm"
+              />
             </div>
 
             <div className="space-y-2 col-span-2 sm:col-span-1">
-              <Label htmlFor="maxUsesPerUser" className="text-gray-400">Max Uses (Per User)</Label>
-              <Input id="maxUsesPerUser" type="number" placeholder="e.g. 1" value={formData.maxUsesPerUser} onChange={(e) => setFormData({ ...formData, maxUsesPerUser: e.target.value })} className="bg-white/5 border-white/10 text-white placeholder:text-gray-600" />
+              <Label htmlFor="maxUsesPerUser" className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase">Max Uses (Per User)</Label>
+              <Input
+                id="maxUsesPerUser"
+                type="number"
+                placeholder="e.g. 1"
+                value={formData.maxUsesPerUser}
+                onChange={(e) => setFormData({ ...formData, maxUsesPerUser: e.target.value })}
+                className="h-11 rounded-xl bg-white dark:bg-slate-950 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-sm"
+              />
             </div>
 
             <div className="space-y-2 col-span-2 sm:col-span-1">
-              <Label htmlFor="validUntil" className="text-gray-400">Valid Until (Optional)</Label>
-              <Input id="validUntil" type="date" value={formData.validUntil} onChange={(e) => setFormData({ ...formData, validUntil: e.target.value })} className="bg-white/5 border-white/10 text-white placeholder:text-gray-600" style={{ colorScheme: 'dark' }} />
+              <Label htmlFor="validUntil" className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase">Valid Until (Optional)</Label>
+              <Input
+                id="validUntil"
+                type="date"
+                value={formData.validUntil}
+                onChange={(e) => setFormData({ ...formData, validUntil: e.target.value })}
+                className="h-11 rounded-xl bg-white dark:bg-slate-950 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-sm"
+                style={{ colorScheme: 'light dark' }}
+              />
             </div>
           </div>
 
-          <span className="text-red-500 text-sm mt-2">* Please fill all the required fields</span>
+          <div className="text-xs text-red-500 font-medium mt-1 mb-4">* Please fill all the required fields</div>
 
-          <div className="flex justify-end gap-3 mt-4">
-            <Button type="button" variant="outline" onClick={onClose} className="bg-transparent border-white/10 text-white hover:bg-white/10 hover:text-white">
+          <div className="flex justify-end gap-3 pt-3 border-t border-gray-100 dark:border-white/5">
+            <Button type="button" variant="outline" onClick={onClose} className="rounded-xl font-bold bg-white dark:bg-slate-900 border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting} className="bg-blue-600 hover:bg-blue-700 text-white">
+            <Button type="submit" disabled={isSubmitting} className="rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20">
               {isSubmitting ? "Saving..." : "Save Promo Code"}
             </Button>
           </div>

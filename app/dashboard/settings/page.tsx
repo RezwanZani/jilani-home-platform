@@ -28,7 +28,7 @@ export default function UserSettingsPage() {
           <AnimatePresence mode="wait">
             {active === "profile" && <ProfileTab user={user} />}
             {active === "security" && <SecurityTab />}
-            {active === "billing" && <BillingTab />}
+            {active === "billing" && <BillingTab user={user} />}
           </AnimatePresence>
         </div>
       </div>

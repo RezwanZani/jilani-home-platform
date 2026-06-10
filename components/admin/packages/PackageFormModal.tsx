@@ -96,53 +96,53 @@ export default function PackageFormModal({ isOpen, onClose, initialData }: Packa
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[600px] bg-[#0B1121] border-white/10 text-white max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[600px] bg-white dark:bg-slate-900 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white max-h-[90vh] overflow-y-auto rounded-2xl p-6">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold">{initialData ? "Edit Package" : "Add New Package"}</DialogTitle>
+          <DialogTitle className="text-xl font-bold text-gray-900 dark:text-white">{initialData ? "Edit Package" : "Add New Package"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4 py-4">
             <div className="space-y-2 col-span-2 sm:col-span-1">
-              <Label htmlFor="name" className="text-gray-400">Package Name *</Label>
-              <Input id="name" placeholder="e.g. 1000 Points" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="bg-white/5 border-white/10 text-white placeholder:text-gray-600" />
+              <Label htmlFor="name" className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase">Package Name *</Label>
+              <Input id="name" placeholder="e.g. 1000 Points" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="h-11 rounded-xl bg-white dark:bg-slate-950 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-sm" />
             </div>
             <div className="space-y-2 col-span-2 sm:col-span-1">
-              <Label htmlFor="name_bn" className="text-gray-400">Package Name (Bengali)</Label>
-              <Input id="name_bn" placeholder="১০০০ পয়েন্ট" value={formData.name_bn} onChange={(e) => setFormData({ ...formData, name_bn: e.target.value })} className="bg-white/5 border-white/10 text-white placeholder:text-gray-600" />
+              <Label htmlFor="name_bn" className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase">Package Name (Bengali)</Label>
+              <Input id="name_bn" placeholder="১০০০ পয়েন্ট" value={formData.name_bn} onChange={(e) => setFormData({ ...formData, name_bn: e.target.value })} className="h-11 rounded-xl bg-white dark:bg-slate-950 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-sm" />
             </div>
             <div className="space-y-2 col-span-2 sm:col-span-1">
-              <Label htmlFor="points" className="text-gray-400">Points *</Label>
-              <Input id="points" type="number" placeholder="1000" value={formData.points} onChange={(e) => setFormData({ ...formData, points: e.target.value })} className="bg-white/5 border-white/10 text-white placeholder:text-gray-600" />
+              <Label htmlFor="points" className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase">Points *</Label>
+              <Input id="points" type="number" placeholder="1000" value={formData.points} onChange={(e) => setFormData({ ...formData, points: e.target.value })} className="h-11 rounded-xl bg-white dark:bg-slate-950 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-sm" />
             </div>
             <div className="space-y-2 col-span-2 sm:col-span-1">
-              <Label htmlFor="price" className="text-gray-400">Price (BDT) *</Label>
-              <Input id="price" type="number" step="0.01" placeholder="500.00" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} className="bg-white/5 border-white/10 text-white placeholder:text-gray-600" />
+              <Label htmlFor="price" className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase">Price (BDT) *</Label>
+              <Input id="price" type="number" step="0.01" placeholder="500.00" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} className="h-11 rounded-xl bg-white dark:bg-slate-950 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-sm" />
             </div>
             <div className="space-y-2 col-span-2 sm:col-span-1 flex flex-col justify-center">
-              <Label htmlFor="isPopular" className="text-gray-400">Mark as Popular?</Label>
+              <Label htmlFor="isPopular" className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-1">Mark as Popular?</Label>
               <div className="flex items-center gap-3">
                 <Switch 
                   id="isPopular" 
                   checked={formData.isPopular} 
                   onCheckedChange={(checked) => setFormData({ ...formData, isPopular: checked })} 
                 />
-                <span className="text-sm text-gray-400">{formData.isPopular ? "Yes" : "No"}</span>
+                <span className="text-sm font-semibold text-gray-600 dark:text-gray-400">{formData.isPopular ? "Yes" : "No"}</span>
               </div>
             </div>
           </div>
 
           {/* Features Section */}
-          <div className="space-y-4 py-2 border-t border-white/10 mt-2 mb-4">
+          <div className="space-y-4 py-3 border-t border-gray-100 dark:border-white/5 mt-2 mb-4">
             <div className="flex items-center justify-between">
-              <Label className="text-gray-400">Package Features</Label>
+              <Label className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase">Package Features</Label>
               <Button 
                 type="button" 
                 variant="outline" 
                 size="sm" 
                 onClick={() => setFormData({ ...formData, features: [...formData.features, { text: "", text_bn: "" }] })}
-                className="bg-transparent border-white/20 text-white hover:bg-white/10 h-8"
+                className="rounded-xl font-bold bg-white dark:bg-slate-900 border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors h-9 px-3"
               >
-                <Plus className="w-4 h-4 mr-1" /> Add Feature
+                <Plus className="w-4 h-4 mr-1 text-blue-500" /> Add Feature
               </Button>
             </div>
             <div className="max-h-48 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
@@ -157,7 +157,7 @@ export default function PackageFormModal({ isOpen, onClose, initialData }: Packa
                         newFeatures[index].text = e.target.value;
                         setFormData({ ...formData, features: newFeatures });
                       }} 
-                      className="bg-white/5 border-white/10 text-white placeholder:text-gray-600 h-9 text-sm" 
+                      className="h-10 rounded-xl bg-white dark:bg-slate-950 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-sm text-sm" 
                     />
                   </div>
                   <div className="col-span-6">
@@ -169,7 +169,7 @@ export default function PackageFormModal({ isOpen, onClose, initialData }: Packa
                         newFeatures[index].text_bn = e.target.value;
                         setFormData({ ...formData, features: newFeatures });
                       }} 
-                      className="bg-white/5 border-white/10 text-white placeholder:text-gray-600 h-9 text-sm" 
+                      className="h-10 rounded-xl bg-white dark:bg-slate-950 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-sm text-sm" 
                     />
                   </div>
                   <div className="col-span-1 flex justify-end">
@@ -188,18 +188,18 @@ export default function PackageFormModal({ isOpen, onClose, initialData }: Packa
                 </div>
               ))}
               {formData.features.length === 0 && (
-                <p className="text-xs text-gray-500 text-center py-4 border border-dashed border-white/10 rounded-lg">No features added yet.</p>
+                <p className="text-xs text-gray-500 text-center py-6 border border-dashed border-gray-200 dark:border-white/10 rounded-xl bg-gray-50/50 dark:bg-slate-950/20">No features added yet.</p>
               )}
             </div>
           </div>
 
-          <span className="text-red-500 text-sm mt-2">* Please fill all the required fields</span>
+          <div className="text-xs text-red-500 font-medium mt-1 mb-4">* Please fill all the required fields</div>
 
-          <div className="flex justify-end gap-3 mt-4">
-            <Button type="button" variant="outline" onClick={onClose} className="bg-transparent border-white/10 text-white hover:bg-white/10 hover:text-white">
+          <div className="flex justify-end gap-3 pt-3 border-t border-gray-100 dark:border-white/5">
+            <Button type="button" variant="outline" onClick={onClose} className="rounded-xl font-bold bg-white dark:bg-slate-900 border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting} className="bg-blue-600 hover:bg-blue-700 text-white">
+            <Button type="submit" disabled={isSubmitting} className="rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20">
               {isSubmitting ? "Saving..." : "Save Package"}
             </Button>
           </div>

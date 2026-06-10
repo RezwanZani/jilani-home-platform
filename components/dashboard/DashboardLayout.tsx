@@ -140,19 +140,19 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       </nav>
 
       {/* Bottom Agency Section */}
-      <div className="pt-3 border-t border-gray-100 dark:border-white/10 mt-3 space-y-5 flex-shrink-0">
-        <div className="border border-blue-500/50 rounded-2xl p-3 transition-colors">
+      <div className="pt-2 border-t border-gray-100 dark:border-white/10 mt-2 flex-shrink-0">
+        <div className="border border-blue-500/30 rounded-xl p-2 hover:bg-blue-500/5 dark:hover:bg-blue-500/10 transition-colors">
           <a href="https://neosparkx.com" target="_blank" rel="noopener noreferrer">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5">
               <ImageWithFallback
                 src="/agency/neosparkx.jpeg"
                 alt="NeoSparkX"
-                className="w-14 h-14 rounded-xl object-cover bg-gray-900"
+                className="w-9 h-9 rounded-lg object-cover bg-gray-900"
               />
               <div>
-                <p className="text-gray-300 dark:text-gray-500 font-bold mb-1 mx-auto text-[10px] text-center">Design & Developed By</p>
-                <h5 className="text-white font-bold tracking-wide text-lg -mt-0.5">NEOSPARKX</h5>
-                <p className="text-[#3B82F6] text-[12px] font-medium -mt-0.5">A Software Agency</p>
+                <p className="text-gray-400 dark:text-gray-500 font-bold text-[8px] tracking-wider uppercase mb-0.5">Design & Developed By</p>
+                <h5 className="text-gray-900 dark:text-white font-bold tracking-wide text-xs leading-none">NEOSPARKX</h5>
+                <p className="text-blue-600 dark:text-[#3B82F6] text-[10px] font-medium mt-0.5 leading-none">A Software Agency</p>
               </div>
             </div>
           </a>

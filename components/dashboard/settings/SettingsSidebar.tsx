@@ -34,10 +34,10 @@ export function SettingsSidebar({ active, setActive }: SettingsSidebarProps) {
               )}
             >
               <span className="flex min-w-0 items-center gap-3">
-                <s.icon className={cn("w-4.5 h-4.5", active === s.id ? "text-white" : "text-gray-400 group-hover:text-blue-500")} />
+                <s.icon className={cn("w-5 h-5", active === s.id ? "!text-white" : "text-gray-400 group-hover:text-blue-500")} />
                 <span className="truncate">{s.label}</span>
               </span>
-              <ChevronRight className={cn("w-4 h-4 flex-shrink-0 transition-transform", active === s.id ? "rotate-90" : "opacity-0 group-hover:opacity-100")} />
+              <ChevronRight className={cn("w-4 h-4 flex-shrink-0 transition-transform", active === s.id ? "rotate-90 !text-white" : "opacity-0 group-hover:opacity-100")} />
             </button>
           ))}
         </nav>

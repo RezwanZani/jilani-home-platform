@@ -81,7 +81,7 @@ export default function AdminSettingsPage() {
                   )}
                 >
                   <span className="flex items-center gap-4">
-                    <s.icon className={cn("w-5 h-5", active === s.id ? "text-white" : "text-gray-400 group-hover:text-blue-500")} />
+                    <s.icon className={cn("w-5 h-5", active === s.id ? "!text-white" : "text-gray-400 group-hover:text-blue-500")} />
                     {s.label}
                   </span>
                   {active === s.id && (

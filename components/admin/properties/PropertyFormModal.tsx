@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     X, Building2, MapPin, Plus, Minus, Search, Sparkles, User, Check, ChevronDown, List, ListOrdered, FileImage, Loader2, Layers
@@ -97,6 +98,11 @@ interface PropertyFormProps {
 }
 
 export default function PropertyForm({ isOpen, onClose, initialData, onSuccess }: PropertyFormProps) {
+    const [isMounted, setIsMounted] = useState(false);
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
     const [formData, setFormData] = useState({
         type: "house", zoneId: "", price: "", priceType: "month", slug: "", status: "pending", title: "", title_bn: "", description: "", description_bn: "", amenities: [] as string[], amenities_bn: [] as string[], sizeSqft: "", roomCount: 2, ownerId: "", coverImage: "",
     });
@@ -309,7 +315,7 @@ export default function PropertyForm({ isOpen, onClose, initialData, onSuccess }
         setDeletedImageUrls(prev => [...prev, url]);
     };
 
-    return (
+    const modalContent = (
         <AnimatePresence>
             {isOpen && (
                 <div className="fixed inset-0 z-50 flex justify-end overflow-hidden">
@@ -641,4 +647,7 @@ export default function PropertyForm({ isOpen, onClose, initialData, onSuccess }
             )}
         </AnimatePresence>
     );
+
+    if (!isMounted) return null;
+    return createPortal(modalContent, document.body);
 }

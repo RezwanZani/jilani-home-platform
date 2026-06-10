@@ -184,6 +184,11 @@
   label { font-size: var(--text-base); font-weight: var(--font-weight-medium); line-height: 1.5; }
   button { font-size: var(--text-base); font-weight: var(--font-weight-medium); line-height: 1.5; }
   input { font-size: var(--text-base); font-weight: var(--font-weight-normal); line-height: 1.5; }
+  
+  /* Add property house + hand cursor on hover for interactive elements */
+  a:hover, button:hover, nav *:hover {
+    cursor: url('/cursor-house.svg') 14 5, pointer;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
