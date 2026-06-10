@@ -23,9 +23,10 @@ export default async function OnboardingLayout({ children }: { children: React.R
         redirect("/logout");
     }
 
-    // 4. If they already have a phone number, kick them to Dashboard
+    // 4. If they already have a phone number, kick them to their landing page
     if (dbUser.phoneNumber) {
-        redirect("/dashboard");
+        const landingPage = dbUser.role === "admin" ? "/admin" : "/dashboard";
+        redirect(landingPage);
     }
 
     // Only render the onboarding page if they TRULY have no phone number

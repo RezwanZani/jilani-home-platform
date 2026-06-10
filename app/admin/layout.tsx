@@ -28,6 +28,11 @@ export default async function UserDashboardLayout({
     redirect("/logout");
   }
 
+  // 🚨 RBAC: Only admins can access the admin panel
+  if (dbUser.role !== "admin") {
+    redirect("/dashboard");
+  }
+
   // Normal flow
   if (!dbUser.phoneNumber) {
     redirect("/onboarding");

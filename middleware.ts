@@ -47,14 +47,16 @@ export default auth((req) => {
         return NextResponse.redirect(new URL(defaultLandingPage, req.nextUrl));
     }
 
-    // 4. RBAC Shields (Admins can see everything, Users cannot see Admin)
+    // 4. RBAC Shields — strict role isolation
     if (path.startsWith("/admin") && role !== "admin") {
         // Kick normal users out of the admin panel
         return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
     }
 
-    // Notice: There is no block stopping Admins from visiting /dashboard here!
-    // If an admin navigates to /dashboard, NextResponse.next() allows it.
+    if (path.startsWith("/dashboard") && role === "admin") {
+        // Kick admins out of the user dashboard
+        return NextResponse.redirect(new URL("/admin", req.nextUrl));
+    }
 
     return NextResponse.next();
 });
