@@ -73,6 +73,7 @@ export async function createProperty(data: any) {
                 amenities_bn: data.amenities_bn,
                 status: data.status,
                 coverImage: data.coverImage,
+                videoUrl: data.videoUrl || null,
             }).returning({ id: properties.id });
 
             // ==========================================
@@ -176,6 +177,7 @@ export async function updateProperty(propertyId: string, data: any) {
                 amenities_bn: data.amenities_bn,
                 status: data.status,
                 coverImage: data.coverImage || null,
+                videoUrl: data.videoUrl || null,
             }).where(eq(properties.id, propertyId));
 
             // ==========================================

@@ -80,7 +80,7 @@ function TakaDisplay(amount: number) {
   return `৳ ${amount}`
 }
 
-type DetailListing = Listing & { images: string[] };
+type DetailListing = Listing & { images: string[]; videoUrl?: string | null };
 
 export default async function ListingDetail(props: { params: Promise<{ slug: string }> }) {
   // 1. Next.js 15: Await the params Promise
@@ -132,6 +132,7 @@ export default async function ListingDetail(props: { params: Promise<{ slug: str
     amenities: Array.isArray(item.property.amenities) ? item.property.amenities : ['WiFi'],
     verified: item.property.status === 'active',
     tag: Number(item.property.averageRating) >= 4.5 ? 'Top Rated' : null,
+    videoUrl: item.property.videoUrl || null,
   };
 
   // 4. Fetch the boolean states and similar properties concurrently for speed
@@ -208,7 +209,7 @@ export default async function ListingDetail(props: { params: Promise<{ slug: str
         <div className="flex flex-col lg:flex-row gap-8">
 
           <div className="flex-1 min-w-0 space-y-6">
-            <PhotoGallery images={listing.images} title={listing.title} />
+            <PhotoGallery images={listing.images} title={listing.title} videoUrl={listing.videoUrl} />
 
             {/* Quick stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100 fill-mode-both">

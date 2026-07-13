@@ -92,6 +92,7 @@ export const properties = pgTable('properties', {
 
     // NEW: Main cover image for fast UI loading
     coverImage: text('cover_image'),
+    videoUrl: text('video_url'),
 
     slug: varchar('slug').unique().notNull(),
     priceType: priceTypeEnum('price_type').default('month').notNull(),

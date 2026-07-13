@@ -104,7 +104,7 @@ export default function PropertyForm({ isOpen, onClose, initialData, onSuccess }
     }, []);
 
     const [formData, setFormData] = useState({
-        type: "house", zoneId: "", price: "", priceType: "month", slug: "", status: "pending", title: "", title_bn: "", description: "", description_bn: "", amenities: [] as string[], amenities_bn: [] as string[], sizeSqft: "", roomCount: 2, ownerId: "", coverImage: "",
+        type: "house", zoneId: "", price: "", priceType: "month", slug: "", status: "pending", title: "", title_bn: "", description: "", description_bn: "", amenities: [] as string[], amenities_bn: [] as string[], sizeSqft: "", roomCount: 2, ownerId: "", coverImage: "", videoUrl: "",
     });
 
     const [privateAddress, setPrivateAddress] = useState({
@@ -168,6 +168,7 @@ export default function PropertyForm({ isOpen, onClose, initialData, onSuccess }
                 roomCount: initialData.roomCount || 2,
                 ownerId: initialData.ownerId || "",
                 coverImage: initialData.coverImage || "",
+                videoUrl: initialData.videoUrl || "",
             });
             if (initialData.location) setPrivateAddress({ house: "", house_bn: "", road: "", road_bn: "", block: "", block_bn: "", landmark: "", landmark_bn: "", additionalLine: "", additionalLine_bn: "", ...initialData.location });
             if (initialData.ownerName) {
@@ -181,7 +182,7 @@ export default function PropertyForm({ isOpen, onClose, initialData, onSuccess }
             setIsSlugManuallyEdited(true); // Don't auto-update slug on edit
         } else if (isOpen && !initialData) {
             // Reset form on new open
-            setFormData({ type: "house", zoneId: "", price: "", priceType: "month", slug: "", status: "pending", title: "", title_bn: "", description: "", description_bn: "", amenities: [], amenities_bn: [], sizeSqft: "", roomCount: 2, ownerId: "", coverImage: "" });
+            setFormData({ type: "house", zoneId: "", price: "", priceType: "month", slug: "", status: "pending", title: "", title_bn: "", description: "", description_bn: "", amenities: [], amenities_bn: [], sizeSqft: "", roomCount: 2, ownerId: "", coverImage: "", videoUrl: "" });
             setPrivateAddress({ house: "", house_bn: "", road: "", road_bn: "", block: "", block_bn: "", landmark: "", landmark_bn: "", additionalLine: "", additionalLine_bn: "" });
             setSelectedOwner(null);
             setOwnerMode("existing");
@@ -632,6 +633,15 @@ export default function PropertyForm({ isOpen, onClose, initialData, onSuccess }
                                     existingUrls={existingGalleryUrls}
                                     onRemoveExisting={handleRemoveExistingGallery}
                                 />
+                                <div className="space-y-2 mt-4">
+                                    <Label className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase">Video URL (YouTube)</Label>
+                                    <Input 
+                                        value={formData.videoUrl} 
+                                        onChange={(e) => setFormData(prev => ({ ...prev, videoUrl: e.target.value }))} 
+                                        placeholder="https://www.youtube.com/watch?v=..." 
+                                        className="h-11 rounded-xl bg-white dark:bg-slate-950 border-gray-200 dark:border-white/10 text-gray-900 dark:text-white" 
+                                    />
+                                </div>
                             </div>
                         </form>
 
