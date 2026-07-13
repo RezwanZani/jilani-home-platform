@@ -18,7 +18,7 @@ export default function PhotoGallery({ images, title, videoUrl }: { images: stri
     const [direction, setDirection] = useState(1);
 
     const ytId = videoUrl ? getYoutubeId(videoUrl) : null;
-    const mediaItems = images.map(url => ({ type: 'image', url, thumbnail: url }));
+    const mediaItems: { type: string; url: string; thumbnail: string; videoId?: string }[] = images.map(url => ({ type: 'image', url, thumbnail: url }));
     if (ytId) {
         mediaItems.splice(1, 0, { type: 'video', url: videoUrl!, thumbnail: `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`, videoId: ytId });
     }
