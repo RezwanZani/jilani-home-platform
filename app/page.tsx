@@ -5,7 +5,7 @@ import TrustStrip from '@/components/TrustStrip';
 import FeaturedListings from '@/components/FeaturedListings';
 import HowItWorks from '@/components/HowItWorks';
 import Testimonials from '@/components/Testimonials';
-import BottomCTA from '@/components/BottomCTA';
+// import BottomCTA from '@/components/BottomCTA';
 import Footer from '@/components/Footer';
 
 import { auth } from '@/lib/auth';
@@ -25,7 +25,7 @@ export default async function HomePage() {
         <FeaturedListings isLoggedIn={isLoggedIn} userBalance={userBalance} />
         <HowItWorks />
         {/* <Testimonials /> */}
-        <BottomCTA />
+        {/* <BottomCTA /> */}
       </main>
       <Footer />
     </div>

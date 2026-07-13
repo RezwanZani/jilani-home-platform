@@ -16,7 +16,6 @@ import {
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import PhotoGallery from '@/components/listings/individual/PhotoGallery';
-import TourRequestPanel from '@/components/listings/individual/TourRequestPanel';
 import SimilarListings from '@/components/listings/individual/SimilarListings';
 import SaveButton from '@/components/listings/SaveButton';
 import ShareButton from '@/components/listings/individual/ShareButton';
@@ -299,8 +298,6 @@ export default async function ListingDetail(props: { params: Promise<{ slug: str
 
               <p className="text-gray-600 text-xs text-center">Pay once · See the contact details for two months.</p>
             </div>
-
-            <TourRequestPanel listingTitle={listing.title} />
 
             <div className="bg-[#3B82F6]/[0.07] border border-[#3B82F6]/20 rounded-2xl p-4 animate-in fade-in slide-in-from-right-4 duration-500 delay-300 fill-mode-both">
               <div className="flex items-start gap-3"><Lock className="w-4 h-4 text-[#3B82F6] shrink-0 mt-0.5" /><p className="text-gray-400 text-xs leading-relaxed">Price, capacity, amenities and approximate location are <span className="text-white">free to view</span>. Sign up once to unlock the exact address, phone number and email.</p></div>

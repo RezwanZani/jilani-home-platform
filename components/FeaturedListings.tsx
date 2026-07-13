@@ -417,8 +417,8 @@ export default function FeaturedListings({ isLoggedIn, userBalance }: { isLogged
   return (
     <section id="browse" className="py-16 sm:py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16 space-y-3 sm:space-y-4">
-          <h2 className="font-heading text-3xl md:text-5xl font-bold text-white">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16 space-y-3 sm:space-y-4">
+          <h2 className="font-heading text-2xl sm:text-3xl md:text-5xl font-bold text-white whitespace-nowrap">
             প্রিমিয়াম স্পেস,{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3B82F6] to-[#60A5FA]">
               শতভাগ যাচাইকৃত

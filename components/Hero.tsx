@@ -37,10 +37,7 @@ export default function Hero() {
               </span> <br />
               খুঁজে নিন আজই
             </h1>
-            
-            <p className="text-gray-800 dark:text-gray-300 text-sm sm:text-base md:text-xl max-w-[290px] sm:max-w-xl md:max-w-2xl mx-auto leading-relaxed font-light">
-              বাসা ভাড়া, কেনা-বেচা এবং শিফটিং সার্ভিস এখন আরও সহজ এখন Jilani Home এর সাথে।
-            </p>
+            {/* Sub-headline text removed */}
           </div>
 
           <div className="flex flex-row items-center justify-center gap-2 sm:gap-5 pt-2 mb-4 md:mb-12 w-full max-w-[340px] sm:max-w-none mx-auto">
