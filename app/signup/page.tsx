@@ -10,7 +10,7 @@ import { sendPhoneOTP } from '@/lib/actions/auth-action'; // MAKE SURE THIS IMPO
 import { useRouter } from 'next/navigation';
 import { signIn, getSession } from 'next-auth/react';
 
-const SIGNUP_IMAGE = "https://images.unsplash.com/photo-1657816925116-9bbb2a45fb6d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBjb252ZW50aW9uJTIwaGFsbCUyMGRhcmslMjBtb2Rlcm4lMjBpbnRlcmlvcnxlbnwxfHx8fDE3NzY3NTYxNTN8MA&ixlib=rb-4.1.0&q=80&w=1080";
+const SIGNUP_IMAGE = "/imports/auth-bg.jpg";
 
 export default function SignUp() {
   const router = useRouter();

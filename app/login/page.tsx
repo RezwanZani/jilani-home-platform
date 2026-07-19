@@ -8,7 +8,7 @@ import { ImageWithFallback } from '@/components/figma/ImageWithFallback';
 import { useRouter } from 'next/navigation';
 import { signIn, getSession } from 'next-auth/react';
 
-const LOGIN_IMAGE = "https://images.unsplash.com/photo-1770992161088-7ad66282c9af?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcmVtaXVtJTIwZGFyayUyMG9mZmljZSUyMGludGVyaW9yJTIwYXJjaGl0ZWN0dXJhbHxlbnwxfHx8fDE3NzY3NTYxNTJ8MA&ixlib=rb-4.1.0&q=80&w=1080";
+const LOGIN_IMAGE = "/imports/auth-bg.jpg";
 
 export default function Login() {
   const [identifier, setIdentifier] = useState('');
